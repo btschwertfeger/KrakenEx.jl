@@ -1,7 +1,9 @@
 module KrakenSpotBaseAPIModule
 using HTTP
 using JSON
-
+using SHA
+using Base64: base64decode, base64encode
+using Nettle: digest
 #======= Exports ========#
 
 export SpotBaseRESTAPI
@@ -13,25 +15,25 @@ export request
 
 # Base.@kwdef 
 struct SpotBaseRESTAPI
-    API_KEY::String # = ""
-    SECRET_KEY::String # = ""
+    API_KEY::Union{String,Nothing}
+    SECRET_KEY::Union{String,Nothing}
 
-    BASE_URL::String # = "https://api.kraken.com"
-    API_V::Int64 # = 0
-    TIMEOUT::Int64 # = 10
-    HEADERS::Vector{Pair{String,String}} # = ["User-Agent" => "krakenex-julia-pkg"]
+    BASE_URL::String
+    API_V::Int64
+    TIMEOUT::Int64
+    HEADERS::Vector{Pair{String,String}}
 
     SpotBaseRESTAPI() = new(
-        "", # key
-        "", # secret
+        nothing, # key
+        nothing, # secret
         "https://api.kraken.com", # url 
         0, # api version
         10, # max timeout
         Vector{Pair{String,String}}(["User-Agent" => "krakenex-julia-pkg"])
     )
     SpotBaseRESTAPI(
-        key::String="",
-        secret::String="",
+        key::String,
+        secret::String,
         url::String="https://api.kraken.com",
         apiv::Int64=0,
         timeout::Int64=0
@@ -62,18 +64,28 @@ function handle_response(response::HTTP.Messages.Response)
 
 end
 
-function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data=nothing, auth::Bool=false)
+function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Union{Dict,Nothing}=nothing, auth::Bool=false)
     url = client.BASE_URL * "/" * string(client.API_V) * endpoint
-
+    isnothing(data) ? data = Dict() : nothing
     headers = deepcopy(client.HEADERS)
 
     try
         if type == "GET"
             return handle_response(HTTP.get(url, query=data, headers=headers, readtimeout=client.TIMEOUT))
         elseif type == "POST"
-            if !auth
-                return handle_response(HTTP.post(url, body=data, headers=headers, readtimeout=client.TIMEOUT))
+            if auth
+                if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
+                    error("Valid API Keys are required for accessing private endpoints.")
+                end
+                nonce = get_nonce()
+                data["nonce"] = nonce
+                signature = get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce)
+                push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
+                push!(headers, "API-Key" => client.API_KEY)
+                push!(headers, "API-Sign" => signature)
             end
+
+            return handle_response(HTTP.post(url, body=data, headers=headers, readtimeout=client.TIMEOUT))
         end
 
     catch error
@@ -82,7 +94,7 @@ function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data=n
 end
 
 function get_nonce()
-    return String(Int64(floor(time() * 1000)))
+    return string(Int64(floor(time() * 1000)))
 end
 
 function dict_to_query(data::Dict)
@@ -93,8 +105,9 @@ function dict_to_query(data::Dict)
     return s[begin:end-1]
 end
 
-function get_kraken_signature(client::SpotBaseRESTAPI; func::String, data::Dict, nonce::String)
-    endpoint = "/" * string(client.API_V) * func
+function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Dict, nonce::String)
+
+    endpoint = "/" * string(client.API_V) * endpoint
     message = endpoint * transcode(String, digest("sha256", nonce * dict_to_query(data)))
     decoded = base64decode(client.SECRET_KEY)
     return base64encode(transcode(String, digest("sha512", decoded, message)))

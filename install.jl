@@ -3,7 +3,8 @@ import Pkg
 Pkg.add("HTTP")
 Pkg.add("JSON")
 Pkg.add("PkgTemplates")
-
+Pkg.add("StringEncodings")
+Pkg.add("Nettle")
 using PkgTemplates
 
 

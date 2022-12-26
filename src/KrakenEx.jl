@@ -8,8 +8,14 @@ export get_server_time
 export get_assets
 export get_tradable_asset_pair
 export get_ticker
+export get_ohlc
+export get_order_book
+export get_recent_trades
+export get_recend_spreads
+export get_system_status
 
 #===> U S E R <===#
+export get_account_balance
 
 #===> T R A D E <===#
 
