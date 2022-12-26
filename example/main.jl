@@ -7,7 +7,6 @@ using DotEnv
 
 #===== G E N E R A L =====#
 client = SpotBaseRESTAPI()
-# println(typeof(client))
 # println(client.BASE_URL)
 # println(get_server_time(client))
 
@@ -25,5 +24,13 @@ private_client = SpotBaseRESTAPI(ENV["SPOT_API_KEY"], ENV["SPOT_SECRET_KEY"])
 # println(get_recend_spreads(client, pair="XBTUSD"))
 # println(get_system_status(client))
 
+
 #====== U S E R ======#
-println(get_account_balance(private_client))
+# println(get_account_balance(private_client))
+# todo: signature wrong error 
+# custom exceptions
+
+# println(get_trade_balance(private_client))
+# println(get_trade_balance(private_client, asset="DOT"))
+# println(get_open_orders(private_client))
+println(get_open_orders(private_client, trades=true))

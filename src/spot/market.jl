@@ -1,5 +1,6 @@
 module KrakenSpotMarketModule
 using ..KrakenSpotBaseAPIModule
+using ..Utils
 
 #======= E X P O R T S ========#
 export get_server_time

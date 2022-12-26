@@ -4,13 +4,12 @@ using JSON
 using SHA
 using Base64: base64decode, base64encode
 using Nettle: digest
+
+using ..Utils
 #======= Exports ========#
 
 export SpotBaseRESTAPI
-
-export vector_to_string
 export request
-
 #======= F U N C T I O N S ========#
 
 # Base.@kwdef 
@@ -80,6 +79,7 @@ function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::
                 nonce = get_nonce()
                 data["nonce"] = nonce
                 signature = get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce)
+
                 push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
                 push!(headers, "API-Key" => client.API_KEY)
                 push!(headers, "API-Sign" => signature)
@@ -97,41 +97,11 @@ function get_nonce()
     return string(Int64(floor(time() * 1000)))
 end
 
-function dict_to_query(data::Dict)
-    s = ""
-    for i in keys(data)
-        s *= i * "=" * data[i] * "&"
-    end
-    return s[begin:end-1]
-end
-
 function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Dict, nonce::String)
-
     endpoint = "/" * string(client.API_V) * endpoint
-    message = endpoint * transcode(String, digest("sha256", nonce * dict_to_query(data)))
+    message = endpoint * transcode(String, digest("sha256", nonce * HTTP.escapeuri(data)))
     decoded = base64decode(client.SECRET_KEY)
     return base64encode(transcode(String, digest("sha512", decoded, message)))
-end
-
-function vector_to_string(value)
-    """Converts a list to a comme separated str"""
-    if typeof(value) === String
-        return value
-    elseif typeof(value) === Array{String} || typeof(value) === Vector{String}
-        if length(value) === 0
-            error("Length of List must be greater than 0.")
-        end
-
-        result::String = value[begin]
-        if length(value) > 1
-            for val in value[begin+1:end]
-                result *= "," * val
-            end
-        end
-        return result
-    else
-        error("Input must be Vector{String} or Array{String}.")
-    end
 end
 
 end

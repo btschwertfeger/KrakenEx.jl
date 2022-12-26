@@ -1,5 +1,8 @@
 module KrakenEx
 
+#= U T I L S =#
+include("utils.jl")
+
 #= S P O T - E X P O R T S =#
 export SpotBaseRESTAPI
 
@@ -16,6 +19,8 @@ export get_system_status
 
 #===> U S E R <===#
 export get_account_balance
+export get_trade_balance
+export get_open_orders
 
 #===> T R A D E <===#
 
