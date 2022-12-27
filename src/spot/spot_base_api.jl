@@ -1,16 +1,13 @@
 module KrakenSpotBaseAPIModule
-using HTTP
-using JSON
-using SHA
+using JSON: parse
+using HTTP: get, post, escapeuri, Messages.Response
 using Base64: base64decode, base64encode
 using Nettle: digest
 
 using ..Utils
-#======= Exports ========#
 
 export SpotBaseRESTAPI
 export request
-#======= F U N C T I O N S ========#
 
 # Base.@kwdef 
 struct SpotBaseRESTAPI
@@ -23,12 +20,12 @@ struct SpotBaseRESTAPI
     HEADERS::Vector{Pair{String,String}}
 
     SpotBaseRESTAPI() = new(
-        nothing, # key
-        nothing, # secret
-        "https://api.kraken.com", # url 
-        0, # api version
-        10, # max timeout
-        Vector{Pair{String,String}}(["User-Agent" => "krakenex-julia-pkg"])
+        nothing,                    # key
+        nothing,                    # secret
+        "https://api.kraken.com",   # url 
+        0,                          # api version
+        10,                         # timeout
+        Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
     )
     SpotBaseRESTAPI(
         key::String,
@@ -42,35 +39,37 @@ struct SpotBaseRESTAPI
         url,
         apiv,
         timeout,
-        Vector{Pair{String,String}}(["User-Agent" => "krakenex-julia-pkg"])
+        Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
     )
 end
 
-function handle_response(response::HTTP.Messages.Response)
+function handle_response(response::Response, return_raw::Bool=false)
 
     response_json = []
 
     try
-        response_json = JSON.parse(String(response.body))
+        if return_raw
+            return response.body
+        else
+            response_json = parse(String(response.body))
+        end
     catch error
         error(string(error))
     end
-    if response_json["error"] != []
+    if response_json["error"] ≠ []
         error("JSON error: " * string(response_json["error"][begin]))
     else
         return response_json["result"]
     end
-
 end
 
-function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Union{Dict,Nothing}=nothing, auth::Bool=false)
+function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Dict=Dict(), auth::Bool=false, return_raw::Bool=false)
     url = client.BASE_URL * "/" * string(client.API_V) * endpoint
-    isnothing(data) ? data = Dict() : nothing
     headers = deepcopy(client.HEADERS)
 
     try
         if type == "GET"
-            return handle_response(HTTP.get(url, query=data, headers=headers, readtimeout=client.TIMEOUT))
+            return handle_response(get(url, query=data, headers=headers, readtimeout=client.TIMEOUT), return_raw)
         elseif type == "POST"
             if auth
                 if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
@@ -85,11 +84,11 @@ function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::
                 push!(headers, "API-Sign" => signature)
             end
 
-            return handle_response(HTTP.post(url, body=data, headers=headers, readtimeout=client.TIMEOUT))
+            return handle_response(post(url, body=data, headers=headers, readtimeout=client.TIMEOUT), return_raw)
         end
 
     catch error
-        error(String(error))
+        error(string(error))
     end
 end
 
@@ -99,7 +98,7 @@ end
 
 function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Dict, nonce::String)
     endpoint = "/" * string(client.API_V) * endpoint
-    message = endpoint * transcode(String, digest("sha256", nonce * HTTP.escapeuri(data)))
+    message = endpoint * transcode(String, digest("sha256", nonce * escapeuri(data)))
     decoded = base64decode(client.SECRET_KEY)
     return base64encode(transcode(String, digest("sha512", decoded, message)))
 end

@@ -1,10 +1,9 @@
 module Utils
 
 export vector_to_string
-export bool_to_string
 
 function vector_to_string(value::Union{String,Vector{String},Array{String}})
-    """Converts a list to a comme separated str"""
+    """Converts a list to a comma separated str"""
     if typeof(value) === String
         return value
     elseif typeof(value) === Array{String} || typeof(value) === Vector{String}
@@ -22,7 +21,4 @@ function vector_to_string(value::Union{String,Vector{String},Array{String}})
     end
 end
 
-function bool_to_string(value::Bool)
-    return value ? "true" : "false"
-end
 end
