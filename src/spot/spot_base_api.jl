@@ -1,5 +1,5 @@
 module KrakenSpotBaseAPIModule
-using JSON: parse
+using JSON: parse, json
 using HTTP: get, post, escapeuri, Messages.Response
 using Base64: base64decode, base64encode
 using Nettle: digest
@@ -9,7 +9,6 @@ using ..Utils
 export SpotBaseRESTAPI
 export request
 
-# Base.@kwdef 
 struct SpotBaseRESTAPI
     API_KEY::Union{String,Nothing}
     SECRET_KEY::Union{String,Nothing}
@@ -27,6 +26,7 @@ struct SpotBaseRESTAPI
         10,                         # timeout
         Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
     )
+
     SpotBaseRESTAPI(
         key::String,
         secret::String,
@@ -39,14 +39,20 @@ struct SpotBaseRESTAPI
         url,
         apiv,
         timeout,
-        Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
+        Vector{Pair{String,String}}([
+            "User-Agent" => "KrakenEx.jl",
+            "API-Key" => key
+        ])
     )
 end
 
+function handle_error(error_string::String)
+    # todo: check which error and than throw specific kraken exception
+    error(error_string)
+end
+
 function handle_response(response::Response, return_raw::Bool=false)
-
     response_json = []
-
     try
         if return_raw
             return response.body
@@ -54,37 +60,44 @@ function handle_response(response::Response, return_raw::Bool=false)
             response_json = parse(String(response.body))
         end
     catch error
-        error(string(error))
+        handle_error(string(error))
     end
+
     if response_json["error"] ≠ []
-        error("JSON error: " * string(response_json["error"][begin]))
+        handle_error(string(response_json["error"][begin]))
     else
         return response_json["result"]
     end
 end
 
-function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Dict=Dict(), auth::Bool=false, return_raw::Bool=false)
+function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Dict=Dict{String,Any}(), auth::Bool=false, return_raw::Bool=false, do_json::Bool=false)
     url = client.BASE_URL * "/" * string(client.API_V) * endpoint
     headers = deepcopy(client.HEADERS)
 
     try
         if type == "GET"
-            return handle_response(get(url, query=data, headers=headers, readtimeout=client.TIMEOUT), return_raw)
+            return handle_response(get(url, headers=headers, query=data, readtimeout=client.TIMEOUT), return_raw)
         elseif type == "POST"
             if auth
                 if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
                     error("Valid API Keys are required for accessing private endpoints.")
                 end
+
                 nonce = get_nonce()
                 data["nonce"] = nonce
-                signature = get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce)
 
-                push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
-                push!(headers, "API-Key" => client.API_KEY)
+                if do_json
+                    data = json(data)
+                    push!(headers, "Content-Type" => "application/json")
+                else
+                    push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
+                end
+
+                signature = get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce)
                 push!(headers, "API-Sign" => signature)
             end
 
-            return handle_response(post(url, body=data, headers=headers, readtimeout=client.TIMEOUT), return_raw)
+            return handle_response(post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
         end
 
     catch error
@@ -96,10 +109,13 @@ function get_nonce()
     return string(Int64(floor(time() * 1000)))
 end
 
-function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Dict, nonce::String)
+function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Union{String,Dict{String,Any}}, nonce::String)
+    typeof(data) == String ? post_data = data : post_data = escapeuri(data)
+
     endpoint = "/" * string(client.API_V) * endpoint
-    message = endpoint * transcode(String, digest("sha256", nonce * escapeuri(data)))
+    message = endpoint * transcode(String, digest("sha256", nonce * post_data))
     decoded = base64decode(client.SECRET_KEY)
+
     return base64encode(transcode(String, digest("sha512", decoded, message)))
 end
 

@@ -1,7 +1,50 @@
 module KrakenEx
 
-#= U T I L S =#
 include("utils.jl")
+
+#=== Exceptions ===#
+include("exceptions/exceptions.jl")
+using .KrakenExceptionsModule
+export KrakenInvalidArgumentError
+export KrakenInvalidArgumentsError
+export KrakenInvalidArgumentsIndexUnavailableError
+export KrakenPermissionDeniedError
+export KrakenServiceUnavailableError
+export KrakenMarketInOnlyCancelModeError
+export KrakenDeadlineElapsedError
+export KrakenInvalidAPIKeyError
+export KrakenInvalidSignatureError
+export KrakenInvalidNonceError
+export KrakenInvalidOrderError
+export KrakenInvalidPriceError
+export KrakenAuthenticationError
+export KrakenCannotOpenPositionError
+export KrakenMarginAllowedExceededError
+export KrakenMarginLevelToLowError
+export KrakenMarginPositionSizeExceededError
+export KrakenInsufficientMarginError
+export KrakenInsufficientFundsError
+export KrakenOrderMinimumNotMetError
+export KrakenCostMinimumNotMetError
+export KrakenTickSizeInvalidCheckError
+export KrakenOrderLimitsExceededError
+export KrakenRateLimitExceededError
+export KrakenApiLimitExceededError
+export KrakenPositionLimitExceeded
+export KrakenUnknownPositionError
+export KrakenUnknownAssetPairError
+export KrakenUnknownAssetError
+export KrakenInvalidUnitError
+export KrakenUnavailableError
+export KrakenInvalidReferenceIdError
+export KrakenUnknownWithdrawKeyError
+export KrakenInvalidAmountError
+export KrakenInvalidStakingMethodError
+export KrakenInvalidAccountError
+export KrakenNotFoundError
+export KrakenOrderForEditNotFoundError
+export KrakenToManyAdressesError
+export MaxReconnectError
 
 #= S P O T - E X P O R T S =#
 export SpotBaseRESTAPI
@@ -47,6 +90,7 @@ export cancel_order_batch
 export get_deposit_methods
 export get_deposit_address
 export get_recend_deposits_status
+export withdraw_funds
 export get_withdrawal_info
 export get_recend_withdraw_status
 export cancel_withdraw
@@ -59,6 +103,7 @@ export list_stakeable_assets
 export get_pending_staking_transactions
 export list_staking_transactions
 
+#===> S P O T - I M P O R T S <===#
 include("spot/spot_base_api.jl")
 using .KrakenSpotBaseAPIModule
 
@@ -76,6 +121,7 @@ using .KrakenSpotFundingModule
 
 include("spot/staking.jl")
 using .KrakenSpotStakingModule
+
 
 #====== F U T U R E S - E X P O R T S ======#
 

@@ -13,16 +13,15 @@ export cancel_all_orders_after_x
 export cancel_order_batch
 
 #======= F U N C T I O N S ========#
-
 function create_order(client::SpotBaseRESTAPI;
     ordertype::String,
     side::String,
-    volume::Union{Float64,UInt64,String},
+    volume::Union{Float64,Int64,String},
     pair::String,
-    price::Union{Float64,UInt64,String,Nothing}=nothing,
-    price2::Union{Float64,UInt64,String,Nothing}=nothing,
+    price::Union{Float64,Int64,String,Nothing}=nothing,
+    price2::Union{Float64,Int64,String,Nothing}=nothing,
     trigger::Union{String,Nothing}=nothing,
-    leverage::Union{Float64,UInt64,String}=nothing,
+    leverage::Union{Float64,Int64,String,Nothing}=nothing,
     stp_type::String="cancel-newest",
     oflags::Union{String,Vector{String},Nothing}=nothing,
     timeinforce::Union{String,Nothing}=nothing,
@@ -36,7 +35,7 @@ function create_order(client::SpotBaseRESTAPI;
     userref::Union{Int32,Nothing}=nothing
 )
     """https://docs.kraken.com/rest/#operation/addOrder"""
-    params = Dict{String,Any}([
+    params = Dict{String,Any}(
         "ordertype" => ordertype,
         "type" => side,
         "volume" => string(volume),
@@ -45,7 +44,7 @@ function create_order(client::SpotBaseRESTAPI;
         "starttm" => starttm,
         "expiretim" => expiretim,
         "validate" => string(validate)
-    ])
+    )
     if !isnothing(trigger)
         if ordertype ∈ ["stop-loss", "stop-loss-limit", "take-profit-limit", "take-profit-limit"]
             if !isnothing(timeinforce)
@@ -70,6 +69,7 @@ function create_order(client::SpotBaseRESTAPI;
     !isnothing(userref) ? params["userref"] = userref : nothing
     return request(client, "POST", "/private/AddOrder", data=params, auth=true)
 end
+
 function create_order_batch(client::SpotBaseRESTAPI;
     orders::Vector{Dict{String,Any}},
     pair::String,
@@ -77,21 +77,21 @@ function create_order_batch(client::SpotBaseRESTAPI;
     validate::Bool=false
 )
     """https://docs.kraken.com/rest/#operation/addOrderBatch"""
-    params = Dict{String,Any}([
+    params = Dict{String,Any}(
         "orders" => orders,
         "pair" => pair,
         "validate" => validate
-    ])
+    )
     !isnothing(deadline) ? params["deadline"] = deadline : nothing
-    return request(client, "POST", "/private/AddOrderBatch", data=params, auth=true)
+    return request(client, "POST", "/private/AddOrderBatch", data=params, auth=true, do_json=true)
 end
 
 function edit_order(client::SpotBaseRESTAPI;
     txid::String,
     pair::String,
-    volume::Union{String,UInt64,Float64,Nothing}=nothing,
-    price::Union{String,UInt64,Float64,Nothing}=nothing,
-    price2::Union{String,UInt64,Float64,Nothing}=nothing,
+    volume::Union{String,Int64,Float64,Nothing}=nothing,
+    price::Union{String,Int64,Float64,Nothing}=nothing,
+    price2::Union{String,Int64,Float64,Nothing}=nothing,
     oflags::Union{String,Vector{String},Nothing}=nothing,
     deadline::Union{String,Nothing}=nothing,
     cancel_response::Bool=false,
@@ -99,11 +99,11 @@ function edit_order(client::SpotBaseRESTAPI;
     userref::Union{Int32,Nothing}=nothing
 )
     """https://docs.kraken.com/rest/#operation/editOrder"""
-    params = Dict{String,Any}([
+    params = Dict{String,Any}(
         "txid" => txid,
         "pair" => pair,
         "validate" => validate
-    ])
+    )
     !isnothing(userref) ? params["userref"] = userref : nothing
     !isnothing(volume) ? params["volume"] = string(volume) : nothing
     !isnothing(price) ? params["price"] = string(price) : nothing
@@ -127,12 +127,12 @@ end
 
 function cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)
     """https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter"""
-    return request(client, "POST", "/private/CancelAllOrdersAfter", data=Dict{String,Any}(["timeout" => timeout]), auth=true)
+    return request(client, "POST", "/private/CancelAllOrdersAfter", data=Dict{String,Any}("timeout" => timeout), auth=true)
 end
 
 function cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})
     """https://docs.kraken.com/rest/#operation/cancelOrderBatch"""
-    return request(client, "POST", "/private/CancelOrderBatch", data=Dict{String,Any}(["orders" => orders]), auth=true)
+    return request(client, "POST", "/private/CancelOrderBatch", data=Dict{String,Any}("orders" => orders), auth=true, do_json=true)
 end
 
 end

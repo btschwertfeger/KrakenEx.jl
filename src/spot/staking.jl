@@ -11,23 +11,21 @@ export get_pending_staking_transactions
 export list_staking_transactions
 
 #======= F U N C T I O N S ========#
-
-function stake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,String}, method::String)
+function stake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String}, method::String)
     """https://docs.kraken.com/rest/#operation/stake"""
-    return request(client, "POST", "/private/Stake", data=Dict{String,Any}([
+    return request(client, "POST", "/private/Stake", data=Dict{String,Any}(
             "asset" => asset,
             "amount" => string(amount),
             "method" => method
-        ]), auth=true)
+        ), auth=true)
 end
 
-function unstake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,String}, method::String)
+function unstake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String})
     """https://docs.kraken.com/rest/#operation/unstake"""
-    return request(client, "POST", "/private/Unstake", data=Dict{String,Any}([
+    return request(client, "POST", "/private/Unstake", data=Dict{String,Any}(
             "asset" => asset,
-            "amount" => string(amount),
-            "method" => method
-        ]), auth=true)
+            "amount" => string(amount)
+        ), auth=true)
 end
 
 function list_stakeable_assets(client::SpotBaseRESTAPI)
