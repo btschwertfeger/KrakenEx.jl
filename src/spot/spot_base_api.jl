@@ -4,8 +4,6 @@ using HTTP: get, post, escapeuri, Messages.Response
 using Base64: base64decode, base64encode
 using Nettle: digest
 
-using ..Utils
-
 export SpotBaseRESTAPI
 export request
 
@@ -70,7 +68,15 @@ function handle_response(response::Response, return_raw::Bool=false)
     end
 end
 
-function request(client::SpotBaseRESTAPI, type::String, endpoint::String; data::Dict=Dict{String,Any}(), auth::Bool=false, return_raw::Bool=false, do_json::Bool=false)
+function request(
+    client::SpotBaseRESTAPI,
+    type::String,
+    endpoint::String;
+    data::Dict=Dict{String,Any}(),
+    auth::Bool=false,
+    return_raw::Bool=false,
+    do_json::Bool=false
+)
     url = client.BASE_URL * "/" * string(client.API_V) * endpoint
     headers = deepcopy(client.HEADERS)
 

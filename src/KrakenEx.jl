@@ -49,6 +49,11 @@ export MaxReconnectError
 #= S P O T - E X P O R T S =#
 export SpotBaseRESTAPI
 
+#===> W E B S O C K E T <===#
+export SpotWebsocketClient
+export connect
+export subscribe
+
 #===> M A R K E T <===#
 export get_server_time
 export get_assets
@@ -103,9 +108,14 @@ export list_stakeable_assets
 export get_pending_staking_transactions
 export list_staking_transactions
 
+
+
 #===> S P O T - I M P O R T S <===#
 include("spot/spot_base_api.jl")
 using .KrakenSpotBaseAPIModule
+
+include("spot/websocket.jl")
+using .KrakenSpotWebsocketModule
 
 include("spot/market.jl")
 using .KrakenSpotMarketModule
@@ -124,6 +134,26 @@ using .KrakenSpotStakingModule
 
 
 #====== F U T U R E S - E X P O R T S ======#
+
+
+#====== F U T U R E S - I M P O R T S ======#
+include("futures/futures_base_api.jl")
+using .KrakenFuturesBaseAPIModule
+
+include("futures/websocket.jl")
+using .KrakenFuturesWebsocketModule
+
+include("futures/market.jl")
+using .KrakenFuturesMarketModule
+
+include("futures/user.jl")
+using .KrakenFuturesUserModule
+
+include("futures/trade.jl")
+using .KrakenFuturesTradeModule
+
+include("futures/funding.jl")
+using .KrakenFuturesFundingModule
 
 
 end

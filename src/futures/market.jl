@@ -1,0 +1,2 @@
+module KrakenFuturesMarketModule
+end
