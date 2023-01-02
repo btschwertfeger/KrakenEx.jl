@@ -1,5 +1,4 @@
 module spot_websoclet_exmaple
-using HTTP
 
 include("../src/KrakenEx.jl")
 using .KrakenEx
@@ -10,20 +9,36 @@ function main()
     DotEnv.config(path=".env")
 
     ws_client = SpotWebsocketClient(ENV["SPOT_API_KEY"], ENV["SPOT_SECRET_KEY"])
-    x = false
-    function cb(ws::HTTP.WebSockets.WebSocket, msg)
+
+    function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
-        if !x
-            subscribe(
-                ws=ws,
-                subscription=Dict{String,Any}("name" => "ticker"),
-                pairs=["XBT/USD"]
-            )
-            x = true
-        end
     end
 
-    connect(ws_client, callback=cb)
+    con = @async connect(ws_client, callback=on_message)
+
+    subscribe(
+        client=ws_client,
+        subscription=Dict{String,Any}("name" => "ticker"),
+        pairs=["XBT/USD", "DOT/USD"]
+    )
+    subscribe(
+        client=ws_client,
+        subscription=Dict{String,Any}("name" => "ownTrades")
+    )
+
+    # wait before unsubscribe is done ...
+    sleep(2)
+    # unsubscribe(
+    #     client=ws_client,
+    #     subscription=Dict{String,Any}("name" => "ticker"),
+    #     pairs=["XBT/USD", "DOT/USD"]
+    # )
+    # unsubscribe(
+    #     client=ws_client,
+    #     subscription=Dict{String,Any}("name" => "ownTrades")
+    # )
+    wait(con)
+
 end
 
 main()

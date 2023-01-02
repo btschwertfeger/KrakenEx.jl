@@ -1,5 +1,6 @@
 module KrakenSpotFundingModule
 
+
 using ..KrakenSpotBaseAPIModule
 using ..Utils
 

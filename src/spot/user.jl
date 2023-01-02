@@ -19,6 +19,7 @@ export request_export_report
 export get_export_report_status
 export retrieve_export
 export delete_export_report
+export get_websockets_token
 
 #======= F U N C T I O N S ========#
 function get_account_balance(client::SpotBaseRESTAPI)
@@ -193,5 +194,10 @@ function delete_export_report(client::SpotBaseRESTAPI; id::String, type::String)
             "id" => id,
             "type" => type # delete, cancel
         ), auth=true)
+end
+
+function get_websockets_token(client::SpotBaseRESTAPI)
+    """https://docs.kraken.com/rest/#tag/Websockets-Authentication"""
+    return request(client, "POST", "/private/GetWebSocketsToken", auth=true)
 end
 end

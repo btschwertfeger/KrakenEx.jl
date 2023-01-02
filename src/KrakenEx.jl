@@ -2,9 +2,7 @@ module KrakenEx
 
 include("utils.jl")
 
-#=== Exceptions ===#
-include("exceptions/exceptions.jl")
-using .KrakenExceptionsModule
+#=== E X C E P T I O N S - E X P O R T S ===#
 export KrakenInvalidArgumentError
 export KrakenInvalidArgumentsError
 export KrakenInvalidArgumentsIndexUnavailableError
@@ -46,13 +44,17 @@ export KrakenOrderForEditNotFoundError
 export KrakenToManyAdressesError
 export MaxReconnectError
 
+#=== E X C E P T I O N S  I M P O R T ===#
+include("exceptions/exceptions.jl")
+using .KrakenExceptionsModule
+
 #= S P O T - E X P O R T S =#
 export SpotBaseRESTAPI
 
 #===> W E B S O C K E T <===#
 export SpotWebsocketClient
 export connect
-export subscribe
+export subscribe, unsubscribe
 
 #===> M A R K E T <===#
 export get_server_time
@@ -81,6 +83,7 @@ export request_export_report
 export get_export_report_status
 export retrieve_export
 export delete_export_report
+export get_websockets_token
 
 #===> T R A D E <===#
 export create_order
@@ -108,14 +111,9 @@ export list_stakeable_assets
 export get_pending_staking_transactions
 export list_staking_transactions
 
-
-
 #===> S P O T - I M P O R T S <===#
 include("spot/spot_base_api.jl")
 using .KrakenSpotBaseAPIModule
-
-include("spot/websocket.jl")
-using .KrakenSpotWebsocketModule
 
 include("spot/market.jl")
 using .KrakenSpotMarketModule
@@ -132,6 +130,8 @@ using .KrakenSpotFundingModule
 include("spot/staking.jl")
 using .KrakenSpotStakingModule
 
+include("spot/websocket.jl")
+using .KrakenSpotWebsocketModule
 
 #====== F U T U R E S - E X P O R T S ======#
 
