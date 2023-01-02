@@ -1,8 +1,64 @@
 module spot_rest_exmaples
 
-include("../src/KrakenEx.jl")
-using .KrakenEx
 using DotEnv
+
+include("../src/KrakenEx.jl")
+using .KrakenEx: SpotBaseRESTAPI
+
+using .KrakenEx.SpotMarketModule:
+    get_server_time,
+    get_assets,
+    get_tradable_asset_pair,
+    get_ticker,
+    get_ohlc,
+    get_order_book,
+    get_recent_trades,
+    get_recend_spreads,
+    get_system_status
+
+using .KrakenEx.SpotUserModule:
+    get_account_balance,
+    get_trade_balance,
+    get_open_orders,
+    get_closed_orders,
+    get_orders_info,
+    get_trades_history,
+    get_trades_info,
+    get_open_positions,
+    get_ledgers_info,
+    get_ledgers,
+    get_trade_volume,
+    request_export_report,
+    get_export_report_status,
+    retrieve_export,
+    delete_export_report,
+    get_websockets_token
+
+using .KrakenEx.SpotTradeModule:
+    create_order,
+    create_order_batch,
+    edit_order,
+    cancel_order,
+    cancel_all_orders,
+    cancel_all_orders_after_x,
+    cancel_order_batch
+
+using .KrakenEx.SpotFundingModule:
+    get_deposit_methods,
+    get_deposit_address,
+    get_recend_deposits_status,
+    withdraw_funds,
+    get_withdrawal_info,
+    get_recend_withdraw_status,
+    cancel_withdraw,
+    wallet_transfer
+
+using .KrakenEx.SpotStakingModule:
+    stake_asset,
+    unstake_asset,
+    list_stakeable_assets,
+    get_pending_staking_transactions,
+    list_staking_transactions
 
 function market_endpoints(client::SpotBaseRESTAPI)
     #====== M A R K E T ======#

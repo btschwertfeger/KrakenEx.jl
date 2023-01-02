@@ -1,6 +1,6 @@
-module KrakenSpotTradeModule
+module SpotTradeModule
 
-using ..KrakenSpotBaseAPIModule
+using ..SpotBaseAPIModule: SpotBaseRESTAPI, request
 using ..Utils
 
 #======= E X P O R T S ========#
@@ -13,11 +13,36 @@ export cancel_all_orders_after_x
 export cancel_order_batch
 
 #======= F U N C T I O N S ========#
+"""
+    create_order(client::SpotBaseRESTAPI;
+        ordertype::String,
+        side::String,
+        pair::String,
+        volume::Union{Float64,Int64,String},
+        price::Union{Float64,Int64,String,Nothing}=nothing,
+        price2::Union{Float64,Int64,String,Nothing}=nothing,
+        trigger::Union{String,Nothing}=nothing,
+        leverage::Union{Float64,Int64,String,Nothing}=nothing,
+        stp_type::String="cancel-newest",
+        oflags::Union{String,Vector{String},Nothing}=nothing,
+        timeinforce::Union{String,Nothing}=nothing,
+        starttm::String="0",
+        expiretim::String="0",
+        close_ordertype::Union{String,Nothing}=nothing,
+        close_price::Union{String,Nothing}=nothing,
+        close_price2::Union{String,Nothing}=nothing,
+        deadline::Union{String,Nothing}=nothing,
+        validate::Bool=false,
+        userref::Union{Int32,Nothing}=nothing
+    )
+
+https://docs.kraken.com/rest/#operation/addOrder
+"""
 function create_order(client::SpotBaseRESTAPI;
     ordertype::String,
     side::String,
-    volume::Union{Float64,Int64,String},
     pair::String,
+    volume::Union{Float64,Int64,String},
     price::Union{Float64,Int64,String,Nothing}=nothing,
     price2::Union{Float64,Int64,String,Nothing}=nothing,
     trigger::Union{String,Nothing}=nothing,
@@ -34,7 +59,6 @@ function create_order(client::SpotBaseRESTAPI;
     validate::Bool=false,
     userref::Union{Int32,Nothing}=nothing
 )
-    """https://docs.kraken.com/rest/#operation/addOrder"""
     params = Dict{String,Any}(
         "ordertype" => ordertype,
         "type" => side,
@@ -70,13 +94,22 @@ function create_order(client::SpotBaseRESTAPI;
     return request(client, "POST", "/private/AddOrder", data=params, auth=true)
 end
 
+"""
+    create_order_batch(client::SpotBaseRESTAPI;
+        orders::Vector{Dict{String,Any}},
+        pair::String,
+        deadline::Union{String,Nothing}=nothing,
+        validate::Bool=false
+    )
+
+https://docs.kraken.com/rest/#operation/addOrderBatch
+"""
 function create_order_batch(client::SpotBaseRESTAPI;
     orders::Vector{Dict{String,Any}},
     pair::String,
     deadline::Union{String,Nothing}=nothing,
     validate::Bool=false
 )
-    """https://docs.kraken.com/rest/#operation/addOrderBatch"""
     params = Dict{String,Any}(
         "orders" => orders,
         "pair" => pair,
@@ -86,6 +119,22 @@ function create_order_batch(client::SpotBaseRESTAPI;
     return request(client, "POST", "/private/AddOrderBatch", data=params, auth=true, do_json=true)
 end
 
+"""
+    edit_order(client::SpotBaseRESTAPI;
+        txid::String,
+        pair::String,
+        volume::Union{String,Int64,Float64,Nothing}=nothing,
+        price::Union{String,Int64,Float64,Nothing}=nothing,
+        price2::Union{String,Int64,Float64,Nothing}=nothing,
+        oflags::Union{String,Vector{String},Nothing}=nothing,
+        deadline::Union{String,Nothing}=nothing,
+        cancel_response::Bool=false,
+        validate::Bool=false,
+        userref::Union{Int32,Nothing}=nothing
+    )
+
+https://docs.kraken.com/rest/#operation/editOrder
+"""
 function edit_order(client::SpotBaseRESTAPI;
     txid::String,
     pair::String,
@@ -98,7 +147,6 @@ function edit_order(client::SpotBaseRESTAPI;
     validate::Bool=false,
     userref::Union{Int32,Nothing}=nothing
 )
-    """https://docs.kraken.com/rest/#operation/editOrder"""
     params = Dict{String,Any}(
         "txid" => txid,
         "pair" => pair,
@@ -115,23 +163,39 @@ function edit_order(client::SpotBaseRESTAPI;
 end
 
 
+"""
+    cancel_order(client::SpotBaseRESTAPI; txid::String)
+
+https://docs.kraken.com/rest/#operation/cancelOrder
+"""
 function cancel_order(client::SpotBaseRESTAPI; txid::String)
-    """https://docs.kraken.com/rest/#operation/cancelOrder"""
     return request(client, "POST", "/private/CancelOrder", data=Dict{String,Any}("txid" => txid), auth=true)
 end
 
+"""
+    cancel_all_orders(client::SpotBaseRESTAPI)
+
+https://docs.kraken.com/rest/#operation/cancelAllOrders
+"""
 function cancel_all_orders(client::SpotBaseRESTAPI)
-    """https://docs.kraken.com/rest/#operation/cancelAllOrders"""
     return request(client, "POST", "/private/CancelAll", auth=true)
 end
 
+"""
+    cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)
+
+https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter
+"""
 function cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)
-    """https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter"""
     return request(client, "POST", "/private/CancelAllOrdersAfter", data=Dict{String,Any}("timeout" => timeout), auth=true)
 end
 
+"""
+    cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})
+
+https://docs.kraken.com/rest/#operation/cancelOrderBatch
+"""
 function cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})
-    """https://docs.kraken.com/rest/#operation/cancelOrderBatch"""
     return request(client, "POST", "/private/CancelOrderBatch", data=Dict{String,Any}("orders" => orders), auth=true, do_json=true)
 end
 
