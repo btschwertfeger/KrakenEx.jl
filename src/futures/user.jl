@@ -1,0 +1,3 @@
+module KrakenFuturesUserModule
+
+end

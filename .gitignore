@@ -25,3 +25,5 @@ Manifest.toml
 
 .env
 *del*
+*.zip
+.DS_Store

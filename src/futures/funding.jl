@@ -1,0 +1,2 @@
+module KrakenFuturesFundingModule
+end
