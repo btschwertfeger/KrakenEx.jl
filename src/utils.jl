@@ -21,4 +21,16 @@ function vector_to_string(value::Union{String,Vector{String},Array{String}})
     end
 end
 
+"""
+    get_nonce()
+
+As of https://docs.kraken.com/rest/#section/General-Usage/Requests-Responses-and-Errors (January, 2023):
+"Nonce must be an always increasing, unsigned 64-bit integer, for each request that is made with a particular API key.
+While a simple counter would provide a valid nonce, a more usual method of generating a valid nonce is to use e.g. a 
+UNIX timestamp in milliseconds."
+"""
+function get_nonce()
+    return string(Int64(floor(time() * 1000)))
+end
+
 end

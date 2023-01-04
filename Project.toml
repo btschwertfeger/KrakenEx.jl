@@ -11,6 +11,9 @@ Nettle = "49dea1ee-f6fa-5aa6-9a11-8816cee7d4b9"
 
 [compat]
 julia = "1"
+JSON = "0.21"
+HTTP = "1"
+Nettle = "1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
