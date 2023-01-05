@@ -283,8 +283,8 @@ Base.@kwdef struct KrakenToManyAdressesError <: KrakenException{Exception}
     description::String = "To many adresses specified"
     message::String = ""
 end
-Base.@kwdef struct KrakenInsufficientAvailavleFundsError <: KrakenException{Exception}
-    name::String = "KrakenInsufficientAvailavleFundsError"
+Base.@kwdef struct KrakenInsufficientAvailableFundsError <: KrakenException{Exception}
+    name::String = "KrakenInsufficientAvailableFundsError"
     description::String = "Client does not have the necessary funds"
     message::String = ""
 end
@@ -346,7 +346,7 @@ function get_exception(name::String)
 
         # futures_trading_errors__________________________
         "authenticationError" => KrakenAuthenticationError,
-        "insufficientAvailableFunds" => KrakenInsufficientAvailavleFundsError,
+        "insufficientAvailableFunds" => KrakenInsufficientAvailableFundsError,
         "apiLimitExceeded" => KrakenApiLimitExceededError,
         "invalidUnit" => KrakenInvalidUnitError,
         "Unavailable" => KrakenUnavailableError,

@@ -151,7 +151,8 @@ function request(
     query_params::Union{Dict{String,Any},Nothing}=nothing,
     post_params::Union{Dict{String,Any},Nothing}=nothing,
     auth::Bool=false,
-    return_raw::Bool=false
+    return_raw::Bool=false,
+    do_json::Bool=false
 )
     method = uppercase(method)
     headers = deepcopy(client.HEADERS)
@@ -163,7 +164,12 @@ function request(
 
     post_string::String = ""
     if !isnothing(post_params)
-        post_string = escapeuri(post_params)
+        if !do_json
+            post_string = escapeuri(post_params)
+        else
+            post_params = json(post_params)
+            post_string = "json=" * escapeuri(post_params)
+        end
     end
 
     if auth
@@ -174,8 +180,8 @@ function request(
         nonce = get_nonce()
         for value ∈ [
             "Nonce" => nonce,
-            "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8",
-            "Authent" => get_kraken_signature(client, uri, query_string * post_string, nonce)
+            "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8",#do_json ? "application/json" : "application/x-www-form-urlencoded; charset=utf-8",
+            "Authent" => get_kraken_signature(client, uri, query_string * (!do_json ? post_string : "json=" * (post_params)), nonce)
         ]
             push!(headers, value)
         end
@@ -194,7 +200,6 @@ function request(
         )
 
     elseif method == "PUT"
-        println(client.BASE_URL * uri * "?" * query_string)
         return handle_response(
             put(
                 client.BASE_URL * uri * "?" * query_string,
@@ -205,16 +210,14 @@ function request(
         )
 
     elseif method == "POST"
-        return handle_response(
-            post(
+        return handle_response(post(
                 client.BASE_URL * uri * "?" * post_string,
                 headers=headers,
-                body=post_data,
+                body=post_params,
                 readtimeout=client.TIMEOUT
             ),
             return_raw
         )
-
     else
         error("Unknown method `$method``.")
     end

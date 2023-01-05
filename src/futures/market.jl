@@ -1,6 +1,5 @@
 module FuturesMarketModule
 using ..FuturesBaseAPIModule: FuturesBaseRESTAPI, request
-using ..Utils: vector_to_string
 
 #======= E X P O R T S ========#
 export get_ohlc
@@ -14,7 +13,6 @@ export get_tickers
 export get_instruments
 export get_instruments_status
 export get_trade_history
-export get_historical_funding_rates
 export get_leverage_preference
 export set_leverage_preference
 export get_pnl_preference
@@ -173,17 +171,6 @@ function get_trade_history(client::FuturesBaseRESTAPI;
         error("`get_trade_history`: Either symbol or lastTime must be specified!")
     end
     return request(client, "GET", "/derivatives/api/v3/history", query_params=params, auth=false)
-end
-
-"""
-    get_historical_funding_rates(client::FuturesBaseRESTAPI; symbol::String)
-
-https://support.kraken.com/hc/en-us/articles/360061979852-Historical-Funding-Rates
-"""
-function get_historical_funding_rates(client::FuturesBaseRESTAPI; symbol::String)
-    return request(client, "GET", "/derivatives/api/v4/historicalfundingrates", query_params=Dict{String,Any}(
-            "symbol" => symbol
-        ), auth=false)
 end
 
 """

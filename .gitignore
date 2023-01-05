@@ -27,3 +27,4 @@ Manifest.toml
 *del*
 *.zip
 .DS_Store
+*.csv
