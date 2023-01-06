@@ -66,8 +66,8 @@ function initiate_subccount_transfer(client::FuturesBaseRESTAPI;
     return request(client, "POST", "/derivatives/api/v3/transfer/subaccount", post_params=Dict{String,Any}(
             "amount" => amount,
             "fromAccount" => fromAccount,
-            "toAccount" => toAccount,
             "fromUser" => fromUser,
+            "toAccount" => toAccount,
             "toUser" => toUser,
             "unit" => unit
         ), auth=true)
@@ -85,10 +85,10 @@ https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-with
 function initiate_withdrawal_to_spot_wallet(client::FuturesBaseRESTAPI;
     amount::Union{String,Int,Float64},
     currency::String,
-    sourceWallet::Union{String,Nothing}
+    sourceWallet::Union{String,Nothing}=nothing
 )
     params::Dict{String,Any} = Dict{String,Any}(
-        "amount" => amount,
+        "amount" => string(amount),
         "currency" => currency
     )
     isnothing(sourceWallet) ? nothing : params["sourceWallet"] = sourceWallet

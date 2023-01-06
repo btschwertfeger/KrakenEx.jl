@@ -1,7 +1,8 @@
-module KrakenExceptionsModule
+module ExceptionsModule
 using Base
 
 #====== E X P O R T S ======#
+export KrakenException
 export KrakenInvalidArgumentsError
 export KrakenInvalidArgumentsIndexUnavailableError
 export KrakenPermissionDeniedError
@@ -14,6 +15,7 @@ export KrakenInvalidSignatureError
 export KrakenInvalidNonceError
 export KrakenInvalidOrderError
 export KrakenInvalidPriceError
+export KrakenInsufficientAvailableFundsError
 export KrakenAuthenticationError
 export KrakenCannotOpenPositionError
 export KrakenMarginAllowedExceededError
@@ -45,7 +47,6 @@ export MaxReconnectError
 
 export showerror
 export get_exception
-
 
 abstract type KrakenException{T} end
 
@@ -348,8 +349,9 @@ function get_exception(name::String)
         "authenticationError" => KrakenAuthenticationError,
         "insufficientAvailableFunds" => KrakenInsufficientAvailableFundsError,
         "apiLimitExceeded" => KrakenApiLimitExceededError,
-        "invalidUnit" => KrakenInvalidUnitError,
         "Unavailable" => KrakenUnavailableError,
+        "invalidUnit" => KrakenInvalidUnitError,
+        "invalidArgument" => KrakenInvalidArgumentsError,
         "invalidAccount" => KrakenInvalidAccountError,
         "notFound" => KrakenNotFoundError,
         "orderForEditNotFound" => KrakenOrderForEditNotFoundError, "INTERNAL_SERVER_ERROR" => KrakenInternalServerError

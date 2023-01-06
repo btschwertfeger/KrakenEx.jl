@@ -13,14 +13,22 @@ export get_orders_status
 export create_order
 
 #======= F U N C T I O N S ========#
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-data-get-your-fills"""
-function get_fills(client::FuturesBaseRESTAPI; lastFillTime::Union{Int,String,Nothing}=nothing)
+"""
+    get_fills(client::FuturesBaseRESTAPI; lastFillTime::Union{Int64,String,Nothing}=nothing)
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-data-get-your-fills
+"""
+function get_fills(client::FuturesBaseRESTAPI; lastFillTime::Union{Int64,String,Nothing}=nothing)
     params::Dict{String,Any} = Dict{String,Any}()
     isnothing(lastFillTime) ? nothing : params["lastFillTime"] = lastFillTime
     return request(client, "GET", "/derivatives/api/v3/fills", query_params=params, auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-batch-order-management"""
+"""
+    create_batch_order(client::FuturesBaseRESTAPI; batchorder_list::Vector{Dict{String,Any}})
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-batch-order-management
+"""
 function create_batch_order(client::FuturesBaseRESTAPI; batchorder_list::Vector{Dict{String,Any}})
     return request(client, "POST", "/derivatives/api/v3/batchorder",
         post_params=Dict{String,Any}("batchOrder" => batchorder_list),
@@ -29,21 +37,36 @@ function create_batch_order(client::FuturesBaseRESTAPI; batchorder_list::Vector{
     )
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-all-orders"""
+"""
+    cancel_all_orders(client::FuturesBaseRESTAPI; symbol::Union{String,Nothing}=nothing)
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-all-orders
+"""
 function cancel_all_orders(client::FuturesBaseRESTAPI; symbol::Union{String,Nothing}=nothing)
     params::Dict{String,Any} = Dict{String,Any}()
-    isnothing(symbol) ? nothing : params["symbol"] = symbols
+    isnothing(symbol) ? nothing : params["symbol"] = symbol
     return request(client, "POST", "/derivatives/api/v3/cancelallorders", post_params=params, auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-dead-man-39-s-switch"""
+"""
+    dead_mans_switch(client::FuturesBaseRESTAPI; timeout::Int=60)
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-dead-man-39-s-switch
+"""
 function dead_mans_switch(client::FuturesBaseRESTAPI; timeout::Int=60)
     return request(client, "POST", "/derivatives/api/v3/cancelallordersafter", post_params=Dict{String,Any}(
             "timeout" => timeout
         ), auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-order"""
+"""
+    cancel_order(client::FuturesBaseRESTAPI;
+        order_id::Union{String,Nothing}=nothing,
+        cliOrdId::Union{String,Nothing}=nothing
+    )
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-order
+"""
 function cancel_order(client::FuturesBaseRESTAPI;
     order_id::Union{String,Nothing}=nothing,
     cliOrdId::Union{String,Nothing}=nothing
@@ -59,21 +82,31 @@ function cancel_order(client::FuturesBaseRESTAPI;
     return request(client, "POST", "/derivatives/api/v3/cancelorder", post_params=params, auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-edit-order"""
+"""
+    edit_order(client::FuturesBaseRESTAPI;
+        orderId::Union{String,Nothing}=nothing,
+        cliOrdId::Union{String,Nothing}=nothing,
+        limitPrice::Union{String,Float64,Int64,Nothing}=nothing,
+        size::Union{String,Float64,Int64,Nothing}=nothing,
+        stopPrice::Union{String,Float64,Int64,Nothing}=nothing
+    )
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-edit-order
+"""
 function edit_order(client::FuturesBaseRESTAPI;
-    order_id::Union{String,Nothing}=nothing,
+    orderId::Union{String,Nothing}=nothing,
     cliOrdId::Union{String,Nothing}=nothing,
-    limitPrice::Union{String,Float64,Nothing}=nothing,
-    size::Union{String,Float64,Nothing}=nothing,
-    stopPrice::Union{String,Float64,Nothing}=nothing
+    limitPrice::Union{String,Float64,Int64,Nothing}=nothing,
+    size::Union{String,Float64,Int64,Nothing}=nothing,
+    stopPrice::Union{String,Float64,Int64,Nothing}=nothing
 )
     params::Dict{String,Any} = Dict{String,Any}()
-    if !isnothing(order_id)
-        params["order_id"] = order_id
+    if !isnothing(orderId)
+        params["orderId"] = orderId
     elseif !isnothing(cliOrdId)
         params["cliOrdId"] = cliOrdId
     else
-        error("edit_order: Either `order_id` or `cliOrdId` must be set!")
+        error("edit_order: Either `orderId` or `cliOrdId` must be set!")
     end
     isnothing(limitPrice) ? nothing : params["limitPrice"] = limitPrice
     isnothing(size) ? nothing : params["size"] = size
@@ -81,10 +114,17 @@ function edit_order(client::FuturesBaseRESTAPI;
     return request(client, "POST", "/derivatives/api/v3/editorder", post_params=params, auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-get-the-current-status-for-specific-orders"""
+"""
+    get_orders_status(client::FuturesBaseRESTAPI;
+        orderIds::Union{Vector{String},Nothing}=nothing,
+        cliOrdIds::Union{Vector{String},Nothing}=nothing
+    )
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-get-the-current-status-for-specific-orders
+"""
 function get_orders_status(client::FuturesBaseRESTAPI;
-    orderIds::Union{Vector{String},Nothing},
-    cliOrdIds::Union{Vector{String},Nothing}
+    orderIds::Union{Vector{String},Nothing}=nothing,
+    cliOrdIds::Union{Vector{String},Nothing}=nothing
 )
     params::Dict{String,Any} = Dict{String,Any}()
     if !isnothing(orderIds)
@@ -97,15 +137,29 @@ function get_orders_status(client::FuturesBaseRESTAPI;
     return request(client, "POST", "/derivatives/api/v3/orders/status", post_params=params, auth=true)
 end
 
-"""https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-send-order"""
+"""
+    create_order(client::FuturesBaseRESTAPI;
+        orderType::String,
+        side::String,
+        size::Union{Float64,Int64,String},
+        symbol::String,
+        cliOrdId::Union{String,Nothing}=nothing,
+        limitPrice::Union{String,Float64,Int64,Nothing}=nothing,
+        stopPrice::Union{String,Float64,Int64,Nothing}=nothing,
+        reduceOnly::Union{Bool,Nothing}=nothing,
+        triggerSignal::Union{String,Nothing}=nothing
+    )
+
+https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-send-order
+"""
 function create_order(client::FuturesBaseRESTAPI;
     orderType::String,
     side::String,
-    size::Union{Float64,String},
+    size::Union{Float64,Int64,String},
     symbol::String,
     cliOrdId::Union{String,Nothing}=nothing,
-    limitPrice::Union{String,Float64,Nothing}=nothing,
-    stopPrice::Union{String,Float64,Nothing}=nothing,
+    limitPrice::Union{String,Float64,Int64,Nothing}=nothing,
+    stopPrice::Union{String,Float64,Int64,Nothing}=nothing,
     reduceOnly::Union{Bool,Nothing}=nothing,
     triggerSignal::Union{String,Nothing}=nothing
 )

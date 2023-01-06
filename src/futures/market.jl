@@ -15,8 +15,8 @@ export get_instruments_status
 export get_trade_history
 export get_leverage_preference
 export set_leverage_preference
-export get_pnl_preference
-export set_pnl_preference
+export get_pnl_currency_preference
+export set_pnl_currency_preference
 export get_execution_events
 export get_public_execution_events
 export get_public_order_events
@@ -198,16 +198,16 @@ end
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-get-pnl-currency-preference-for-a-market
 """
-function get_pnl_preference(client::FuturesBaseRESTAPI)
+function get_pnl_currency_preference(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/pnlpreferences", auth=true)
 end
 
 """
-    set_pnl_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
+set_pnl_currency_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-pnl-currency-preference-for-a-market
 """
-function set_pnl_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
+function set_pnl_currency_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
     return request(client, "PUT", "/derivatives/api/v3/pnlpreferences", query_params=Dict{String,Any}(
             "symbol" => symbol,
             "pnlPreference" => pnlPreference

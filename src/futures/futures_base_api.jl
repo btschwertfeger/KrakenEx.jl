@@ -1,6 +1,6 @@
 module FuturesBaseAPIModule
 using ..Utils: get_nonce
-using ..KrakenExceptionsModule: get_exception
+using ..ExceptionsModule: get_exception
 using JSON: parse, json
 using HTTP: get, delete, post, put, escapeuri, Messages.Response
 using Base64: base64decode, base64encode
@@ -110,23 +110,23 @@ function handle_response(response::Response, return_raw::Bool=false)
             return response.body
         end
 
-        data = []
+        data = String(response.body)
         try
-            data = parse(String(response.body))
-            if haskey(data, "error")
-                return handle_error("check", data)
-            elseif haskey(data, "sendStatus")
-                return handle_error("check_send_status", data)
-            elseif haskey(data, "batchStatus")
-                return handle_error("check_batch_status", data)
-            end
-
-            return data
+            data = parse(data)
         catch err
-            error(err)
+            return data
+            # error(err)
         end
 
-        return data
+        if haskey(data, "error")
+            return handle_error("check", data)
+        elseif haskey(data, "sendStatus")
+            return handle_error("check_send_status", data)
+        elseif haskey(data, "batchStatus")
+            return handle_error("check_batch_status", data)
+        else
+            return data
+        end
     else
         error(response.status * ": " * response.body)
     end
@@ -174,7 +174,9 @@ function request(
 
     if auth
         if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
-            error("Valid API Keys are required for accessing private endpoints.")
+            throw(KrakenAuthenticationError(
+                message="Valid API keys are required for accessing private endpoints."
+            ))
         end
 
         nonce = get_nonce()
@@ -203,6 +205,7 @@ function request(
         return handle_response(
             put(
                 client.BASE_URL * uri * "?" * query_string,
+                body=query_params,
                 headers=headers,
                 readtimeout=client.TIMEOUT
             ),
@@ -219,7 +222,7 @@ function request(
             return_raw
         )
     else
-        error("Unknown method `$method``.")
+        error("Unknown method `$method`.")
     end
 end
 
