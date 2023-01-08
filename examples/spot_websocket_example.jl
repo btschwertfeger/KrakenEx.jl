@@ -19,7 +19,7 @@ function main()
         # implement your strategy here....
     end
 
-    con = @async connect(ws_client, callback=on_message)
+    con = @async connect(ws_client, callback=on_message, private=true)
 
     #== Subscribe to public and private websocket feeds ==#
     subscribe(

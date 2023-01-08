@@ -1,14 +1,13 @@
 module SpotBaseAPIModule
-using JSON: parse, json
-using HTTP: get, post, escapeuri, Messages.Response
+using ..Utils: get_nonce
 using Base64: base64decode, base64encode
+using HTTP: Messages.Response, escapeuri, get, post
+using JSON: json, parse
 using Nettle: digest
 
 #======= E X P O R T S ========#
 export SpotBaseRESTAPI
 export request
-
-
 
 struct SpotBaseRESTAPI
     API_KEY::Union{String,Nothing}
@@ -58,15 +57,15 @@ end
 Handles incoming responses.
 """
 function handle_response(response::Response, return_raw::Bool=false)
+    if return_raw
+        return response.body
+    end
+
     response_json = []
     try
-        if return_raw
-            return response.body
-        else
-            response_json = parse(String(response.body))
-        end
+        response_json = parse(String(response.body))
     catch error
-        handle_error(string(error))
+        return handle_error(string(error))
     end
 
     if response_json["error"] ≠ []
@@ -120,29 +119,17 @@ function request(
                     push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
                 end
 
-                signature = get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce)
-                push!(headers, "API-Sign" => signature)
+                push!(headers, "API-Sign" => get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce))
             end
 
             return handle_response(post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
         end
 
-    catch error
-        error(string(error))
+    catch err
+        error(string(err))
     end
 end
 
-"""
-    get_nonce()
-
-As of https://docs.kraken.com/rest/#section/General-Usage/Requests-Responses-and-Errors (January, 2023):
-"Nonce must be an always increasing, unsigned 64-bit integer, for each request that is made with a particular API key.
-While a simple counter would provide a valid nonce, a more usual method of generating a valid nonce is to use e.g. a 
-UNIX timestamp in milliseconds."
-"""
-function get_nonce()
-    return string(Int64(floor(time() * 1000)))
-end
 
 """
     get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Union{String,Dict{String,Any}}, nonce::String)
@@ -151,12 +138,16 @@ Returns a signed String
 """
 function get_kraken_signature(client::SpotBaseRESTAPI; endpoint::String, data::Union{String,Dict{String,Any}}, nonce::String)
     typeof(data) == String ? post_data = data : post_data = escapeuri(data)
-
     endpoint = "/" * string(client.API_V) * endpoint
-    message = endpoint * transcode(String, digest("sha256", nonce * post_data))
-    decoded = base64decode(client.SECRET_KEY)
-
-    return base64encode(transcode(String, digest("sha512", decoded, message)))
+    return base64encode(
+        transcode(
+            String, digest(
+                "sha512",
+                base64decode(client.SECRET_KEY), # decoded 
+                endpoint * transcode(String, digest("sha256", nonce * post_data)) # message
+            )
+        )
+    )
 end
 
 end

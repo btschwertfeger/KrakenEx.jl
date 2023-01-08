@@ -293,7 +293,10 @@ function main()
     # println(get_server_time(client))
 
     DotEnv.config(path=".env")
-    private_client = SpotBaseRESTAPI(ENV["SPOT_API_KEY"], ENV["SPOT_SECRET_KEY"])
+    private_client = SpotBaseRESTAPI(
+        ENV["SPOT_API_KEY"],
+        ENV["SPOT_SECRET_KEY"]
+    )
 
     # market_endpoints(client)
     # user_endpoints(private_client)

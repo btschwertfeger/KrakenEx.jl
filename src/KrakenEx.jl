@@ -18,6 +18,8 @@ include("spot/websocket.jl")
 
 #====== F U T U R E S - I M P O R T S ======#
 include("futures/futures_base_api.jl")
+using .FuturesBaseAPIModule
+
 include("futures/websocket.jl")
 include("futures/market.jl")
 include("futures/user.jl")

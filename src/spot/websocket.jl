@@ -5,7 +5,7 @@ using JSON: json, parse
 
 using ..SpotBaseAPIModule: SpotBaseRESTAPI
 using ..SpotUserModule: get_websockets_token
-import ..KrakenExceptionsModule as exc
+import ..ExceptionsModule as exc
 
 export SpotWebSocketClient
 export connect, subscribe, unsubscribe
@@ -51,6 +51,11 @@ end
 
 
 
+"""
+    send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
+
+Sends a (optional: signed) message via the websocket connection.
+"""
 function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
     if haskey(message, "subscription") && private
         message["subscription"]["token"] = client.private_ws_token
@@ -61,14 +66,29 @@ function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClie
     WebSockets.send(ws, json(message))
 end
 
-function unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
-    [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="unsubscribe", pairs=pairs)]
-end
+"""
+    subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
 
+Subscribe to a websocket feed.
+"""
 function subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="subscribe", pairs=pairs)]
 end
 
+"""
+    unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+
+Unsubscribe from a subscribed feed.
+"""
+function unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+    [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="unsubscribe", pairs=pairs)]
+end
+
+"""
+    build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
+
+Builds sub- and unsubscription payloads.
+"""
 function build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
     subscriptions::Vector{Dict{String,Any}} = []
 
@@ -93,6 +113,8 @@ end
 """
     check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
 
+Iterates over the pending subscriptions and calls the `send_message` function 
+to request the subscription to Kraken.
 """
 function check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
     public_sub_names::Vector{String} = ["ticker", "spread", "book", "ohlc", "trade", "*"]
@@ -117,12 +139,11 @@ end
 """
 function check_pending_messages(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket)
     for message ∈ client.pending_messages
-        # messages sent are always private so far
+        # messages sent are always private (so far)
         send_message(ws=ws, client=client, message=sub, private=true)
         filter!(e -> e ≠ message, client.pending_messages)
     end
 end
-
 
 """
     recover_subscriptions(client::SpotWebSocketClient)
@@ -152,6 +173,7 @@ function parse_message(client::SpotWebSocketClient, msg::String)
             elseif message["event"] == "subscriptionStatus" && haskey(message, "status")
                 if message["status"] ∈ ["subscribed", "unsubscribed"]
                     sub::Union{Dict{String,Any},Nothing} = nothing
+
                     if haskey(message, "pair")
                         sub = build_subscriptions(subscription=message["subscription"], pairs=[message["pair"]], event="subscribe")[begin]
                     else
@@ -189,27 +211,27 @@ function establish_connection(client::SpotWebSocketClient, callback::Core.Functi
 
     private ? auth = "private" : auth = "public"
 
-    return @async WebSockets.open("https://" * url) do ws
+    return @async WebSockets.open("wss://" * url) do ws
         callback(parse_message(
             client,
             json(Dict{String,String}("event" => "$auth WebSocket connected"))
         ))
 
-        last_public_ping_time = now()
+        last_ping_time = now()
         msg::Union{String,Dict{String,Any},Nothing} = nothing
 
         recover_subscriptions(client)
 
         try
-            for msg in ws
+            for msg ∈ ws
                 check_pending_subscriptions(client, ws, private)
                 if private
                     check_pending_messages(client, ws)
                 end
 
-                if last_public_ping_time < now() - Second(15)
+                if last_ping_time < now() - Second(15)
                     WebSockets.ping(ws)
-                    last_public_ping_time = now()
+                    last_ping_time = now()
                 end
 
                 if !isnothing(msg)
@@ -233,7 +255,7 @@ end
 Connects to public Kraken Websocket API and also to the private feed if the 
 `SpotWebSocketClient` has assigned credentials. Messages are filtered and forwarded to the callback function.
 """
-function connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=true)
+function connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=false)
 
     !public && !private ? error("No connection established, because public and private was set to false") : nothing
 
