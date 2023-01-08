@@ -51,6 +51,11 @@ end
 
 
 
+"""
+    send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
+
+Sends a (optional: signed) message via the websocket connection.
+"""
 function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
     if haskey(message, "subscription") && private
         message["subscription"]["token"] = client.private_ws_token
@@ -61,14 +66,29 @@ function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClie
     WebSockets.send(ws, json(message))
 end
 
+"""
+    subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+
+Subscribe to a websocket feed.
+"""
 function subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="subscribe", pairs=pairs)]
 end
 
+"""
+    unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+
+Unsubscribe from a subscribed feed.
+"""
 function unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="unsubscribe", pairs=pairs)]
 end
 
+"""
+    build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
+
+Builds sub- and unsubscription payloads.
+"""
 function build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
     subscriptions::Vector{Dict{String,Any}} = []
 
@@ -93,6 +113,8 @@ end
 """
     check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
 
+Iterates over the pending subscriptions and calls the `send_message` function 
+to request the subscription to Kraken.
 """
 function check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
     public_sub_names::Vector{String} = ["ticker", "spread", "book", "ohlc", "trade", "*"]
@@ -117,12 +139,11 @@ end
 """
 function check_pending_messages(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket)
     for message ∈ client.pending_messages
-        # messages sent are always private so far
+        # messages sent are always private (so far)
         send_message(ws=ws, client=client, message=sub, private=true)
         filter!(e -> e ≠ message, client.pending_messages)
     end
 end
-
 
 """
     recover_subscriptions(client::SpotWebSocketClient)
