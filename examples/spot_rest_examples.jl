@@ -378,11 +378,11 @@ function main()
 
     DotEnv.config(path=".env")
     private_client = SpotBaseRESTAPI(
-        ENV["SPOT_API_KEY"],
-        ENV["SPOT_SECRET_KEY"]
+        key=ENV["SPOT_API_KEY"],
+        secret=ENV["SPOT_SECRET_KEY"]
     )
 
-    # market_endpoints(client)
+    market_endpoints(client)
     # user_endpoints(private_client)
     # trade_endpoints(private_client)
     # funding_endpoints(private_client)

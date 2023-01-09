@@ -55,17 +55,17 @@ using .KrakenEx.FuturesTradeModule:
     create_order
 
 function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBaseRESTAPI)
-    # println(get_ohlc(client,
-    #     tick_type="trade",
-    #     symbol="PI_XBTUSD",
-    #     resolution="1m",
-    #     from=1668989233,
-    #     to=1668999233
-    # ))
+    println(get_ohlc(client,
+        tick_type="trade",
+        symbol="PI_XBTUSD",
+        resolution="1m",
+        from=1668989233,
+        to=1668999233
+    ))
 
-    # println(get_tick_types(client))
+    println(get_tick_types(client))
 
-    # println(get_tradeable_products(client, tick_type="mark")) # mark, spot, trade
+    println(get_tradeable_products(client, tick_type="mark")) # mark, spot, trade
 
     println(get_resolutions(
         client,
@@ -73,22 +73,22 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
         tick_type="spot"
     ))
 
-    # println(get_fee_schedules(client))
-    # println(get_fee_schedules_vol(private_client))
+    println(get_fee_schedules(client))
+    println(get_fee_schedules_vol(private_client))
 
-    # println(get_orderbook(client, symbol="PI_XBTUSD"))
+    println(get_orderbook(client, symbol="PI_XBTUSD"))
 
-    # println(get_tickers(client))
+    println(get_tickers(client))
 
-    # println(get_instruments(client))
-    # println(get_instruments_status(client))
-    # println(get_instruments_status(client, instrument="PI_XBTUSD"))
+    println(get_instruments(client))
+    println(get_instruments_status(client))
+    println(get_instruments_status(client, instrument="PI_XBTUSD"))
 
-    # println(get_trade_history(client, symbol="PI_XBTUSD"))
-    # println(get_trade_history(client, lastTime=string(1668989233)))
+    println(get_trade_history(client, symbol="PI_XBTUSD"))
+    println(get_trade_history(client, lastTime=string(1668989233)))
 
 
-    if true
+    if false
         # note: This only work in sanbox environment. I may need a higher Tier 
         # println(get_leverage_preference(private_client))
         # todo: PUT request not working
@@ -103,17 +103,17 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
         # println(set_pnl_currency_preference(private_client, symbol="PI_XBTUSD", pnlPreference="XBT"))
     end
 
-    # println(get_execution_events(private_client))
-    # println(get_public_execution_events(client, tradeable="PI_XBTUSD"))
-    # println(get_public_order_events(client, tradeable="PI_XBTUSD"))
+    println(get_execution_events(private_client))
+    println(get_public_execution_events(client, tradeable="PI_XBTUSD"))
+    println(get_public_order_events(client, tradeable="PI_XBTUSD"))
 
-    # println(get_public_mark_price_events(client, tradeable="PI_XBTUSD"))
+    println(get_public_mark_price_events(client, tradeable="PI_XBTUSD"))
 
-    # println(get_order_events(private_client))
-    # println(get_order_events(private_client, tradeable="PI_XBTUSD", sort="asc", before="1668989233"))
+    println(get_order_events(private_client))
+    println(get_order_events(private_client, tradeable="PI_XBTUSD", sort="asc", before="1668989233"))
 
-    # println(get_trigger_events(private_client))
-    # println(get_trigger_events(private_client, tradeable="PI_XBTUSD", sort="desc", before="1668989233"))
+    println(get_trigger_events(private_client))
+    println(get_trigger_events(private_client, tradeable="PI_XBTUSD", sort="desc", before="1668989233"))
 end
 
 function user_endpoints(client::FuturesBaseRESTAPI)
@@ -280,17 +280,17 @@ function main()
 
     client = FuturesBaseRESTAPI()
     private_client = FuturesBaseRESTAPI(
-        API_KEY=ENV["FUTURES_API_KEY"],
-        SECRET_KEY=ENV["FUTURES_SECRET_KEY"]
+        key=ENV["FUTURES_API_KEY"],
+        secret=ENV["FUTURES_SECRET_KEY"]
     )
 
-    pirivate_sandbox_client = FuturesBaseRESTAPI(
-        API_KEY=ENV["FUTURES_SANDBOX_API_KEY"],
-        SECRET_KEY=ENV["FUTURES_SANDBOX_SECRET_KEY"],
+    private_sandbox_client = FuturesBaseRESTAPI(
+        key=ENV["FUTURES_SANDBOX_API_KEY"],
+        secret=ENV["FUTURES_SANDBOX_SECRET_KEY"],
         DEMO=true
     )
 
-    market_endpoints(client, pirivate_sandbox_client)
+    market_endpoints(client, private_sandbox_client)
     # user_endpoints(private_client)
     # funding_endpoints(private_client)
     # trade_endpoints(private_client)

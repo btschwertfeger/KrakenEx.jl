@@ -21,33 +21,61 @@ function get_deposit_methods(client::SpotBaseRESTAPI; asset::String)
 end
 
 """
-    get_deposit_address(client::SpotBaseRESTAPI; asset::String, method::String, new::Bool=false)
+    get_deposit_address(
+        client::SpotBaseRESTAPI; 
+        asset::String, 
+        method::String, 
+        new::Bool=false
+    )
 
 https://docs.kraken.com/rest/#operation/getDepositAddresses
 """
-function get_deposit_address(client::SpotBaseRESTAPI; asset::String, method::String, new::Bool=false)
+function get_deposit_address(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    method::String,
+    new::Bool=false
+)
     return request(client, "POST", "/private/DepositAddresses", data=Dict{String,Any}([
             "asset" => asset, "method" => method, "new" => string(new)
         ]), auth=true)
 end
 
 """
-    get_recend_deposits_status(client::SpotBaseRESTAPI; asset::String, method::Union{String,Nothing}=nothing)
+    get_recend_deposits_status(
+        client::SpotBaseRESTAPI;
+        asset::String,
+        method::Union{String,Nothing}=nothing
+    )
 
 https://docs.kraken.com/rest/#operation/getStatusRecentDeposits
 """
-function get_recend_deposits_status(client::SpotBaseRESTAPI; asset::String, method::Union{String,Nothing}=nothing)
+function get_recend_deposits_status(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    method::Union{String,Nothing}=nothing
+)
     params = Dict{String,Any}("asset" => asset)
     !isnothing(method) ? params["method"] = method : nothing
     return request(client, "POST", "/private/DepositStatus", data=params, auth=true)
 end
 
 """
-    withdraw_funds(client::SpotBaseRESTAPI; asset::String, key::String, amount::Union{Float64,Int64,String})
+    withdraw_funds(
+        client::SpotBaseRESTAPI;
+        asset::String,
+        key::String,
+        amount::Union{Float64,Int64,String}
+    )
 
 https://docs.kraken.com/rest/#operation/withdrawFunds
 """
-function withdraw_funds(client::SpotBaseRESTAPI; asset::String, key::String, amount::Union{Float64,Int64,String})
+function withdraw_funds(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    key::String,
+    amount::Union{Float64,Int64,String}
+)
     return request(client, "POST", "/private/Withdraw", data=Dict{String,Any}(
             "asset" => asset,
             "key" => key,
@@ -56,11 +84,21 @@ function withdraw_funds(client::SpotBaseRESTAPI; asset::String, key::String, amo
 end
 
 """
-    get_withdrawal_info(client::SpotBaseRESTAPI; asset::String, key::String, amount::Union{Float64,Int64,String})
+    get_withdrawal_info(
+        client::SpotBaseRESTAPI;
+        asset::String, 
+        key::String, 
+        amount::Union{Float64,Int64,String}
+    )
 
 https://docs.kraken.com/rest/#operation/getWithdrawalInformation
 """
-function get_withdrawal_info(client::SpotBaseRESTAPI; asset::String, key::String, amount::Union{Float64,Int64,String})
+function get_withdrawal_info(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    key::String,
+    amount::Union{Float64,Int64,String}
+)
     return request(client, "POST", "/private/WithdrawInfo", data=Dict{String,Any}(
             "amount" => string(amount),
             "asset" => asset,
@@ -69,11 +107,19 @@ function get_withdrawal_info(client::SpotBaseRESTAPI; asset::String, key::String
 end
 
 """
-    get_recend_withdraw_status(client::SpotBaseRESTAPI; asset::String, method::Union{String,Nothing}=nothing)
+    get_recend_withdraw_status(
+        client::SpotBaseRESTAPI; 
+        asset::String,
+        method::Union{String,Nothing}=nothing
+    )
 
 https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals
 """
-function get_recend_withdraw_status(client::SpotBaseRESTAPI; asset::String, method::Union{String,Nothing}=nothing)
+function get_recend_withdraw_status(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    method::Union{String,Nothing}=nothing
+)
     params = Dict{String,Any}("asset" => asset)
     !isnothing(method) ? params["method"] = method : nothing
     return request(client, "POST", "/private/WithdrawStatus", data=params, auth=true)
@@ -92,11 +138,23 @@ function cancel_withdraw(client::SpotBaseRESTAPI; asset::String, refid::String)
 end
 
 """
-    wallet_transfer(client::SpotBaseRESTAPI; asset::String, from::String, to::String, amount::Union{Float64,Int64,String})
+    wallet_transfer(
+        client::SpotBaseRESTAPI;
+        asset::String,
+        from::String,
+        to::String,
+        amount::Union{Float64,Int64,String}
+    )
 
 https://docs.kraken.com/rest/#operation/walletTransfer
 """
-function wallet_transfer(client::SpotBaseRESTAPI; asset::String, from::String, to::String, amount::Union{Float64,Int64,String})
+function wallet_transfer(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    from::String,
+    to::String,
+    amount::Union{Float64,Int64,String}
+)
     return request(client, "POST", "/private/WalletTransfer", data=Dict{String,Any}(
             "asset" => asset,
             "from" => from,

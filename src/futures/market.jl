@@ -203,7 +203,7 @@ function get_pnl_currency_preference(client::FuturesBaseRESTAPI)
 end
 
 """
-set_pnl_currency_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
+    set_pnl_currency_preference(client::FuturesBaseRESTAPI; symbol::String, pnlPreference::String)
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-pnl-currency-preference-for-a-market
 """
@@ -215,7 +215,8 @@ function set_pnl_currency_preference(client::FuturesBaseRESTAPI; symbol::String,
 end
 
 """
-    _get_historical_events(client::FuturesBaseRESTAPI;
+    _get_historical_events(
+        client::FuturesBaseRESTAPI;
         endpoint::String,
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
@@ -226,7 +227,8 @@ end
     )
 
 """
-function _get_historical_events(client::FuturesBaseRESTAPI;
+function _get_historical_events(
+    client::FuturesBaseRESTAPI;
     endpoint::String,
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
@@ -246,7 +248,8 @@ function _get_historical_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_execution_events(client::FuturesBaseRESTAPI;
+    get_execution_events(
+        client::FuturesBaseRESTAPI;
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
         since::Union{Int,String,Nothing}=nothing,
@@ -256,7 +259,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-history-market-history-get-execution-events
 """
-function get_execution_events(client::FuturesBaseRESTAPI;
+function get_execution_events(
+    client::FuturesBaseRESTAPI;
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
     since::Union{Int,String,Nothing}=nothing,
@@ -276,7 +280,8 @@ function get_execution_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_public_execution_events(client::FuturesBaseRESTAPI;
+    get_public_execution_events(
+        client::FuturesBaseRESTAPI;
         tradeable::String,
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
@@ -284,11 +289,11 @@ end
         sort::Union{String,Nothing}=nothing
     )
 
-
 https://docs.futures.kraken.com/#http-api-history-market-history-get-public-execution-events,
 https://support.kraken.com/hc/en-us/articles/4401755685268-Market-History-Executions
 """
-function get_public_execution_events(client::FuturesBaseRESTAPI;
+function get_public_execution_events(
+    client::FuturesBaseRESTAPI;
     tradeable::String,
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
@@ -307,7 +312,8 @@ function get_public_execution_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_public_order_events(client::FuturesBaseRESTAPI;
+    get_public_order_events(
+        client::FuturesBaseRESTAPI;
         tradeable::String,
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
@@ -318,7 +324,8 @@ end
 https://docs.futures.kraken.com/#http-api-history-market-history-get-public-order-events,
 https://support.kraken.com/hc/en-us/articles/4401755906452-Market-History-Orders
 """
-function get_public_order_events(client::FuturesBaseRESTAPI;
+function get_public_order_events(
+    client::FuturesBaseRESTAPI;
     tradeable::String,
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
@@ -337,7 +344,8 @@ function get_public_order_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_public_mark_price_events(client::FuturesBaseRESTAPI;
+    get_public_mark_price_events(
+        client::FuturesBaseRESTAPI;
         tradeable::String,
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
@@ -348,7 +356,8 @@ end
 https://docs.futures.kraken.com/#http-api-history-market-history-get-public-mark-price-events,
 https://support.kraken.com/hc/en-us/articles/4401748276116-Market-History-Mark-Price
 """
-function get_public_mark_price_events(client::FuturesBaseRESTAPI;
+function get_public_mark_price_events(
+    client::FuturesBaseRESTAPI;
     tradeable::String,
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
@@ -367,7 +376,8 @@ function get_public_mark_price_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_order_events(client::FuturesBaseRESTAPI;
+    get_order_events(
+        client::FuturesBaseRESTAPI;
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
         since::Union{Int,String,Nothing}=nothing,
@@ -377,7 +387,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-history-market-history-get-order-events
 """
-function get_order_events(client::FuturesBaseRESTAPI;
+function get_order_events(
+    client::FuturesBaseRESTAPI;
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
     since::Union{Int,Nothing}=nothing,
@@ -397,7 +408,8 @@ function get_order_events(client::FuturesBaseRESTAPI;
 end
 
 """
-    get_trigger_events(client::FuturesBaseRESTAPI;
+    get_trigger_events(
+        client::FuturesBaseRESTAPI;
         before::Union{Int,String,Nothing}=nothing,
         continuation_token::Union{String,Nothing}=nothing,
         since::Union{Int,String,Nothing}=nothing,
@@ -407,7 +419,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-history-market-history-get-trigger-events
 """
-function get_trigger_events(client::FuturesBaseRESTAPI;
+function get_trigger_events(
+    client::FuturesBaseRESTAPI;
     before::Union{Int,String,Nothing}=nothing,
     continuation_token::Union{String,Nothing}=nothing,
     since::Union{Int,String,Nothing}=nothing,

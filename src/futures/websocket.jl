@@ -1,4 +1,4 @@
-module FuturesWebsocketModule
+module FuturesWebSocketModule
 using HTTP
 using Dates: now, Second
 using JSON: json, parse
@@ -12,9 +12,44 @@ export subscribe
 export unsubscribe
 export connect
 
+"""
+    FuturesWebSocketClient
+
+Type that stores information about the client and can be used
+to establish public and private websocket connections for 
+Kraken Futures trading.
+
+### Fields
+
+- `key` -- Kraken Futures API key
+- `secret` -- Kraken Futures Secret key
+- `cancel_public_connection` -- can be set disable the active public websocket connection
+- `cancel_private_connection` -- can be set to disable the active private websocket connection
+
+The following will be managed by the connection:
+- `new_challenge` -- newest signed message
+- `last_challenge` -- last signed message
+- `challenge_ready` -- is set if the challenge is signed
+
+- `url` -- default websocket url for Kraken Futures
+- `active_subscriptions` -- List of active subscribed feeds
+- `pending_subscriptions` -- List of pending subscribtions
+
+- `public_ws` -- Public connected websocket instance
+- `private_ws` -- Private connected websocket instance
+
+- `available_public_feeds` -- List of all public feeds
+- `available_private_feeds` -- List of all private feeds
+
+### Examples
+
+- `FuturesWebSocketClient()` -- default, public client
+
+- `FuturesWebSocketClient("the-api-key", "the-api-secret-key")` -- authenticated client for public and private requests
+"""
 mutable struct FuturesWebSocketClient
-    API_KEY::Union{String,Nothing}
-    SECRET_KEY::Union{String,Nothing}
+    key::Union{String,Nothing}
+    secret::Union{String,Nothing}
 
     new_challenge::Union{String,Nothing}
     last_challenge::Union{String,Nothing}
@@ -23,7 +58,6 @@ mutable struct FuturesWebSocketClient
     url::String
     active_subscriptions::Vector{Dict{String,Any}}
     pending_subscriptions::Vector{Dict{String,Any}}
-    pending_messages::Vector{Dict{String,Any}}
 
     public_ws::Union{HTTP.WebSockets.WebSocket,Nothing}
     private_ws::Union{HTTP.WebSockets.WebSocket,Nothing}
@@ -41,7 +75,7 @@ mutable struct FuturesWebSocketClient
         nothing,                    # last_challenge
         false,                      # challenge_ready
         "futures.kraken.com/ws/v1", # url
-        [], [], [],                 # misc
+        [], [],                     # misc
         nothing, nothing,           # connections
         false, false,               # cancel connections
         ["trade", "book", "ticker", "ticker_lite", "heartbeat"],
@@ -60,7 +94,7 @@ mutable struct FuturesWebSocketClient
         nothing,                        # last_challenge
         false,                          # challenge_ready
         "futures.kraken.com/ws/v1",     # url
-        [], [], [],                     # misc
+        [], [],                         # misc
         nothing, nothing,               # connections
         false, false,                   # cancel connections
         ["trade", "book", "ticker", "ticker_lite", "heartbeat"],
@@ -75,20 +109,36 @@ mutable struct FuturesWebSocketClient
 end
 
 """
-    subscribe(; client::FuturesWebSocketClient, feed::String, products::Union{Vector{String},Nothing}=nothing)
+    subscribe(; 
+        client::FuturesWebSocketClient,
+        feed::String,
+        products::Union{Vector{String},Nothing}=nothing
+    )
 
 Subscribe to a websocket feed.
 """
-function subscribe(; client::FuturesWebSocketClient, feed::String, products::Union{Vector{String},Nothing}=nothing)
+function subscribe(;
+    client::FuturesWebSocketClient,
+    feed::String,
+    products::Union{Vector{String},Nothing}=nothing
+)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(client, feed, "subscribe", products)]
 end
 
 """
-    unsubscribe(; client::FuturesWebSocketClient, feed::String, products::Union{Vector{String},Nothing}=nothing)
+    unsubscribe(;
+        client::FuturesWebSocketClient,
+        feed::String,
+        products::Union{Vector{String},Nothing}=nothing
+    )
 
 Unsubscribe from a subscribed feed.
 """
-function unsubscribe(; client::FuturesWebSocketClient, feed::String, products::Union{Vector{String},Nothing}=nothing)
+function unsubscribe(;
+    client::FuturesWebSocketClient,
+    feed::String,
+    products::Union{Vector{String},Nothing}=nothing
+)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(client, feed, "unsubscribe", products)]
 end
 
@@ -100,7 +150,7 @@ Requests and wait for a new challenge to create a private request.
 function wait_check_challenge_ready(client::FuturesWebSocketClient)
     WebSockets.send(client.private_ws, json(Dict{String,Any}(
         "event" => "challenge",
-        "api_key" => client.API_KEY
+        "key" => client.key
     )))
 
     wait(@async while !client.challenge_ready
@@ -123,13 +173,13 @@ function send_message(
     private::Bool=false
 )
     if private
-        if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
+        if isnothing(client.key) || isnothing(client.secret)
             throw(KrakenAuthenticationError("Cannot access private endpoints using an unauthenticated client."))
         elseif !client.challenge_ready
             wait_check_challenge_ready(client)
         end
 
-        message["api_key"] = client.API_KEY
+        message["key"] = client.key
         message["original_challenge"] = client.last_challenge
         message["signed_challenge"] = client.new_challenge
         WebSockets.send(client.private_ws, json(message))
@@ -143,12 +193,21 @@ function send_message(
 end
 
 """
-    build_subscriptions(client::FuturesWebSocketClient, feed::String, event::String, products::Union{Vector{String},Nothing}=nothing)
+    build_subscriptions(
+        client::FuturesWebSocketClient,
+        feed::String,
+        event::String,
+        products::Union{Vector{String},Nothing}=nothing
+    )
 
 Builds sub- and unsubscription payloads.
 """
-function build_subscriptions(client::FuturesWebSocketClient, feed::String, event::String, products::Union{Vector{String},Nothing}=nothing)
-
+function build_subscriptions(
+    client::FuturesWebSocketClient,
+    feed::String,
+    event::String,
+    products::Union{Vector{String},Nothing}=nothing
+)
     if feed ∈ client.available_public_feeds
         if isnothing(products)
             return Vector{Dict{String,Any}}([Dict{String,Any}(
@@ -222,7 +281,7 @@ function get_sign_challenge(client::FuturesWebSocketClient, challenge::String)
         transcode(
             String, digest(
                 "sha512",
-                base64decode(client.SECRET_KEY), # decoded 
+                base64decode(client.secret), # decoded 
                 transcode(String, digest("sha256", challenge)) # message
             )
         )
@@ -284,12 +343,20 @@ function parse_message(client::FuturesWebSocketClient, msg::String)
 end
 
 """
-    establish_connection(client::FuturesWebSocketClient, callback::Core.Function, private::Bool=false)
+    establish_connection(
+        client::FuturesWebSocketClient,
+        callback::Core.Function,
+        private::Bool=false
+    )
 
 Can create both, private and public websocket connections to send the received messages to
 the callback function.
 """
-function establish_connection(client::FuturesWebSocketClient, callback::Core.Function, private::Bool=false)
+function establish_connection(
+    client::FuturesWebSocketClient,
+    callback::Core.Function,
+    private::Bool=false
+)
 
     return @async WebSockets.open("wss://" * client.url) do ws
 
@@ -339,9 +406,9 @@ end
 
 """
     connect(
-        client::FuturesWebSocketClient; 
-        callback::Core.Function, 
-        public::Bool=true, 
+        client::FuturesWebSocketClient;
+        callback::Core.Function,
+        public::Bool=true,
         private::Bool=false
     )
 
@@ -351,7 +418,12 @@ and unsubscribed after a successful connection. This function must be invoked us
 websocket connections and privat feed subscriptions requre valid API keys on the passed 
 `FuturesWebSocketClient` object.
 """
-function connect(client::FuturesWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=false)
+function connect(
+    client::FuturesWebSocketClient;
+    callback::Core.Function,
+    public::Bool=true,
+    private::Bool=false
+)
 
     !public && !private ? error("No connection established, because public and private was set to false") : nothing
 
@@ -368,7 +440,7 @@ function connect(client::FuturesWebSocketClient; callback::Core.Function, public
         public_task = nothing
     end
 
-    if !isnothing(client.API_KEY) && !isnothing(client.SECRET_KEY) && private
+    if !isnothing(client.key) && !isnothing(client.secret) && private
         @async while !client.cancel_private_connection
             client.challenge_ready = false
             private_task = establish_connection(client, callback, true)

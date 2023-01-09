@@ -3,7 +3,7 @@ module futures_websocket_example
 using DotEnv
 
 include("../src/KrakenEx.jl")
-using .KrakenEx.FuturesWebsocketModule:
+using .KrakenEx.FuturesWebSocketModule:
     FuturesWebSocketClient,
     connect,
     subscribe,
@@ -53,7 +53,7 @@ function main()
     sleep(2)
 
     #== Unsubscribe from public and private websocket feeds ==#
-    # unsubscribe(client=ws_client, feed="ticker", products=["PF_SOLUSD"])
+    unsubscribe(client=ws_client, feed="ticker", products=["PF_SOLUSD"])
     # unsubscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD"])
     # unsubscribe(client=ws_client, feed="fills")
     # unsubscribe(client=ws_client, feed="open_orders")

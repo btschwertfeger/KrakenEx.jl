@@ -11,10 +11,34 @@ using StringEncodings: encode
 export FuturesBaseRESTAPI
 export request
 
-Base.@kwdef struct FuturesBaseRESTAPI
-    API_KEY::Union{String,Nothing} = nothing
-    SECRET_KEY::Union{String,Nothing} = nothing
+"""
+    FuturesBaseRESTAPI
 
+Type that stores information about the client and can be used
+to access public and private endpoints of the Kraken API for 
+Futures trading.
+
+### Fields
+
+- `key`  -- Kraken Futures API key
+- `secret` -- Kraken Futures Secret key
+
+Defualt:
+- `BASE_URL`  -- Kraken Futures API base url (default: "https://futures.kraken.com")
+- `DEMO_URL`  -- Kraken Futures API demo environment url (default: "https://demo-futures.kraken.com")
+- `DEMO`  -- Switch to use demo environment (default: false)
+- `TIMEOUT`  -- Request timeout (default: 10)
+- `HEADERS`  -- Default headers (default: ["User-Agent" => "KrakenEx.jl"])
+
+### Examples
+
+- `FuturesBaseRESTAPI()` -- default, public client
+
+- `FuturesBaseRESTAPI(key="the-api-key", secret="the-api-secret-key")` -- authenticated client for public and private requests
+"""
+Base.@kwdef struct FuturesBaseRESTAPI
+    key::Union{String,Nothing} = nothing
+    secret::Union{String,Nothing} = nothing
     BASE_URL::String = "https://futures.kraken.com"
     DEMO_URL::String = "https://demo-futures.kraken.com"
     DEMO::Bool = false
@@ -22,44 +46,11 @@ Base.@kwdef struct FuturesBaseRESTAPI
     HEADERS::Vector{Pair{String,String}} = ["User-Agent" => "KrakenEx.jl"]
 end
 
-# struct FuturesBaseRESTAPI
-#     API_KEY::Union{String,Nothing}
-#     SECRET_KEY::Union{String,Nothing}
-
-#     BASE_URL::String
-#     TIMEOUT::Int64
-#     HEADERS::Vector{Pair{String,String}}
-
-#     FuturesBaseRESTAPI(beta::Bool=false) = new(
-#         nothing,                        # key
-#         nothing,                        # secret
-#         beta ? "demo-futures.kraken.com" : "https://futures.kraken.com",   # url 
-#         10,                             # timeout
-#         Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
-#     )
-
-#     FuturesBaseRESTAPI(
-#         key::String,
-#         secret::String,
-#         url::String="https://futures.kraken.com",
-#         timeout::Int64=0,
-#         beta::Bool=false
-#     ) = new(
-#         key,
-#         secret,
-#         beta ? "demo-futures.kraken.com" : url,
-#         timeout,
-#         Vector{Pair{String,String}}([
-#             "User-Agent" => "KrakenEx.jl",
-#             "APIKey" => key
-#         ])
-#     )
-# end
 
 """
     handle_error(kind::String,message::Dict{String,Any})
 
-TBW
+Handles the error of a request.
 """
 function handle_error(kind::String, data::Dict{String,Any})
     if kind == "check"
@@ -114,7 +105,7 @@ end
 """
     handle_response(response::Response, return_raw::Bool=false)
 
-Handles incoming responses.
+Handles incoming responses, returns the response and/or handles the error.
 """
 function handle_response(response::Response, return_raw::Bool=false)
     if response.status ∈ ["200", 200]
@@ -158,7 +149,7 @@ end
         auth::Bool=false
     )
 
-TBW
+Manages sending requests to Kraken, handles errors and returns the responses. 
 """
 function request(
     client::FuturesBaseRESTAPI,
@@ -189,7 +180,7 @@ function request(
     end
 
     if auth
-        if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
+        if isnothing(client.key) || isnothing(client.secret)
             throw(KrakenAuthenticationError(
                 message="Valid API keys are required for accessing private endpoints."
             ))
@@ -198,8 +189,8 @@ function request(
         nonce = get_nonce() * "0001"
         for value ∈ [
             "Nonce" => nonce,
-            "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8",#do_json ? "application/json" : "application/x-www-form-urlencoded; charset=utf-8",
-            "APIKey" => client.API_KEY,
+            "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8",
+            "APIKey" => client.key,
             "Authent" => get_kraken_signature(client, uri, query_string * (!do_json ? post_string : "json=" * (post_params)), nonce)
         ]
             push!(headers, value)
@@ -246,7 +237,23 @@ function request(
     end
 end
 
-function get_kraken_signature(client::FuturesBaseRESTAPI, endpoint::String, data::String, nonce::String)
+"""
+    get_kraken_signature(
+        client::FuturesBaseRESTAPI,
+        endpoint::String,
+        data::String, 
+        nonce::String
+    )
+
+Returns a signed message based on `endpoint`, `data` and `nonce` using the `secret` - key
+of the `client::FuturesBaseRESTAPI`.
+"""
+function get_kraken_signature(
+    client::FuturesBaseRESTAPI,
+    endpoint::String,
+    data::String,
+    nonce::String
+)
     if startswith(endpoint, "/derivatives")
         endpoint = endpoint[begin+length("/derivatives"):end]
     end
@@ -255,7 +262,7 @@ function get_kraken_signature(client::FuturesBaseRESTAPI, endpoint::String, data
         transcode(
             String, digest(
                 "sha512",
-                base64decode(client.SECRET_KEY), # decoded 
+                base64decode(client.secret), # decoded 
                 transcode(
                     String,
                     digest(

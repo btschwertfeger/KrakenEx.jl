@@ -15,6 +15,33 @@ export cancel_order
 export cancel_all_orders
 export cancel_all_orders_after_x
 
+"""
+SpotWebSocketClient
+
+Type that stores information about the client and can be used
+to establish public and private websocket connections for 
+Kraken Spot trading.
+
+### Fields
+
+- `key` -- Kraken Spot API key
+- `secret` -- Kraken Spot Secret key
+- `cancel_public_connection` -- can be set disable the active public websocket connection
+- `cancel_private_connection` -- can be set to disable the active private websocket connection
+
+The following will be managed by the connection:
+- `public_url` -- default websocket url for Kraken public Spot trading (default: "ws.kraken.com")
+- `private_url` -- default websocket url for Kraken private Spot trading (default: "ws-auth.kraken.com")
+- `active_subscriptions` -- List of active subscribed feeds
+- `pending_subscriptions` -- List of pending subscribtions
+- `pending_messages` -- List of pending messages (e.g. `create_order` events)
+
+### Examples
+
+- `SpotWebSocketClient()` -- default, public client
+
+- `SpotWebSocketClient("the-api-key", "the-api-secret-key")` -- authenticated client for public and private requests
+"""
 mutable struct SpotWebSocketClient
     public_client::SpotBaseRESTAPI
     private_client::Union{SpotBaseRESTAPI,Nothing}
@@ -38,10 +65,11 @@ mutable struct SpotWebSocketClient
         [], [], [],
         false, false
     )
+
     SpotWebSocketClient(key::String, secret::String) = new(
         SpotBaseRESTAPI(),
-        SpotBaseRESTAPI(key, secret),
-        get_websockets_token(SpotBaseRESTAPI(key, secret))["token"],
+        SpotBaseRESTAPI(key=key, secret=secret),
+        get_websockets_token(SpotBaseRESTAPI(key=key, secret=secret))["token"],
         "ws.kraken.com",
         "ws-auth.kraken.com",
         [], [], [],
@@ -50,11 +78,21 @@ mutable struct SpotWebSocketClient
 end
 
 """
-    send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
+    send_message(;
+        ws::HTTP.WebSockets.WebSocket,
+        client::SpotWebSocketClient,
+        message::Dict{String,Any},
+        private::Bool=false
+    )
 
 Sends a (optional: signed) message via the websocket connection.
 """
-function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
+function send_message(;
+    ws::HTTP.WebSockets.WebSocket,
+    client::SpotWebSocketClient,
+    message::Dict{String,Any},
+    private::Bool=false
+)
     if haskey(message, "subscription") && private
         message["subscription"]["token"] = client.private_ws_token
     elseif private
@@ -65,29 +103,53 @@ function send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClie
 end
 
 """
-    subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+    subscribe(;
+        client::SpotWebSocketClient,
+        subscription::Dict{String,Any},
+        pairs::Union{Vector{String},Nothing}=nothing
+    )
 
 Subscribe to a websocket feed.
 """
-function subscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+function subscribe(;
+    client::SpotWebSocketClient,
+    subscription::Dict{String,Any},
+    pairs::Union{Vector{String},Nothing}=nothing
+)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="subscribe", pairs=pairs)]
 end
 
 """
-    unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+    unsubscribe(;
+        client::SpotWebSocketClient,
+        subscription::Dict{String,Any},
+        pairs::Union{Vector{String},Nothing}=nothing
+    )
 
 Unsubscribe from a subscribed feed.
 """
-function unsubscribe(; client::SpotWebSocketClient, subscription::Dict{String,Any}, pairs::Union{Vector{String},Nothing}=nothing)
+function unsubscribe(;
+    client::SpotWebSocketClient,
+    subscription::Dict{String,Any},
+    pairs::Union{Vector{String},Nothing}=nothing
+)
     [push!(client.pending_subscriptions, sub) for sub ∈ build_subscriptions(subscription=subscription, event="unsubscribe", pairs=pairs)]
 end
 
 """
-    build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
+    build_subscriptions(;
+        subscription::Dict{String,Any},
+        event::String,
+        pairs::Union{Vector{String},Nothing}=nothing
+    )
 
 Builds sub- and unsubscription payloads.
 """
-function build_subscriptions(; subscription::Dict{String,Any}, event::String, pairs::Union{Vector{String},Nothing}=nothing)
+function build_subscriptions(;
+    subscription::Dict{String,Any},
+    event::String,
+    pairs::Union{Vector{String},Nothing}=nothing
+)
     subscriptions::Vector{Dict{String,Any}} = []
 
     if !isnothing(pairs)
@@ -109,12 +171,20 @@ function build_subscriptions(; subscription::Dict{String,Any}, event::String, pa
 end
 
 """
-    check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
+    check_pending_subscriptions(
+        client::SpotWebSocketClient,
+        ws::HTTP.WebSockets.WebSocket,
+        private::Bool
+    )
 
 Iterates over the pending subscriptions and calls the `send_message` function 
 to request the subscription to Kraken.
 """
-function check_pending_subscriptions(client::SpotWebSocketClient, ws::HTTP.WebSockets.WebSocket, private::Bool)
+function check_pending_subscriptions(
+    client::SpotWebSocketClient,
+    ws::HTTP.WebSockets.WebSocket,
+    private::Bool
+)
     public_sub_names::Vector{String} = ["ticker", "spread", "book", "ohlc", "trade", "*"]
     private_sub_names::Vector{String} = ["ownTrades", "openOrders"]
 
@@ -199,12 +269,20 @@ function parse_message(client::SpotWebSocketClient, msg::String)
 end
 
 """
-    establish_connection(client::SpotWebSocketClient, callback::Core.Function, private::Bool)
+    establish_connection(
+        client::SpotWebSocketClient,
+        callback::Core.Function,
+        private::Bool
+    )
 
 Can create both, private and public websocket connections to send the received messages to
 the callback function.
 """
-function establish_connection(client::SpotWebSocketClient, callback::Core.Function, private::Bool)
+function establish_connection(
+    client::SpotWebSocketClient,
+    callback::Core.Function,
+    private::Bool
+)
     url::String = private ? client.private_url : client.public_url
 
     private ? auth = "private" : auth = "public"
@@ -248,7 +326,12 @@ function establish_connection(client::SpotWebSocketClient, callback::Core.Functi
 end
 
 """
-    connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=true)
+    connect(
+        client::SpotWebSocketClient;
+        callback::Core.Function,
+        public::Bool=true,
+        private::Bool=false
+    )
 
 Can create up to two (one private and one public) websocket connections. The public and/or private
 websocket object will be stored within the `SpotWebSocketClient`. Websocket feeds can be subscribed
@@ -256,7 +339,12 @@ and unsubscribed after a successful connection. This function must be invoked us
 websocket connections and privat feed subscriptions requre valid API keys on the passed 
 `SpotWebSocketClient` object.
 """
-function connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=false)
+function connect(
+    client::SpotWebSocketClient;
+    callback::Core.Function,
+    public::Bool=true,
+    private::Bool=false
+)
 
     !public && !private ? error("No connection established, because public and private was set to false") : nothing
 

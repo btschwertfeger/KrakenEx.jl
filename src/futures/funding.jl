@@ -20,7 +20,8 @@ function get_historical_funding_rates(client::FuturesBaseRESTAPI; symbol::String
 end
 
 """
-    initiate_wallet_transfer(client::FuturesBaseRESTAPI;
+    initiate_wallet_transfer(
+        client::FuturesBaseRESTAPI;
         amount::Union{String,Float64,Int},
         fromAccount::String,
         toAccount::String,
@@ -29,7 +30,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer
 """
-function initiate_wallet_transfer(client::FuturesBaseRESTAPI;
+function initiate_wallet_transfer(
+    client::FuturesBaseRESTAPI;
     amount::Union{String,Float64,Int},
     fromAccount::String,
     toAccount::String,
@@ -44,7 +46,8 @@ function initiate_wallet_transfer(client::FuturesBaseRESTAPI;
 end
 
 """
-    initiate_subccount_transfer(client::FuturesBaseRESTAPI;
+    initiate_subccount_transfer(
+        client::FuturesBaseRESTAPI;
         amount::Union{String,Float64,Int},
         fromAccount::String,
         toAccount::String,
@@ -55,7 +58,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer
 """
-function initiate_subccount_transfer(client::FuturesBaseRESTAPI;
+function initiate_subccount_transfer(
+    client::FuturesBaseRESTAPI;
     amount::Union{String,Float64,Int},
     fromAccount::String,
     toAccount::String,
@@ -74,7 +78,8 @@ function initiate_subccount_transfer(client::FuturesBaseRESTAPI;
 end
 
 """
-    initiate_withdrawal_to_spot_wallet(client::FuturesBaseRESTAPI;
+    initiate_withdrawal_to_spot_wallet(
+        client::FuturesBaseRESTAPI;
         amount::Union{String,Int,Float64},
         currency::String,
         sourceWallet::Union{String,Nothing}
@@ -82,7 +87,8 @@ end
 
 https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet
 """
-function initiate_withdrawal_to_spot_wallet(client::FuturesBaseRESTAPI;
+function initiate_withdrawal_to_spot_wallet(
+    client::FuturesBaseRESTAPI;
     amount::Union{String,Int,Float64},
     currency::String,
     sourceWallet::Union{String,Nothing}=nothing

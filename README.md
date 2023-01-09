@@ -6,6 +6,9 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Generic badge](https://img.shields.io/badge/julia-1.8+-orange.svg)](https://shields.io/)
 
+[![CI](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml)
+[![Documentation](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml/badge.svg)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml)
+
 </div>
 
 <h3>
@@ -119,7 +122,10 @@ function main()
     secret = "Kraken-secret-key"
 
     client = SpotBaseRESTAPI() # public client
-    private_client = SpotBaseRESTAPI(key,secret) # authenticated client
+    private_client = SpotBaseRESTAPI(
+        key=key,
+        secret=secret
+    ) # authenticated client
 
     #===== User Endpoints =====#
     println(get_account_balance(private_client))
@@ -167,7 +173,7 @@ main()
 
 ## Websockets
 
-... can be found in `/examples/spot_websockets_example.jl`
+... can be found in `/examples/spot_websocket_example.jl`
 
 ```julia
 
@@ -251,20 +257,18 @@ using KrakenEx.FuturesTradeModule
 using KrakenEx.FuturesFundingModule
 
 function main()
-    key = "Kraken-public-key"
-    secret = "Kraken-secret-key"
 
     # private clients can also access public endpoints
     private_client = FuturesBaseRESTAPI(
-        API_KEY=key,
-        SECRET_KEY=secret
+        key="Kraken-public-key",
+        secret="Kraken-secret-key"
     )
 
-    sandbox_client = FuturesBaseRESTAPI(
-        API_KEY=key,
-        SECRET_KEY=secret,
-        DEMO=true
-    )
+    # sandbox_client = FuturesBaseRESTAPI(
+    #     API_KEY=key,
+    #     SECRET_KEY=secret,
+    #     DEMO=true
+    # )
 
     #==== User Endpoints ====#
     println(get_wallets(private_client))
@@ -350,11 +354,11 @@ main()
 
 ## Futures Websocket Client
 
-The following example can be found in `/examples/futures_ws_example.jl`.
+The following example can be found in `/examples/futures_websocket_example.jl`.
 
 ```julia
 using KrakenEx
-using .KrakenEx.FuturesWebsocketModule:
+using .KrakenEx.FuturesWebSocketModule:
     FuturesWebSocketClient,
     connect,
     subscribe, unsubscribe
@@ -623,7 +627,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 ## FuturesWebSocketClient
 
-`KrakenEx.FuturesWebsocketModule`
+`KrakenEx.FuturesWebSocketModule`
 
 | Method                   | Documentation                                                  |
 | ------------------------ | -------------------------------------------------------------- |
