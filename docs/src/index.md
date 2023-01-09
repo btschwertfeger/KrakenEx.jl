@@ -5,10 +5,12 @@ Futures and Spot Websocket and REST API Julia SDK for the Kraken Cryptocurrency 
 [![GitHub](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/btschwertfeger/KrakenEx.jl)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Generic badge](https://img.shields.io/badge/julia-1.8+-orange.svg)](https://shields.io/)
+[![CI](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml)
+[![Documentation](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml/badge.svg)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml)
 
 This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia.
 
----
+This project is based on the (python-kraken-sdk)[https://github.com/btschwertfeger/python-kraken-sdk].
 
 ## Disclaimer
 
@@ -44,15 +46,15 @@ Pkg.add("KrakenEx")
 
 ### 2. Register at Kraken and generate API Keys:
 
-- Spot Trading: https://www.kraken.com/u/security/api
-- Futures Trading: https://futures.kraken.com/trade/settings/api
-- Futures Sandbox: https://demo-futures.kraken.com/settings/api
+- Spot Trading: (https://www.kraken.com/u/security/api)[https://www.kraken.com/u/security/api]
+- Futures Trading: (https://futures.kraken.com/trade/settings/api)[https://futures.kraken.com/trade/settings/api]
+- Futures Sandbox: (https://demo-futures.kraken.com/settings/api)[https://demo-futures.kraken.com/settings/api]
 
 ### 3. Start using the provided example scripts
 
 ### 4. Error handling
 
-If any unexpected behavior occurs, please check your API permissions, rate limits, update the KrakenEx.jl, see the [Troubleshooting](@ref) Troubleshooting section, and if the error persits please open an issue on GitHub.
+If any unexpected behavior occurs, please check your API permissions, rate limits, update the [KrakenEx.jl](@ref) package, see the [Troubleshooting](@ref) Troubleshooting section, and if the error persits please open an issue on GitHub.
 
 ---
 
@@ -65,15 +67,13 @@ If any unexpected behavior occurs, please check your API permissions, rate limit
 
 ---
 
-## 📝 Notes
-
-- Pull requests will be ignored until the owner finished the core idea
+## Notes
 
 - Coding standards are not always followed to make arguments and function names as similar as possible to those in the Kraken API documentations.
 
 - When calling endpoints for examlpe the futures funding endpoint and you submit spaces, braces,... in strings like `" )|] "` a KrakenAuthenticationError will be raised.
 
-## 🔭 References
+## References
 
 - [https://docs.kraken.com/rest](https://docs.kraken.com/rest)
 - [https://docs.kraken.com/websockets](https://docs.kraken.com/websockets)

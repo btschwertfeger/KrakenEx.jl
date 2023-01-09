@@ -21,11 +21,12 @@ using KrakenEx.SpotStakingModule
 # you can also import all specific functions separate like shown in `/examples/spot_rest_examples.jl`
 
 function main()
-    key = "Kraken-public-key"
-    secret = "Kraken-secret-key"
 
     client = SpotBaseRESTAPI() # public client
-    private_client = SpotBaseRESTAPI(key,secret) # authenticated client
+    private_client = SpotBaseRESTAPI(
+        key="Kraken-public-key",
+        secret="Kraken-secret-key"
+    ) # authenticated client
 
     #===== User Endpoints =====#
     println(get_account_balance(private_client))
