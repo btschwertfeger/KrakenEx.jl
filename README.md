@@ -638,7 +638,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 # 🚨 Troubleshooting
 
-- Check if your version of <b>python-kraken-sdk version</b> is the newest.
+- Check if your version of <b>KrakenEx.jl version</b> is the newest.
 - Check the <b>permissions of your API keys</b> and the required permissions on the respective endpoints.
 - If you get some cloudflare or <b>rate limit errors</b>, please check your Kraken Tier level and maybe apply for a higher rank if required.
 - <b>Use different API keys for different algorithms</b>, because the nonce calculation is based on timestamps and a sent nonce must always be the highest nonce ever sent of that API key. Having multiple algorithms using the same keys will result in invalid nonce errors.
@@ -650,7 +650,6 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 # 📝 Notes:
 
 - Pull requests will be ignored until the owner finished the core idea
-<!-- - Triggers: stop-loss, stop-loss-limit, take-profit and take-profit-limit orders. -->
 
 - Coding standards are not always followed to make arguments and function names as similar as possible to those in the Kraken API documentations.
 
@@ -666,9 +665,3 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 - https://support.kraken.com/hc/en-us/sections/360012894412-Futures-API
 
 ---
-
-## Notes
-
-```julia
-import Pkg; Pkg.precompile()
-```
