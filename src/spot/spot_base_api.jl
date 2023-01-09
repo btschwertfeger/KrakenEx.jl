@@ -1,5 +1,6 @@
 module SpotBaseAPIModule
 using ..Utils: get_nonce
+using ..ExceptionsModule: get_exception
 using Base64: base64decode, base64encode
 using HTTP: Messages.Response, escapeuri, get, post
 using JSON: json, parse
@@ -46,18 +47,33 @@ struct SpotBaseRESTAPI
     )
 end
 
-function handle_error(error_string::String)
-    # todo: check which error and than throw specific kraken exception
-    error(error_string)
-end
+"""
+    handle_error(data::Dict{String,Any})
 
+Check if the error message is a known Kraken error response
+than raise a custom exception or return the data containing the 'error'
+"""
+function handle_error(data::Dict{String,Any})
+    if length(data["error"]) == 0 && haskey(data, "result")
+        return data["result"]
+    end
+
+    exception = get_exception(data["error"][begin])
+    if !isnothing(exception)
+        throw(exception(message=json(data)))
+    else
+        return data
+    end
+end
 """
     handle_response(response::Response, return_raw::Bool=false)
 
 Handles incoming responses.
 """
 function handle_response(response::Response, return_raw::Bool=false)
-    if return_raw
+    if response.status ∉ ["200", 200]
+        error(response.status * ": " * String(response.body))
+    elseif return_raw
         return response.body
     end
 
@@ -65,11 +81,11 @@ function handle_response(response::Response, return_raw::Bool=false)
     try
         response_json = parse(String(response.body))
     catch error
-        return handle_error(string(error))
+        error("Could not parse response.")
     end
 
-    if response_json["error"] ≠ []
-        handle_error(string(response_json["error"][begin]))
+    if haskey(response_json, "error") && response_json["error"] ≠ []
+        handle_error(response_json)
     else
         return response_json["result"]
     end
@@ -100,33 +116,28 @@ function request(
     url = client.BASE_URL * "/" * string(client.API_V) * endpoint
     headers = deepcopy(client.HEADERS)
 
-    try
-        if type == "GET"
-            return handle_response(get(url, headers=headers, query=data, readtimeout=client.TIMEOUT), return_raw)
-        elseif type == "POST"
-            if auth
-                if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
-                    error("Valid API Keys are required for accessing private endpoints.")
-                end
-
-                nonce = get_nonce()
-                data["nonce"] = nonce
-
-                if do_json
-                    data = json(data)
-                    push!(headers, "Content-Type" => "application/json")
-                else
-                    push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
-                end
-
-                push!(headers, "API-Sign" => get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce))
+    if type == "GET"
+        return handle_response(get(url, headers=headers, query=data, readtimeout=client.TIMEOUT), return_raw)
+    elseif type == "POST"
+        if auth
+            if isnothing(client.API_KEY) || isnothing(client.SECRET_KEY)
+                error("Valid API Keys are required for accessing private endpoints.")
             end
 
-            return handle_response(post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
+            nonce = get_nonce()
+            data["nonce"] = nonce
+
+            if do_json
+                data = json(data)
+                push!(headers, "Content-Type" => "application/json")
+            else
+                push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
+            end
+
+            push!(headers, "API-Sign" => get_kraken_signature(client, endpoint=endpoint, data=data, nonce=nonce))
         end
 
-    catch err
-        error(string(err))
+        return handle_response(post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
     end
 end
 

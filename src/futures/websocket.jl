@@ -308,21 +308,19 @@ function establish_connection(client::FuturesWebSocketClient, callback::Core.Fun
 
         recover_subscriptions(client)
 
+        last_ping_time = now()
         @async while true
             check_pending_subscriptions(client, private)
-            check_pending_messages(client)
-            sleep(0.1)
+            if last_ping_time < now() - Second(15)
+                WebSockets.ping(ws)
+                last_ping_time = now()
+            end
+            sleep(0.25)
         end
 
-        last_ping_time = now()
         msg::Union{String,Dict{String,Any},Nothing} = nothing
         try
             for msg ∈ ws
-                if last_ping_time < now() - Second(15)
-                    WebSockets.ping(ws)
-                    last_ping_time = now()
-                end
-
                 if !isnothing(msg)
                     msg = parse_message(client, msg)
                     !isnothing(msg) ? callback(msg) : nothing
@@ -348,10 +346,10 @@ end
     )
 
 Can create up to two (one private and one public) websocket connections. The public and/or private
-websocket object will be stored within the FuturesWebSocketClient. Websocket feeds can be subscribed
+websocket object will be stored within the `FuturesWebSocketClient`. Websocket feeds can be subscribed
 and unsubscribed after a successful connection. This function must be invoked using `@async`. Private 
 websocket connections and privat feed subscriptions requre valid API keys on the passed 
-FuturesWebSocketClient object.
+`FuturesWebSocketClient` object.
 """
 function connect(client::FuturesWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=false)
 

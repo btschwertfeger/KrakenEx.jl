@@ -29,11 +29,13 @@ end
 
 https://docs.kraken.com/rest/#operation/unstake
 """
-function unstake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String})
-    return request(client, "POST", "/private/Unstake", data=Dict{String,Any}(
-            "asset" => asset,
-            "amount" => string(amount)
-        ), auth=true)
+function unstake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String}, method::Union{String,Nothing}=nothing)
+    params::Dict{String,Any} = Dict{String,Any}(
+        "asset" => asset,
+        "amount" => string(amount)
+    )
+    !isnothing(method) ? params["method"] = method : nothing
+    return request(client, "POST", "/private/Unstake", data=params, auth=true)
 end
 
 """

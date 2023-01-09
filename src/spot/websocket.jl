@@ -49,8 +49,6 @@ mutable struct SpotWebSocketClient
     )
 end
 
-
-
 """
     send_message(; ws::HTTP.WebSockets.WebSocket, client::SpotWebSocketClient, message::Dict{String,Any}, private::Bool=false)
 
@@ -252,8 +250,11 @@ end
 """
     connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=true)
 
-Connects to public Kraken Websocket API and also to the private feed if the 
-`SpotWebSocketClient` has assigned credentials. Messages are filtered and forwarded to the callback function.
+Can create up to two (one private and one public) websocket connections. The public and/or private
+websocket object will be stored within the `SpotWebSocketClient`. Websocket feeds can be subscribed
+and unsubscribed after a successful connection. This function must be invoked using `@async`. Private 
+websocket connections and privat feed subscriptions requre valid API keys on the passed 
+`SpotWebSocketClient` object.
 """
 function connect(client::SpotWebSocketClient; callback::Core.Function, public::Bool=true, private::Bool=false)
 

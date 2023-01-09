@@ -1,48 +1,60 @@
 module FuturesBaseAPIModule
-using ..Utils: get_nonce
 using ..ExceptionsModule: get_exception
-using JSON: parse, json
-using HTTP: get, delete, post, put, escapeuri, Messages.Response
+using ..Utils: get_nonce
 using Base64: base64decode, base64encode
+using HTTP: Messages.Response, delete, escapeuri, get, post, put
+using JSON: json, parse
 using Nettle: digest
+using StringEncodings: encode
 
 #======= E X P O R T S ========#
 export FuturesBaseRESTAPI
 export request
 
-struct FuturesBaseRESTAPI
-    API_KEY::Union{String,Nothing}
-    SECRET_KEY::Union{String,Nothing}
+Base.@kwdef struct FuturesBaseRESTAPI
+    API_KEY::Union{String,Nothing} = nothing
+    SECRET_KEY::Union{String,Nothing} = nothing
 
-    BASE_URL::String
-    TIMEOUT::Int64
-    HEADERS::Vector{Pair{String,String}}
-
-    FuturesBaseRESTAPI(beta::Bool=false) = new(
-        nothing,                        # key
-        nothing,                        # secret
-        beta ? "demo-futures.kraken.com" : "https://futures.kraken.com",   # url 
-        10,                             # timeout
-        Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
-    )
-
-    FuturesBaseRESTAPI(
-        key::String,
-        secret::String,
-        url::String="https://futures.kraken.com",
-        timeout::Int64=0,
-        beta::Bool=false
-    ) = new(
-        key,
-        secret,
-        beta ? "demo-futures.kraken.com" : url,
-        timeout,
-        Vector{Pair{String,String}}([
-            "User-Agent" => "KrakenEx.jl",
-            "APIKey" => key
-        ])
-    )
+    BASE_URL::String = "https://futures.kraken.com"
+    DEMO_URL::String = "https://demo-futures.kraken.com"
+    DEMO::Bool = false
+    TIMEOUT::Int64 = 10
+    HEADERS::Vector{Pair{String,String}} = ["User-Agent" => "KrakenEx.jl"]
 end
+
+# struct FuturesBaseRESTAPI
+#     API_KEY::Union{String,Nothing}
+#     SECRET_KEY::Union{String,Nothing}
+
+#     BASE_URL::String
+#     TIMEOUT::Int64
+#     HEADERS::Vector{Pair{String,String}}
+
+#     FuturesBaseRESTAPI(beta::Bool=false) = new(
+#         nothing,                        # key
+#         nothing,                        # secret
+#         beta ? "demo-futures.kraken.com" : "https://futures.kraken.com",   # url 
+#         10,                             # timeout
+#         Vector{Pair{String,String}}(["User-Agent" => "KrakenEx.jl"])
+#     )
+
+#     FuturesBaseRESTAPI(
+#         key::String,
+#         secret::String,
+#         url::String="https://futures.kraken.com",
+#         timeout::Int64=0,
+#         beta::Bool=false
+#     ) = new(
+#         key,
+#         secret,
+#         beta ? "demo-futures.kraken.com" : url,
+#         timeout,
+#         Vector{Pair{String,String}}([
+#             "User-Agent" => "KrakenEx.jl",
+#             "APIKey" => key
+#         ])
+#     )
+# end
 
 """
     handle_error(kind::String,message::Dict{String,Any})
@@ -64,9 +76,9 @@ function handle_error(kind::String, data::Dict{String,Any})
 
         if !isnothing(exception)
             throw(exception(message=json(data)))
+        else
+            return data
         end
-
-        return data
 
     elseif kind == "check_send_status"
         """Used for futures REST responses"""
@@ -116,6 +128,10 @@ function handle_response(response::Response, return_raw::Bool=false)
         catch err
             return data
             # error(err)
+        end
+
+        if typeof(data) == Vector{Any}
+            return data
         end
 
         if haskey(data, "error")
@@ -179,18 +195,21 @@ function request(
             ))
         end
 
-        nonce = get_nonce()
+        nonce = get_nonce() * "0001"
         for value ∈ [
             "Nonce" => nonce,
             "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8",#do_json ? "application/json" : "application/x-www-form-urlencoded; charset=utf-8",
+            "APIKey" => client.API_KEY,
             "Authent" => get_kraken_signature(client, uri, query_string * (!do_json ? post_string : "json=" * (post_params)), nonce)
         ]
             push!(headers, value)
         end
     end
 
+    url = client.DEMO ? client.DEMO_URL : client.BASE_URL
+
     if method ∈ ["GET", "DELETE"]
-        url = client.BASE_URL * uri
+        url *= uri
         if query_string != ""
             url *= "?" * query_string
         end
@@ -204,7 +223,7 @@ function request(
     elseif method == "PUT"
         return handle_response(
             put(
-                client.BASE_URL * uri * "?" * query_string,
+                url * uri * "?" * query_string,
                 body=query_params,
                 headers=headers,
                 readtimeout=client.TIMEOUT
@@ -213,8 +232,9 @@ function request(
         )
 
     elseif method == "POST"
+        post_string != "" ? post_string = "?$post_string" : ""
         return handle_response(post(
-                client.BASE_URL * uri * "?" * post_string,
+                url * uri * post_string,
                 headers=headers,
                 body=post_params,
                 readtimeout=client.TIMEOUT
@@ -236,7 +256,13 @@ function get_kraken_signature(client::FuturesBaseRESTAPI, endpoint::String, data
             String, digest(
                 "sha512",
                 base64decode(client.SECRET_KEY), # decoded 
-                transcode(String, digest("sha256", data * nonce * endpoint)) # message
+                transcode(
+                    String,
+                    digest(
+                        "sha256",
+                        encode(data * nonce * endpoint, "utf-8")
+                    )
+                ) # message
             )
         )
     )

@@ -30,12 +30,14 @@ export KrakenOrderLimitsExceededError
 export KrakenRateLimitExceededError
 export KrakenApiLimitExceededError
 export KrakenPositionLimitExceeded
+export KrakenUnknownOrderError
 export KrakenUnknownPositionError
 export KrakenUnknownAssetPairError
 export KrakenUnknownAssetError
 export KrakenInvalidUnitError
 export KrakenUnavailableError
 export KrakenInvalidReferenceIdError
+export KrakenUnknownReferenceIdError
 export KrakenUnknownWithdrawKeyError
 export KrakenInvalidAmountError
 export KrakenInvalidStakingMethodError
@@ -207,6 +209,11 @@ Base.@kwdef struct KrakenPositionLimitExceeded <: KrakenException{Exception}
     message::String = ""
 end
 
+Base.@kwdef struct KrakenUnknownOrderError <: KrakenException{Exception}
+    name::String = "KrakenUnknownOrderError"
+    description::String = "Order is unknown"
+    message::String = ""
+end
 Base.@kwdef struct KrakenUnknownPositionError <: KrakenException{Exception}
     name::String = "KrakenUnknownPositionError"
     description::String = "Position is unknown"
@@ -240,6 +247,11 @@ end
 Base.@kwdef struct KrakenInvalidReferenceIdError <: KrakenException{Exception}
     name::String = "KrakenInvalidReferenceIdError"
     description::String = "The requested referece id is invalid"
+    message::String = ""
+end
+Base.@kwdef struct KrakenUnknownReferenceIdError <: KrakenException{Exception}
+    name::String = "KrakenUnknownReferenceIdError"
+    description::String = "The requested referece id is unknown"
     message::String = ""
 end
 
@@ -335,8 +347,10 @@ function get_exception(name::String)
         "EOrder:Orders limit exceeded" => KrakenOrderLimitsExceededError,
         "EOrder:Rate limit exceeded" => KrakenRateLimitExceededError,
         "EOrder:Positions limit exceeded" => KrakenPositionLimitExceeded,
+        "EOrder:Unknown order" => KrakenUnknownOrderError,
         "EOrder:Unknown position" => KrakenUnknownPositionError,
         "EFunding:Invalid reference id" => KrakenInvalidReferenceIdError,
+        "EFunding:Unknown reference id" => KrakenUnknownReferenceIdError,
         "EFunding:Unknown withdraw key" => KrakenUnknownWithdrawKeyError,
         "EFunding:Invalid amount" => KrakenInvalidAmountError,
         "EFunding:Invalid staking method" => KrakenInvalidStakingMethodError,
