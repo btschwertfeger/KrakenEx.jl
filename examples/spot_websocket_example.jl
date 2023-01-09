@@ -34,6 +34,7 @@ function main()
 
     # wait before unsubscribe is done ...
     sleep(2)
+
     #== Unsubscribe from public and private websocket feeds ==#
     # unsubscribe(
     #     client=ws_client,
@@ -44,6 +45,11 @@ function main()
     #     client=ws_client,
     #     subscription=Dict{String,Any}("name" => "ownTrades")
     # )
+
+    # to cancel a connection you can use:
+    # ws_client.cancel_private_connection = true
+    # ws_client.cancel_public_connection = true
+
     wait(con)
 end
 

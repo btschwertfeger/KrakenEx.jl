@@ -53,11 +53,15 @@ function main()
     sleep(2)
 
     #== Unsubscribe from public and private websocket feeds ==#
-    unsubscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD"])
     # unsubscribe(client=ws_client, feed="ticker", products=["PF_SOLUSD"])
+    # unsubscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD"])
     # unsubscribe(client=ws_client, feed="fills")
     # unsubscribe(client=ws_client, feed="open_orders")
     # ...
+
+    # to cancel a connection you can use:
+    # ws_client.cancel_private_connection = true
+    # ws_client.cancel_public_connection = true
 
     wait(con)
 end

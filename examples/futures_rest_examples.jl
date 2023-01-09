@@ -67,11 +67,11 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
 
     # println(get_tradeable_products(client, tick_type="mark")) # mark, spot, trade
 
-    # println(get_resolutions(
-    #     client,
-    #     tradeable="PI_XBTUSD",
-    #     tick_type="spot"
-    # ))
+    println(get_resolutions(
+        client,
+        tradeable="PI_XBTUSD",
+        tick_type="spot"
+    ))
 
     # println(get_fee_schedules(client))
     # println(get_fee_schedules_vol(private_client))
@@ -87,21 +87,21 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
     # println(get_trade_history(client, symbol="PI_XBTUSD"))
     # println(get_trade_history(client, lastTime=string(1668989233)))
 
-    # println(get_historical_funding_rates(client, symbol="PI_XBTUSD"))
 
-    # todo: forbidden?
-    # println(get_leverage_preference(private_client))
-    # return
-    # todo: forbidden?
-    # println(set_leverage_preference(private_client, symbol="PI_XBTUSD", maxLeverage=1))
+    if true
+        # note: This only work in sanbox environment. I may need a higher Tier 
+        # println(get_leverage_preference(private_client))
+        # todo: PUT request not working
+        # println(set_leverage_preference(private_client, symbol="PI_XBTUSD", maxLeverage=1))
 
-    # reset leverage setting
-    # todo: forbidden?
-    # println(set_leverage_preference(private_client, symbol="PI_XBTUSD"))
+        # reset leverage settings
+        # todo: PUT request not working
+        # println(set_leverage_preference(private_client, symbol="PI_XBTUSD"))
 
-    # println(get_pnl_currency_preference(private_client))
-    # todo: Dict{String, Any}("error" => "nonceDuplicate: 1672858785696", "serverTime" => "2023-01-04T18:59:53.498Z", "result" => "error")
-    println(set_pnl_currency_preference(private_client, symbol="PI_XBTUSD", pnlPreference="XBT"))
+        # println(get_pnl_currency_preference(private_client))
+        # todo: PUT request not working
+        # println(set_pnl_currency_preference(private_client, symbol="PI_XBTUSD", pnlPreference="XBT"))
+    end
 
     # println(get_execution_events(private_client))
     # println(get_public_execution_events(client, tradeable="PI_XBTUSD"))
@@ -280,11 +280,17 @@ function main()
 
     client = FuturesBaseRESTAPI()
     private_client = FuturesBaseRESTAPI(
-        ENV["FUTURES_API_KEY"],
-        ENV["FUTURES_SECRET_KEY"]
+        API_KEY=ENV["FUTURES_API_KEY"],
+        SECRET_KEY=ENV["FUTURES_SECRET_KEY"]
     )
 
-    market_endpoints(client, private_client)
+    pirivate_sandbox_client = FuturesBaseRESTAPI(
+        API_KEY=ENV["FUTURES_SANDBOX_API_KEY"],
+        SECRET_KEY=ENV["FUTURES_SANDBOX_SECRET_KEY"],
+        DEMO=true
+    )
+
+    market_endpoints(client, pirivate_sandbox_client)
     # user_endpoints(private_client)
     # funding_endpoints(private_client)
     # trade_endpoints(private_client)

@@ -4,7 +4,7 @@ using DotEnv
 
 include("../src/KrakenEx.jl")
 using .KrakenEx: SpotBaseRESTAPI
-
+using .KrakenEx.ExceptionsModule
 using .KrakenEx.SpotMarketModule:
     get_server_time,
     get_assets,
@@ -97,6 +97,7 @@ function user_endpoints(private_client::SpotBaseRESTAPI)
             )
         )
     end
+    sleep(5)
 
     println(get_orders_info(private_client, txid="OXBBSK-EUGDR-TDNIEQ"))
     println(
@@ -119,7 +120,17 @@ function user_endpoints(private_client::SpotBaseRESTAPI)
         println(get_trades_history(private_client, type=type, end_=1668431675, ofs=1, trades=false))
     end
 
-    println(get_trades_info(private_client, txid="OQQYNL-FXCFA-FBFVD7"))
+    try
+        println(get_trades_info(private_client, txid="OQQYNL-FXCFA-FBFVD7"))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenInvalidOrderError)
+                throw(err)
+            end
+        end
+    end
+    sleep(5)
 
     println(get_open_positions(private_client))
     println(get_open_positions(private_client, txid="OQQYNL-FXCFA-FBFVD7"))
@@ -129,6 +140,8 @@ function user_endpoints(private_client::SpotBaseRESTAPI)
     println(get_ledgers_info(private_client, asset="DOT"))
     println(get_ledgers_info(private_client, asset="DOT,EUR"))
     println(get_ledgers_info(private_client, asset=["DOT", "EUR"]))
+    sleep(5)
+
     for type ∈ [
         "all", "deposit", "withdrawal",
         "trade", "margin", "rollover",
@@ -146,7 +159,7 @@ function user_endpoints(private_client::SpotBaseRESTAPI)
             )
         )
     end
-
+    sleep(5)
     println(get_ledgers(private_client, id="LNYQGU-SUR5U-UXTOWM"))
     println(get_ledgers(private_client, id=["LNYQGU-SUR5U-UXTOWM", "LTCMN2-5DZHX-6CPRC4"], trades=false))
 
@@ -155,13 +168,13 @@ function user_endpoints(private_client::SpotBaseRESTAPI)
     println(get_trade_volume(private_client, pair="DOTUSD", fee_info=false))
 
     # how to export a report?
-    println(request_export_report(private_client, report="ledgers", description="myLedgersExport", format="CSV")) # returns e.g.: Dict{String, Any}("id" => "WSDS")
+    response = request_export_report(private_client, report="ledgers", description="myLedgersExport", format="CSV") # returns e.g.: Dict{String, Any}("id" => "WSDS")
     println(get_export_report_status(private_client, report="ledgers"))
-    report = retrieve_export(private_client, id="WSDS")
+    report = retrieve_export(private_client, id=response["id"])
     open("myExport.zip", "w") do io
         write(io, report)
     end
-    println(delete_export_report(private_client, type="delete", id="WSDS"))
+    println(delete_export_report(private_client, type="delete", id=response["id"]))
 end
 
 function trade_endpoints(private_client::SpotBaseRESTAPI)
@@ -247,6 +260,7 @@ function trade_endpoints(private_client::SpotBaseRESTAPI)
             validate=true
         )
     )
+    sleep(5)
 
     println(
         edit_order(
@@ -258,11 +272,31 @@ function trade_endpoints(private_client::SpotBaseRESTAPI)
             validate=true
         )
     )
-    println(cancel_order(private_client, txid="O2JLFP-VYFIW-35ZAAE"))
-    # println(cancel_all_orders(private_client))
+
+    try
+        println(cancel_order(private_client, txid="O2JLFP-VYFIW-35ZAAE"))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenInvalidOrderError)
+                throw(err)
+            end
+        end
+    end
+
+    # if false println(cancel_all_orders(private_client)) end
     println(cancel_all_orders_after_x(private_client, timeout=60))
     println(cancel_all_orders_after_x(private_client, timeout=0)) # reset timeout
-    println(cancel_order_batch(private_client, orders=["O2JLFP-VYFIW-35ZAAE", "O523KJ-DO4M2-KAT243", "OCDIAL-YC66C-DOF7HS", "OVFPZ2-DA2GV-VBFVVI"]))
+    try
+        println(cancel_order_batch(private_client, orders=["O2JLFP-VYFIW-35ZAAE", "O523KJ-DO4M2-KAT243", "OCDIAL-YC66C-DOF7HS", "OVFPZ2-DA2GV-VBFVVI"]))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenInvalidOrderError)
+                throw(err)
+            end
+        end
+    end
 end
 
 function funding_endpoints(private_client::SpotBaseRESTAPI)
@@ -270,11 +304,41 @@ function funding_endpoints(private_client::SpotBaseRESTAPI)
     println(get_deposit_methods(private_client, asset="DOT"))
     println(get_deposit_address(private_client, asset="DOT", method="Polkadot"))
     println(get_recend_deposits_status(private_client, asset="DOT", method="Polkadot"))
-    # println(withdraw_funds(private_client, asset="DOT", key="pwallet1", amount=200))
-    println(get_withdrawal_info(private_client, asset="DOT", key="pwallet1", amount="200"))
+    # if false println(withdraw_funds(private_client, asset="DOT", key="pwallet1", amount=200)) end
+
+    try
+        println(get_withdrawal_info(private_client, asset="DOT", key="pwallet1", amount="200"))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenUnknownWithdrawKeyError)
+                throw(err)
+            end
+        end
+    end
     println(get_recend_withdraw_status(private_client, asset="DOT"))
-    # println(cancel_withdraw(private_client, asset="DOT", refid="1234"))
-    # println(wallet_transfer(private_client, asset="XLM", from="Spot Wallet", to="Futures Wallet", amount=200))
+
+    try
+        println(cancel_withdraw(private_client, asset="DOT", refid="1234"))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenUnknownReferenceIdError)
+                throw(err)
+            end
+        end
+    end
+
+    try
+        println(wallet_transfer(private_client, asset="XLM", from="Spot Wallet", to="Futures Wallet", amount=200))
+    catch err
+        if isa(err, KrakenException)
+            println(err.message)
+            if !isa(err, KrakenUnknownWithdrawKeyError)
+                throw(err)
+            end
+        end
+    end
 end
 
 function staking_endpoints(private_client::SpotBaseRESTAPI)
@@ -282,8 +346,28 @@ function staking_endpoints(private_client::SpotBaseRESTAPI)
     println(list_stakeable_assets(private_client))
     println(get_pending_staking_transactions(private_client))
     println(list_staking_transactions(private_client))
-    # println(stake_asset(private_client, asset="DOT", amount=200, method="polkadot-staked"))
-    # println(unstake_asset(private_client, asset="DOT", amount=200, method="polkadot-staked"))
+
+    # try
+    #     println(stake_asset(private_client, asset="DOT", amount=20000, method="polkadot-staked"))
+    # catch err
+    #     if isa(err, KrakenException)
+    #         println(err.message)
+    #         if !isa(err, KrakenInvalidAmountError)
+    #             throw(err)
+    #         end
+    #     end
+    # end
+
+    # try
+    #     println(unstake_asset(private_client, asset="XXBT", amount=20000))
+    # catch err
+    #     if isa(err, KrakenException)
+    #         println(err.message)
+    #         if !isa(err, KrakenInvalidAmountError)
+    #             throw(err)
+    #         end
+    #     end
+    # end
 end
 
 function main()
@@ -305,7 +389,6 @@ function main()
     staking_endpoints(private_client)
 end
 
-# throw(KrakenInvalidArgumentsError())
 main()
 
 end
