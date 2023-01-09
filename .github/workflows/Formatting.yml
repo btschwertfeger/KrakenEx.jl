@@ -1,9 +1,8 @@
-# [.github/workflows/Formattting.yml]
 name: format-check
 on:
   push:
     branches:
-      - "master"u
+      - "master"
       - "release-"
     tags: "*"
   pull_request:

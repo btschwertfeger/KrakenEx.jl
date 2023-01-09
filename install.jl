@@ -1,3 +1,5 @@
+
+#=This file only contain private notes=#
 import Pkg
 
 Pkg.add("HTTP")
@@ -18,7 +20,7 @@ Pkg.add("StringEncodings")
 
 # t("KrakenEx")
 
-using Pkg
-activate ~/repositories/Finance/Kraken/KrakenEx.jl
-# adding packages
-add Nettle
+# using Pkg
+# activate ~/repositories/Finance/Kraken/KrakenEx.jl
+# # adding packages
+# add Nettle
