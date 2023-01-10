@@ -46,9 +46,9 @@ Pkg.add("KrakenEx")
 
 ### 2. Register at Kraken and generate API Keys:
 
-- Spot Trading: (https://www.kraken.com/u/security/api)[https://www.kraken.com/u/security/api]
-- Futures Trading: (https://futures.kraken.com/trade/settings/api)[https://futures.kraken.com/trade/settings/api]
-- Futures Sandbox: (https://demo-futures.kraken.com/settings/api)[https://demo-futures.kraken.com/settings/api]
+- Spot Trading: ([ttps://www.kraken.com/u/security/api](https://www.kraken.com/u/security/api)
+- Futures Trading: [https://futures.kraken.com/trade/settings/api](https://futures.kraken.com/trade/settings/api)
+- Futures Sandbox: [https://demo-futures.kraken.com/settings/api](https://demo-futures.kraken.com/settings/api)
 
 ### 3. Start using the provided example scripts
 

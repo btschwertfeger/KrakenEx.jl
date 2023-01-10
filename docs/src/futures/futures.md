@@ -2,6 +2,8 @@
 
 The listed modules and functions allow to access public and private (authenticated) endpoints of the official Kraken Futures API. All functions of these endpoints require a `FuturesRESTBASEAPI` instance.
 
+The sample outputs are for illustrative purposes only and may vary depending on the user, request and market behavior.
+
 ```@meta
    CurrentModule = KrakenEx
 ```
