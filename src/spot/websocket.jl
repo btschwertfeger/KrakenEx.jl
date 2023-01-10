@@ -16,7 +16,7 @@ export cancel_all_orders
 export cancel_all_orders_after_x
 
 """
-SpotWebSocketClient
+    SpotWebSocketClient
 
 Type that stores information about the client and can be used
 to establish public and private websocket connections for 
@@ -109,7 +109,23 @@ end
         pairs::Union{Vector{String},Nothing}=nothing
     )
 
+Kraken Docs: [https://docs.kraken.com/websockets/#message-subscribe](https://docs.kraken.com/websockets/#message-subscribe)
+
 Subscribe to a websocket feed.
+
+# Example
+
+```julia-repl
+julia> ws_client = SpotWebSocketClient()
+julia> on_message(msg::Union{Dict{String,Any},String}) = println(msg)
+julia> con = @async connect(ws_client, callback=on_message)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD", "DOT/USD"]
+...    )
+julia> wait(conn)
+```
 """
 function subscribe(;
     client::SpotWebSocketClient,
@@ -126,7 +142,23 @@ end
         pairs::Union{Vector{String},Nothing}=nothing
     )
 
+Kraken Docs: [https://docs.kraken.com/websockets/#message-unsubscribe](https://docs.kraken.com/websockets/#message-unsubscribe)
+
 Unsubscribe from a subscribed feed.
+
+# Example
+
+```julia-repl
+julia> ws_client = SpotWebSocketClient()
+julia> on_message(msg::Union{Dict{String,Any},String}) = println(msg)
+julia> con = @async connect(ws_client, callback=on_message)
+julia> unsubscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD", "DOT/USD"]
+...    )
+julia> wait(conn)
+```
 """
 function unsubscribe(;
     client::SpotWebSocketClient,
@@ -332,12 +364,38 @@ end
         public::Bool=true,
         private::Bool=false
     )
-
+    
 Can create up to two (one private and one public) websocket connections. The public and/or private
-websocket object will be stored within the `SpotWebSocketClient`. Websocket feeds can be subscribed
+websocket object will be stored within the [`SpotWebSocketClient`](@ref). Websocket feeds can be subscribed
 and unsubscribed after a successful connection. This function must be invoked using `@async`. Private 
 websocket connections and privat feed subscriptions requre valid API keys on the passed 
-`SpotWebSocketClient` object.
+[`SpotWebSocketClient`](@ref) object.
+
+# Attributes
+
+- `client::SpotWebSocketClient` -- the [`SpotWebSocketClient`](@ref) instance
+- `callback::Core.Function` -- Callback function wich receives the websocket messages
+- `public::Bool=true` -- switch to activate/deactivate the public websocket connection
+- `private::Bool=false` -- switch to activate/deactivate the private websocket connection
+
+# Example
+
+```julia-repl
+julia> # ws_client = SpotWebSocketClient() # unauthenticated
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret") # authenticated
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        # implement your strategy here
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD", "DOT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function connect(
     client::SpotWebSocketClient;
@@ -406,7 +464,7 @@ end
         timeinforce::Union{String,Nothing}=nothing
     )
 
-https://docs.kraken.com/websockets/#message-addOrder
+Kraken Docs: [https://docs.kraken.com/websockets/#message-addOrder](https://docs.kraken.com/websockets/#message-addOrder)
 """
 function create_order(client::SpotWebSocketClient;
     ordertype::String,
@@ -480,7 +538,7 @@ end
         userref::Union{Int32,Nothing}=nothing
     )
 
-https://docs.kraken.com/websockets/#message-editOrder
+Kraken Docs: [https://docs.kraken.com/websockets/#message-editOrder](https://docs.kraken.com/websockets/#message-editOrder)
 """
 function edit_order(client::SpotWebSocketClient;
     txid::String,
@@ -516,7 +574,7 @@ end
 """
     cancel_order(client::SpotWebSocketClient; txid::String)
 
-https://docs.kraken.com/websockets/#message-cancelOrder
+[https://docs.kraken.com/websockets/#message-cancelOrder](https://docs.kraken.com/websockets/#message-cancelOrder)
 """
 function cancel_order(client::SpotWebSocketClient; txid::String)
     if isnothing(client.private_client)
@@ -528,7 +586,7 @@ end
 """
     cancel_all_orders(client::SpotWebSocketClient)
 
-https://docs.kraken.com/websockets/#message-cancelAll
+Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAll](https://docs.kraken.com/websockets/#message-cancelAll)
 """
 function cancel_all_orders(client::SpotWebSocketClient)
     if isnothing(client.private_client)
@@ -540,8 +598,7 @@ end
 """
     cancel_all_orders_after_x(client::SpotWebSocketClient, timeout::Int)
 
-https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter
-
+Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter](https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter)
 """
 function cancel_all_orders_after_x(client::SpotWebSocketClient, timeout::Int)
     if isnothing(client.private_client)

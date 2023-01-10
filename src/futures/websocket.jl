@@ -116,6 +116,18 @@ end
     )
 
 Subscribe to a websocket feed.
+
+# Example
+
+```julia-repl
+julia> # ws_client = FuturesWebSocketClient() # unauthenticated
+julia> ws_client = FuturesWebSocketClient("api-key", "secret-key") # authenticated
+julia> on_message(msg::Union{Dict{String,Any},String}) = println(msg)
+julia> con = @async connect(ws_client, callback=on_message)
+julia> subscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD", "PF_SOLUSD"]) # public feeds
+julia> subscribe(client=ws_client, feed="open_orders") # private feed
+julia> wait(conn)
+```
 """
 function subscribe(;
     client::FuturesWebSocketClient,
@@ -133,6 +145,18 @@ end
     )
 
 Unsubscribe from a subscribed feed.
+
+# Example
+
+```julia-repl
+julia> # ws_client = FuturesWebSocketClient() # unauthenticated
+julia> ws_client = FuturesWebSocketClient("api-key", "secret-key") # authenticated
+julia> on_message(msg::Union{Dict{String,Any},String}) = println(msg)
+julia> con = @async connect(ws_client, callback=on_message)
+julia> unsubscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD", "PF_SOLUSD"]) # public feeds
+julia> unsubscribe(client=ws_client, feed="open_orders") # private feed
+julia> wait(conn)
+```
 """
 function unsubscribe(;
     client::FuturesWebSocketClient,
@@ -417,6 +441,26 @@ websocket object will be stored within the `FuturesWebSocketClient`. Websocket f
 and unsubscribed after a successful connection. This function must be invoked using `@async`. Private 
 websocket connections and privat feed subscriptions requre valid API keys on the passed 
 `FuturesWebSocketClient` object.
+
+# Attributes
+
+- `client::FuturesWebSocketClient` -- the [`FuturesWebSocketClient`](@ref) instance
+- `callback::Core.Function` -- Callback function wich receives the websocket messages
+- `public::Bool=true` -- switch to activate/deactivate the public websocket connection
+- `private::Bool=false` -- switch to activate/deactivate the private websocket connection
+
+
+# Example
+
+```julia-repl
+julia> # ws_client = FuturesWebSocketClient() # unauthenticated
+julia> ws_client = FuturesWebSocketClient("api-key", "secret-key") # authenticated
+julia> on_message(msg::Union{Dict{String,Any},String}) = println(msg)
+julia> con = @async connect(ws_client, callback=on_message)
+julia> subscribe(client=ws_client, feed="ticker", products=["PI_XBTUSD", "PF_SOLUSD"]) # public feeds
+julia> subscribe(client=ws_client, feed="open_orders") # private feed
+julia> wait(conn)
+```
 """
 function connect(
     client::FuturesWebSocketClient;

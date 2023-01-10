@@ -11,7 +11,38 @@ export initiate_withdrawal_to_spot_wallet
 """
     get_historical_funding_rates(client::FuturesBaseRESTAPI; symbol::String)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates](https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates)
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_historical_funding_rates(client, symbol="PI_XBTUSD"))
+Dict{String, Any}(
+    "rates" => Any[
+        Dict{String, Any}(
+            "fundingRate" => 1.0327058177e-8, 
+            "timestamp" => "2018-08-31T16:00:00.000Z", 
+            "relativeFundingRate" => 7.182407e-5
+        ), 
+        Dict{String, Any}(
+            "fundingRate" => -1.2047162502e-8,
+            "timestamp" => "2018-08-31T20:00:00.000Z",
+            "relativeFundingRate" => -8.4873103125e-5
+        ), 
+        Dict{String, Any}(
+            "fundingRate" => -9.645113378e-9, 
+            "timestamp" => "2018-09-01T00:00:00.000Z", 
+            "relativeFundingRate" => -6.76651e-5
+        ), 
+        Dict{String, Any}(
+            "fundingRate" => -8.028122964e-9, 
+            "timestamp" => "2018-09-01T04:00:00.000Z", 
+            "relativeFundingRate" => -5.66897875e-5
+        ), ...
+    ]
+)
+```
 """
 function get_historical_funding_rates(client::FuturesBaseRESTAPI; symbol::String)
     return request(client, "GET", "/derivatives/api/v4/historicalfundingrates", query_params=Dict{String,Any}(
@@ -28,7 +59,19 @@ end
         unit::String
     )
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer)
+
+# Example
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> initiate_wallet_transfer(client,
+...        amount=100,
+...        fromAccount="some-cash-or-margin-account",
+...        toAccount="another-cash-or-margin-account",
+...        unit="the-currency-unit-to-transfer"
+...    )
+```
 """
 function initiate_wallet_transfer(
     client::FuturesBaseRESTAPI;
@@ -56,7 +99,22 @@ end
         toUser::String
     )
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer)
+
+# Example
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> initiate_subccount_transfer(
+...        client,
+...        amount=200,
+...        fromAccount="SomeAccount",
+...        toAccount="ToAnotherAccount",
+...        fromUser="Marianne",
+...        toUser="Perl",
+...        unit="XBT"
+...    )
+```
 """
 function initiate_subccount_transfer(
     client::FuturesBaseRESTAPI;
@@ -85,7 +143,19 @@ end
         sourceWallet::Union{String,Nothing}
     )
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet)
+
+# Example
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> initiate_withdrawal_to_spot_wallet(
+...       client,
+...       amount=200,
+...       currency="XBT",
+...       sourceWallet="Cross-Margin"
+...    )
+```
 """
 function initiate_withdrawal_to_spot_wallet(
     client::FuturesBaseRESTAPI;

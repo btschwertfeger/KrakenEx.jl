@@ -15,7 +15,48 @@ export get_account_log_csv
 """
     get_wallets(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-wallets
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-wallets](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-wallets)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_wallets(client))
+ict{String, Any}(
+    "serverTime" => "2023-01-10T18:29:00.251Z", 
+    "accounts" => Dict{String, Any}(
+        "fv_xrpxbt" => Dict{String, Any}(
+            "currency" => "xbt", 
+            "marginRequirements" => Dict{String, Any}(
+                "tt" => 0.0, "mm" => 0.0, "lt" => 0.0, "im" => 0.0
+            ), 
+            "auxiliary" => Dict{String, Any}(
+                "pv" => 0.0, "pnl" => 0.0, "funding" => 0.0, "af" => 0.0, "usd" => 0
+            ), 
+            "balances" => Dict{String, Any}("xbt" => 0.0), 
+            "triggerEstimates" => Dict{String, Any}(
+                "tt" => 0, "mm" => 0, "lt" => 0, "im" => 0
+            ), 
+            "type" => "marginAccount"
+        ), 
+        "fi_xbtusd" => Dict{String, Any}(
+            "currency" => "xbt", 
+            "marginRequirements" => Dict{String, Any}(
+                "tt" => 0.0, "mm" => 0.0, "lt" => 0.0, "im" => 0.0
+            ), 
+            "auxiliary" => Dict{String, Any}(
+                "pv" => 0.0, "pnl" => 0.0, "funding" => 0.0, "af" => 0.0, "usd" => 0
+            ), 
+            "balances" => Dict{String, Any}("xbt" => 0.0),
+            "triggerEstimates" => Dict{String, Any}(
+                "tt" => 0, "mm" => 0, "lt" => 0, "im" => 0
+            ), "type" => "marginAccount"
+        ), ...
+    )
+)
+```
 """
 function get_wallets(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/accounts", auth=true)
@@ -24,7 +65,21 @@ end
 """
     get_open_orders(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-orders
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-orders](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-orders)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_open_orders(client))
+Dict{String, Any}(
+    "openOrders" => Any[], 
+    "serverTime" => "2023-01-10T18:31:07.027Z", 
+    "result" => "success"
+)
+```
 """
 function get_open_orders(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/openorders", auth=true)
@@ -33,7 +88,21 @@ end
 """
     get_open_positions(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-positions
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-positions](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-positions)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_open_positions(client))
+Dict{String, Any}(
+    "openPositions" => Any[],
+    "serverTime" => "2023-01-10T18:31:45.903Z", 
+    "result" => "success
+)
+```
 """
 function get_open_positions(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/openpositions", auth=true)
@@ -42,7 +111,22 @@ end
 """
     get_subaccounts(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-subaccounts
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-subaccounts](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-subaccounts)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_subaccounts(client))
+Dict{String, Any}(
+    "subaccounts" => Any[], 
+    "serverTime" => "2023-01-10T18:32:03.993Z", 
+    "masterAccountUid" => "XXX-XXX-XXX-XXX", 
+    "result" => "success"
+)
+```
 """
 function get_subaccounts(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/subaccounts", auth=true)
@@ -51,7 +135,21 @@ end
 """
     get_unwindqueue(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-position-percentile-of-unwind-queue
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-position-percentile-of-unwind-queue](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-position-percentile-of-unwind-queue)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_unwindqueue(client))
+Dict{String, Any}(
+    "queue" => Any[], 
+    "serverTime" => "2023-01-10T18:33:00.647Z", 
+    "result" => "success"
+)
+```
 """
 function get_unwindqueue(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/unwindqueue", auth=true)
@@ -60,7 +158,21 @@ end
 """
     get_notificatios(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-trading-v3-api-general-get-notifications
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-general-get-notifications](https://docs.futures.kraken.com/#http-api-trading-v3-api-general-get-notifications)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_notificatios(client))
+Dict{String, Any}(
+    "serverTime" => "2023-01-10T18:33:28.582Z", 
+    "notifications" => Any[], 
+    "result" => "success"
+)
+```
 """
 function get_notificatios(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/derivatives/api/v3/notifications", auth=true)
@@ -77,7 +189,24 @@ end
         info::Union{String,Nothing}=nothing
     )
 
-https://docs.futures.kraken.com/#http-api-history-account-log
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-account-log](https://docs.futures.kraken.com/#http-api-history-account-log)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> println(get_account_log(
+...        client, 
+...        before="1604937694000", 
+...        info="futures liquidation"
+...    ))
+Dict{String, Any}(
+    "accountUid" => "XXX-XXX-XXX--XXXX", 
+    "logs" => Any[]
+)
+```
 """
 function get_account_log(client::FuturesBaseRESTAPI;
     before::Union{Int,String,Nothing}=nothing,
@@ -103,7 +232,19 @@ end
 """
     get_account_log_csv(client::FuturesBaseRESTAPI)
 
-https://docs.futures.kraken.com/#http-api-history-account-log-get-recent-account-log-csv
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-account-log-get-recent-account-log-csv](https://docs.futures.kraken.com/#http-api-history-account-log-get-recent-account-log-csv)
+
+Authenticated `client` required
+
+# Example 
+
+```julia-repl
+julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
+julia> log = get_account_log_csv(client)
+julia> open("myAccountLog.csv", "w") do io
+...        write(io, log)
+...    end
+```
 """
 function get_account_log_csv(client::FuturesBaseRESTAPI)
     return request(client, "GET", "/api/history/v2/accountlogcsv", auth=true, return_raw=true)

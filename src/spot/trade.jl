@@ -36,7 +36,52 @@ export cancel_order_batch
         userref::Union{Int32,Nothing}=nothing
     )
 
-https://docs.kraken.com/rest/#operation/addOrder
+Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrder](https://docs.kraken.com/rest/#operation/addOrder)
+
+Authenticated `client` required
+
+# Arguments
+`validate::Bool=false` -- Simulates order placement if set to `true`
+...
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(
+...        create_order(
+...            private_client,
+...            ordertype="limit",
+...            side="buy",
+...            volume=0.3,
+...            pair="XBTUSD",
+...            price="17000",
+...            oflags="post"
+...        )
+...    )
+Dict{String,Any}(
+    "descr" => Dict{String,Any}(
+        "order" => "buy 0.30000000 XBTUSD @ limit 17000.0",
+    ),
+    "txid" => ["0ZH90J-M4W3ZY-66GF8Y"]
+)
+julia> println(
+...        create_order(
+...            private_client,
+...            ordertype="market",
+...            side="buy",
+...            volume=0.001,
+...            pair="XBTUSD",
+...            validate=true
+...        )
+...    )
+Dict{String,Any}(
+    "descr" => Dict{String,Any}(
+        "order" => "buy 0.00100000 XBTUSD @ market",
+    ),
+    "txid" => ["T4HSG14-TYRCOC-7SWPQ0"]
+)
+```
 """
 function create_order(client::SpotBaseRESTAPI;
     ordertype::String,
@@ -102,7 +147,91 @@ end
         validate::Bool=false
     )
 
-https://docs.kraken.com/rest/#operation/addOrderBatch
+Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrderBatch](https://docs.kraken.com/rest/#operation/addOrderBatch)
+
+Authenticated `client` required
+
+The `validate` key can be submitted to orders to simulate the result (see [`create_order`](@ref)).
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(
+...        create_order_batch(
+...            client,
+...            orders=[
+...                Dict{String,Any}(
+...                    "close" => Dict{String,Any}(
+...                        "ordertype" => "stop-loss-limit",
+...                       "price" => 1000,
+...                       "price2" => 900
+...                   ),
+...                   "ordertype" => "limit",
+...                   "price" => 40000,
+...                   "timeinforce" => "GTC",
+...                   "type" => "buy",
+...                   "userref" => Int32(123),
+...                   "volume" => 2
+...                ),
+...                Dict{String,Any}(
+...                    "ordertype" => "limit",
+...                    "price" => 42000,
+...                    "starttm" => "1668455555",
+...                    "timeinforce" => "GTC",
+...                    "type" => "sell",
+...                    "userref" => Int32(999),
+...                    "volume" => 5
+...                ),
+...                Dict{String,Any}(
+...                    "ordertype" => "market",
+...                    "volume" => 2,
+...                    "type" => "buy"
+...                ),
+...                Dict{String,Any}(
+...                    "ordertype" => "limit",
+...                    "price" => 43000,
+...                    "starttm" => "1668455555",
+...                    "timeinforce" => "GTC",
+...                    "type" => "sell",
+...                    "userref" => Int32(999),
+...                    "volume" => 5
+...                )
+...            ],
+...            pair="XBTUSD",
+...        )
+...    )
+...)
+Dict{String, Any}(
+    "orders" => Any[
+        Dict{String, Any}(
+            "descr" => Dict{String, Any}(
+                "order" => "buy 2.00000000 XBTUSD @ limit 40000.0", 
+                "close" => "close position @ stop loss 1000.0 -> limit 900.0",
+                "txid" => "N5F2Y6-E898J5-8Y6QE0"
+            )
+        ), 
+        Dict{String, Any}(
+            "descr" => Dict{String, Any}(
+                "order" => "sell 5.00000000 XBTUSD @ limit 42000.0",
+                "txid" => "3YHGOT-P82PNP-D9DY85"
+            )
+        ), 
+        Dict{String, Any}(
+            "descr" => Dict{String, Any}(
+                "order" => "buy 2.00000000 XBTUSD @ market",
+                "txid" => "IZXJ1O-9HER70-XJ0PCD"
+            )
+        ), 
+        Dict{String, Any}(
+            "descr" => Dict{String, Any}(
+                "order" => "sell 5.00000000 XBTUSD @ limit 43000.0",
+                "txid" => "3YHGOT-P82PNP-D9DY85"
+            )
+        )
+    ]
+)
+```
 """
 function create_order_batch(client::SpotBaseRESTAPI;
     orders::Vector{Dict{String,Any}},
@@ -133,7 +262,34 @@ end
         userref::Union{Int32,Nothing}=nothing
     )
 
-https://docs.kraken.com/rest/#operation/editOrder
+Kraken Docs: [https://docs.kraken.com/rest/#operation/editOrder](https://docs.kraken.com/rest/#operation/editOrder)
+
+Authenticated `client` required
+
+# Arguments
+`validate::Bool=false` -- Simulates order placement if set to `true`
+...
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(
+...        edit_order(
+...            client,
+...            txid="O2JLFP-VYFIW-35ZAAE",
+...            pair="XBTUSD",
+...            volume=4.2,
+...            price=17000
+...        )
+...    )
+Dict{String, Any}(
+    "status" => "ok", 
+    "originaltxid" => "O2JLFP-VYFIW-35ZAAE", 
+    "orders_cancelled" => 0, 
+    "descr" => Dict{String, Any}("order" => "Order edited")
+)
+```
 """
 function edit_order(client::SpotBaseRESTAPI;
     txid::String,
@@ -162,11 +318,19 @@ function edit_order(client::SpotBaseRESTAPI;
     return request(client, "POST", "/private/EditOrder", data=params, auth=true)
 end
 
-
 """
     cancel_order(client::SpotBaseRESTAPI; txid::String)
 
-https://docs.kraken.com/rest/#operation/cancelOrder
+Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelOrder](https://docs.kraken.com/rest/#operation/cancelOrder)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(cancel_order(client, txid="O2JLFP-VYFIW-35ZAAE"))
+```
 """
 function cancel_order(client::SpotBaseRESTAPI; txid::String)
     return request(client, "POST", "/private/CancelOrder", data=Dict{String,Any}("txid" => txid), auth=true)
@@ -175,7 +339,16 @@ end
 """
     cancel_all_orders(client::SpotBaseRESTAPI)
 
-https://docs.kraken.com/rest/#operation/cancelAllOrders
+Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrders](https://docs.kraken.com/rest/#operation/cancelAllOrders)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(cancel_all_orders(client))
+```
 """
 function cancel_all_orders(client::SpotBaseRESTAPI)
     return request(client, "POST", "/private/CancelAll", auth=true)
@@ -184,7 +357,27 @@ end
 """
     cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)
 
-https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter
+Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter](https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter)
+
+Authenticated `client` required
+
+Set `timeout` to 0 to reset the timout.
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(cancel_all_orders_after_x(client, timeout=60))
+Dict{String, Any}(
+    "currentTime" => "2023-01-10T17:01:57Z", 
+    "triggerTime" => "2023-01-10T17:02:57Z"
+)
+julia> println(cancel_all_orders_after_x(client, timeout=0))
+Dict{String, Any}(
+    "currentTime" => "2023-01-10T17:01:59Z", 
+    "triggerTime" => "0"
+)
+```
 """
 function cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)
     return request(client, "POST", "/private/CancelAllOrdersAfter", data=Dict{String,Any}("timeout" => timeout), auth=true)
@@ -193,7 +386,22 @@ end
 """
     cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})
 
-https://docs.kraken.com/rest/#operation/cancelOrderBatch
+Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelOrderBatch](https://docs.kraken.com/rest/#operation/cancelOrderBatch)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
+julia> println(cancel_order_batch(
+...        client, 
+...        orders=[
+...            "O2JLFP-VYFIW-35ZAAE", "O523KJ-DO4M2-KAT243", 
+...            "OCDIAL-YC66C-DOF7HS", "OVFPZ2-DA2GV-VBFVVI"
+...        ]
+...    ))
+```
 """
 function cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})
     return request(client, "POST", "/private/CancelOrderBatch", data=Dict{String,Any}("orders" => orders), auth=true, do_json=true)
