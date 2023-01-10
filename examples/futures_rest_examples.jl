@@ -85,8 +85,8 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
     println(get_instruments_status(client, instrument="PI_XBTUSD"))
 
     println(get_trade_history(client, symbol="PI_XBTUSD"))
-    println(get_trade_history(client, lastTime=string(1668989233)))
 
+    println(get_trade_history(client, lastTime=string(1668989233)))
 
     if false
         # note: This only work in sanbox environment. I may need a higher Tier 
@@ -114,6 +114,7 @@ function market_endpoints(client::FuturesBaseRESTAPI, private_client::FuturesBas
 
     println(get_trigger_events(private_client))
     println(get_trigger_events(private_client, tradeable="PI_XBTUSD", sort="desc", before="1668989233"))
+
 end
 
 function user_endpoints(client::FuturesBaseRESTAPI)
@@ -290,10 +291,10 @@ function main()
         DEMO=true
     )
 
-    market_endpoints(client, private_sandbox_client)
+    # market_endpoints(client, private_sandbox_client)
     # user_endpoints(private_client)
     # funding_endpoints(private_client)
-    # trade_endpoints(private_client)
+    trade_endpoints(private_client)
 
 end
 
