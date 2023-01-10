@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Kraken Spot Trading Examples · KrakenEx.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">KrakenEx.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Introduction</a></li><li><span class="tocitem">Spot API</span><ul><li><a class="tocitem" href="../spot/">Kraken Spot REST API</a></li><li><a class="tocitem" href="../spot_websocket/">Kraken Spot WebSocket API</a></li><li class="is-active"><a class="tocitem" href>Kraken Spot Trading Examples</a><ul class="internal"><li><a class="tocitem" href="#Spot-REST-Examples"><span>Spot REST Examples</span></a></li><li><a class="tocitem" href="#Spot-WebSocket-Example"><span>Spot WebSocket Example</span></a></li></ul></li></ul></li><li><span class="tocitem">Futures API</span><ul><li><a class="tocitem" href="../../futures/futures/">Kraken Futures REST API</a></li><li><a class="tocitem" href="../../futures/futures_websocket/">Kraken Futures WebSocket API</a></li><li><a class="tocitem" href="../../futures/futures_examples/">Kraken Futures Trading Examples</a></li></ul></li><li><a class="tocitem" href="../../exceptions/">Exceptions</a></li><li><a class="tocitem" href="../../license/">License</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Spot API</a></li><li class="is-active"><a href>Kraken Spot Trading Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Kraken Spot Trading Examples</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/master/docs/src/spot/spot_examples.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><ul><li><a href="#Kraken-Spot-Trading-Examples">Kraken Spot Trading Examples</a></li><li class="no-marker"><ul><li><a href="#Spot-REST-Examples">Spot REST Examples</a></li><li><a href="#Spot-WebSocket-Example">Spot WebSocket Example</a></li></ul></li></ul><h1 id="Kraken-Spot-Trading-Examples"><a class="docs-heading-anchor" href="#Kraken-Spot-Trading-Examples">Kraken Spot Trading Examples</a><a id="Kraken-Spot-Trading-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Kraken-Spot-Trading-Examples" title="Permalink"></a></h1><h2 id="Spot-REST-Examples"><a class="docs-heading-anchor" href="#Spot-REST-Examples">Spot REST Examples</a><a id="Spot-REST-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Spot-REST-Examples" title="Permalink"></a></h2><pre><code class="language-julia hljs">using KrakenEx: SpotBaseRESTAPI
+
+using KrakenEx.SpotMarketModule
+using KrakenEx.SpotUserModule
+using KrakenEx.SpotTradeModule
+using KrakenEx.SpotFundingModule
+using KrakenEx.SpotStakingModule
+# you can also import all specific functions separate like shown in `/examples/spot_rest_examples.jl`
+
+function main()
+
+    client = SpotBaseRESTAPI() # public client
+    private_client = SpotBaseRESTAPI(
+        key=&quot;Kraken-public-key&quot;,
+        secret=&quot;Kraken-secret-key&quot;
+    ) # authenticated client
+
+    #===== User Endpoints =====#
+    println(get_account_balance(private_client))
+    println(get_open_orders(private_client))
+    # ...
+
+    #===== Market Endpoints =====#
+    println(get_assets(client))
+    println(get_tradable_asset_pair(client, pair=[&quot;XBTUSD&quot;, &quot;DOTUSD&quot;]))
+    println(get_ticker(client, pair=&quot;DOTUSD&quot;))
+    # ...
+
+    #===== Trade Endpoints =====#
+    println(
+        create_order(
+            private_client,
+            ordertype=&quot;limit&quot;,
+            side=&quot;buy&quot;,
+            volume=1,
+            pair=&quot;XBTUSD&quot;,
+            price=&quot;10&quot;,
+            oflags=&quot;post&quot;,
+            validate=true
+        )
+    )
+    # ...
+
+    #===== Funding Endpoints =====#
+    println(get_deposit_methods(private_client, asset=&quot;DOT&quot;))
+    println(get_deposit_address(private_client, asset=&quot;DOT&quot;, method=&quot;Polkadot&quot;))
+    # ...
+
+    #===== Staking Endpoints =====#
+    println(list_stakeable_assets(private_client))
+    println(stake_asset(
+        private_client, asset=&quot;DOT&quot;, amount=20000, method=&quot;polkadot-staked&quot;
+    ))
+    # ...
+end
+
+main()</code></pre><h2 id="Spot-WebSocket-Example"><a class="docs-heading-anchor" href="#Spot-WebSocket-Example">Spot WebSocket Example</a><a id="Spot-WebSocket-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Spot-WebSocket-Example" title="Permalink"></a></h2><pre><code class="language-julia hljs">
+using KrakenEx
+using KrakenEx.SpotWebSocketModule:
+    SpotWebSocketClient,
+    connect,
+    subscribe, unsubscribe
+
+function main()
+    key = &quot;Kraken-public-key&quot;
+    secret = &quot;Kraken-secret-key&quot;
+
+    ws_client = SpotWebSocketClient(key, secret)
+
+    function on_message(msg::Union{Dict{String,Any},String})
+        println(msg)
+        # implement your strategy here....
+        # (dont forget that you can also access rest endpoints hier)
+    end
+
+    # the conn will create a public and a private websocket connection
+    con = @async connect(ws_client, callback=on_message, private=true)
+
+    #== Subscribe to public and private websocket feeds ==#
+    subscribe(
+        client=ws_client,
+        subscription=Dict{String,Any}(&quot;name&quot; =&gt; &quot;ticker&quot;),
+        pairs=[&quot;XBT/USD&quot;, &quot;DOT/USD&quot;]
+    )
+
+    subscribe(
+        client=ws_client,
+        subscription=Dict{String,Any}(&quot;name&quot; =&gt; &quot;ownTrades&quot;)
+    )
+
+    # wait before unsubscribe is done ...
+    sleep(2)
+
+    #== Unsubscribe from public and private websocket feeds ==#
+    # unsubscribe(
+    #     client=ws_client,
+    #     subscription=Dict{String,Any}(&quot;name&quot; =&gt; &quot;ticker&quot;),
+    #     pairs=[&quot;XBT/USD&quot;, &quot;DOT/USD&quot;]
+    # )
+    # unsubscribe(
+    #     client=ws_client,
+    #     subscription=Dict{String,Any}(&quot;name&quot; =&gt; &quot;ownTrades&quot;)
+    # )
+
+    # to cancel a connection you can use:
+    # ws_client.cancel_private_connection = true
+    # ws_client.cancel_public_connection = true
+
+    wait(con)
+end
+
+main()</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../spot_websocket/">« Kraken Spot WebSocket API</a><a class="docs-footer-nextpage" href="../../futures/futures/">Kraken Futures REST API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 10 January 2023 19:31">Tuesday 10 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
