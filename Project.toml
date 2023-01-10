@@ -14,6 +14,7 @@ StringEncodings = "69024149-9ee7-55f6-a4c4-859efe599b68"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
+Documenter = "0.27"
 HTTP = "1"
 JSON = "0.21"
 Nettle = "1"
