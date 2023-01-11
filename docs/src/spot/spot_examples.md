@@ -2,11 +2,11 @@
    CurrentModule = KrakenEx
 ```
 
+# Kraken Spot Examples
+
 ```@contents
 Pages = ["spot_examples.md"]
 ```
-
-# Kraken Spot Trading Examples
 
 ## Spot REST Examples
 
@@ -18,15 +18,20 @@ using KrakenEx.SpotUserModule
 using KrakenEx.SpotTradeModule
 using KrakenEx.SpotFundingModule
 using KrakenEx.SpotStakingModule
-# you can also import all specific functions separate like shown in `/examples/spot_rest_examples.jl`
+#= you can also import specific functions
+e.g.:
+using KrakenEx.SpotMarketModule: get_ohlc, get_assets
+=#
 
 function main()
+    # public client
+    client = SpotBaseRESTAPI()
 
-    client = SpotBaseRESTAPI() # public client
+    # authenticated client
     private_client = SpotBaseRESTAPI(
         key="Kraken-public-key",
         secret="Kraken-secret-key"
-    ) # authenticated client
+    )
 
     #===== User Endpoints =====#
     println(get_account_balance(private_client))
@@ -89,10 +94,21 @@ function main()
     function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
         # implement your strategy here....
-        # (dont forget that you can also access rest endpoints hier)
+
+        #=
+            Dont forget that you can also access public rest endpoints here.
+            If the `ws_client` instance is authenticated, you can also
+            use private endpoints:
+
+        KrakenEx.SpotMarketModule.cancel_order(
+            ws_client.rest_client,
+            txid="XXXXXX-XXXXXX-XXXXXX"
+        )
+        =#
     end
 
-    # the conn will create a public and a private websocket connection
+    # create a public and a private websocket connection
+    # specify `private=false` or `public=false` to use only one feed
     con = @async connect(ws_client, callback=on_message, private=true)
 
     #== Subscribe to public and private websocket feeds ==#

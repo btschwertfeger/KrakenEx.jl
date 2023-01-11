@@ -1,10 +1,10 @@
-# Kraken Spot WebSocket API
-
-The listed functions and data types allow to access to public and private (authenticated) websocket feeds.
-
 ```@meta
    CurrentModule = KrakenEx.SpotWebSocketModule
 ```
+
+# Kraken Spot WebSocket API
+
+The listed functions and data types allow to access to public and private (authenticated) websocket feeds.
 
 ```@contents
 Pages = ["spot_websocket.md"]

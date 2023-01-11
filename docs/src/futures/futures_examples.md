@@ -2,11 +2,11 @@
    CurrentModule = KrakenEx
 ```
 
+# Kraken Futures Examples
+
 ```@contents
 Pages = ["futures_examples.md"]
 ```
-
-# Kraken Futures Trading Examples
 
 ## Futures REST Examples
 
@@ -118,7 +118,7 @@ main()
 
 ```julia
 using KrakenEx
-using .KrakenEx.FuturesWebsocketModule:
+using KrakenEx.FuturesWebsocketModule:
     FuturesWebSocketClient,
     connect,
     subscribe, unsubscribe
@@ -131,12 +131,23 @@ function main()
     function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
         # implement your strategy here....
+
+        #=
+            Dont forget that you can also access public rest endpoints here.
+            If the `ws_client` instance is authenticated, you can also
+            use private endpoints:
+
+        KrakenEx.FuturesMarketModule.cancel_order(
+            ws_client.rest_client,
+            txid="XXXXXX-XXXXXX-XXXXXX"
+        )
+        =#
     end
 
     #=
-     `connect` can establish a private and a public connection at the same time.
-     You can turn off either the private or the public connection
-      using `private=false` or `public=false`.
+       `connect` can establish a private and a public connection at the same time.
+       You can turn off either the private or the public connection
+       using `private=false` or `public=false`.
     =#
     con = @async connect(ws_client, callback=on_message, private=true)
 

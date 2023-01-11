@@ -10,7 +10,7 @@ Futures and Spot Websocket and REST API Julia SDK for the Kraken Cryptocurrency 
 
 This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia.
 
-This project is based on the (python-kraken-sdk)[https://github.com/btschwertfeger/python-kraken-sdk].
+This project is based on the [python-kraken-sdk](https://github.com/btschwertfeger/python-kraken-sdk).
 
 ## Disclaimer
 
@@ -30,7 +30,7 @@ Clients:
 General:
 
 - access both public and private endpoints
-- responsive error handling, custom exceptions and logging
+- responsive error handling and custom exceptions
 - extensive example scripts (see [https://github.com/btschwertfeger/KrakenEx.jl](https://github.com/btschwertfeger/KrakenEx.jl))
 
 ---
@@ -39,18 +39,20 @@ General:
 
 ### 1. Install the Julia Package:
 
-```julia
-using Pkg
-Pkg.add("KrakenEx")
+```julia-repl
+julia> using Pkg; Pkg.add("KrakenEx")
 ```
 
 ### 2. Register at Kraken and generate API Keys:
 
-- Spot Trading: ([ttps://www.kraken.com/u/security/api](https://www.kraken.com/u/security/api)
+- Spot Trading: [ttps://www.kraken.com/u/security/api](https://www.kraken.com/u/security/api)
 - Futures Trading: [https://futures.kraken.com/trade/settings/api](https://futures.kraken.com/trade/settings/api)
 - Futures Sandbox: [https://demo-futures.kraken.com/settings/api](https://demo-futures.kraken.com/settings/api)
 
 ### 3. Start using the provided example scripts
+
+- [Spot REST Examples](@ref)
+- [Futures REST Examples](@ref)
 
 ### 4. Error handling
 
@@ -60,7 +62,7 @@ If any unexpected behavior occurs, please check your API permissions, rate limit
 
 ## Troubleshooting
 
-- Check if your version of KrakenEx.jl version is the newest.
+- Check if your version of [KrakenEx.jl](@ref) version is the newest.
 - Check the permissions of your API keys and the required permissions on the respective endpoints.
 - If you get some cloudflare or rate limit errors, please check your Kraken Tier level and maybe apply for a higher rank if required.
 - Use different API keys for different algorithms, because the nonce calculation is based on timestamps and a sent nonce must always be the highest nonce ever sent of that API key. Having multiple algorithms using the same keys will result in invalid nonce errors.

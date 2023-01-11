@@ -1,6 +1,8 @@
 using Documenter
 using KrakenEx
 
+DocMeta.setdocmeta!(KrakenEx, :DocTestSetup, :(using KrakenEx); recursive=true)
+
 About = "Introduction" => "index.md"
 
 SpotAPI = "Spot API" => [
@@ -26,33 +28,20 @@ PAGES = [
     License
 ]
 
-format = Documenter.HTML(prettyurls=get(ENV, "CI", nothing) == "true")
+FORMAT = Documenter.HTML(
+    prettyurls=get(ENV, "CI", nothing) == "true",
+    # assets=["assets/favicon.ico"],
+)
 
 makedocs(
     modules=[KrakenEx],
     sitename="KrakenEx.jl",
     authors="Benjamin Thomas Schwertfeger",
-    format=format,
+    format=FORMAT,
     checkdocs=:exports,
     pages=PAGES
 )
 
-
-# makedocs(
-#     sitename="KrakenEx.jl",
-#     format=Documenter.HTML(prettyurls=get(ENV, "CI", nothing) == "true"),
-#     authors="Benjamin Thomas Schwertfeger",
-#     pages=[
-#         "Introduction" => "index.md",
-#         "Spot REST API" => "spot/spot.md",
-#         "Spot WebSocket API" => "spot/spot_websocket.md",
-#         "Spot Examples" => "spot/spot_examples.md",
-#         "Futures REST API" => "futures/futures.md",
-#         "Futures WebSocket API" => "futures/futures_websocket.md",
-#         "Futures Examples" => "futures/futures_examples.md",
-#         "Exceptions/Errors" => "exceptions.md"
-#     ]
-# )
 
 deploydocs(
     repo="github.com/btschwertfeger/KrakenEx.jl.git",

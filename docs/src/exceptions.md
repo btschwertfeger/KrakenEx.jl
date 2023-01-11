@@ -1,11 +1,10 @@
 # Kraken Exceptions
 
+This package uses custom exceptions which can be thrown or even catched. Exceptions are thrown when the responses
+include errors.
+
 ```@meta
    CurrentModule = KrakenEx
-```
-
-```@contents
-Pages = ["exceptions.md"]
 ```
 
 ```@autodocs

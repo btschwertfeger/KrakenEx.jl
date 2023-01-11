@@ -1,10 +1,10 @@
-# Kraken Futures WebSocket API
-
-The listed functions and data types allow to access to public and private (authenticated) websocket feeds.
-
 ```@meta
    CurrentModule = KrakenEx.FuturesWebSocketModule
 ```
+
+# Kraken Futures WebSocket API
+
+The listed functions and data types allow to access to public and private (authenticated) websocket feeds.
 
 ```@contents
 Pages = ["futures_websocket.md"]
