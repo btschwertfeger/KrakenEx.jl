@@ -3,8 +3,10 @@ import KrakenEx.SpotMarketModule as SpotMarket
 import KrakenEx.FuturesMarketModule as FuturesMarket
 using Test
 
-# Tests can only be performed on public endpoints, because
-# valid API keys are requred for private requests.
+#=
+ Tests can only be performed on public endpoints, because
+ valid API keys are requred for private requests.
+=#
 
 @testset "KrakenEx Spot REST Market Endpoints" begin
 

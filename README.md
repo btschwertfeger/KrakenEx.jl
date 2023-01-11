@@ -23,10 +23,6 @@ There is no guarantee that this software will work flawlessly at this or later t
 
 ---
 
-## Package Update
-
-- January 9, 2023
-
 ## Features
 
 Clients:
@@ -39,7 +35,7 @@ Clients:
 General:
 
 - access both public and private endpoints
-- responsive error handling, custom exceptions and logging
+- responsive error handling and custom exceptions
 - extensive example scripts (see `/examples`)
 
 ---
@@ -192,7 +188,17 @@ function main()
     function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
         # implement your strategy here....
-        # (dont forget that you can also access rest endpoints hier)
+
+        #=
+            Dont forget that you can also access public rest endpoints here.
+            If the `ws_client` instance is authenticated, you can also
+            use private endpoints:
+
+        KrakenEx.SpotMarketModule.cancel_order(
+            ws_client.rest_client,
+            txid="XXXXXX-XXXXXX-XXXXXX"
+        )
+        =#
     end
 
     # the conn will create a public and a private websocket connection
@@ -371,6 +377,17 @@ function main()
     function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
         # implement your strategy here....
+
+        #=
+            Dont forget that you can also access public rest endpoints here.
+            If the `ws_client` instance is authenticated, you can also
+            use private endpoints:
+
+        KrakenEx.FuturesMarketModule.cancel_order(
+            ws_client.rest_client,
+            txid="XXXXXX-XXXXXX-XXXXXX"
+        )
+        =#
     end
 
     #=
@@ -439,24 +456,23 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 `KrakenEx.SpotUserModule`
 
-| Method                     | Documentation                                                 |
-| -------------------------- | ------------------------------------------------------------- |
-| `get_account_balance`      | https://docs.kraken.com/rest/#operation/getAccountBalance     |
-| `get_balances`             | returns the overall and available balance of a given currency |
-| `get_trade_balance`        | https://docs.kraken.com/rest/#operation/getTradeBalance       |
-| `get_open_orders`          | https://docs.kraken.com/rest/#operation/getOpenOrders         |
-| `get_closed_orders`        | https://docs.kraken.com/rest/#operation/getClosedOrders       |
-| `get_orders_info`          | https://docs.kraken.com/rest/#operation/getOrdersInfo         |
-| `get_trades_history`       | https://docs.kraken.com/rest/#operation/getTradeHistory       |
-| `get_trades_info`          | https://docs.kraken.com/rest/#operation/getTradesInfo         |
-| `get_open_positions`       | https://docs.kraken.com/rest/#operation/getOpenPositions      |
-| `get_ledgers_info`         | https://docs.kraken.com/rest/#operation/getLedgers            |
-| `get_ledgers`              | https://docs.kraken.com/rest/#operation/getLedgersInfo        |
-| `get_trade_volume`         | https://docs.kraken.com/rest/#operation/getTradeVolume        |
-| `request_export_report`    | https://docs.kraken.com/rest/#operation/addExport             |
-| `get_export_report_status` | https://docs.kraken.com/rest/#operation/exportStatus          |
-| `retrieve_export`          | https://docs.kraken.com/rest/#operation/retrieveExport        |
-| `delete_export_report`     | https://docs.kraken.com/rest/#operation/removeExport          |
+| Method                     | Documentation                                             |
+| -------------------------- | --------------------------------------------------------- |
+| `get_account_balance`      | https://docs.kraken.com/rest/#operation/getAccountBalance |
+| `get_trade_balance`        | https://docs.kraken.com/rest/#operation/getTradeBalance   |
+| `get_open_orders`          | https://docs.kraken.com/rest/#operation/getOpenOrders     |
+| `get_closed_orders`        | https://docs.kraken.com/rest/#operation/getClosedOrders   |
+| `get_orders_info`          | https://docs.kraken.com/rest/#operation/getOrdersInfo     |
+| `get_trades_history`       | https://docs.kraken.com/rest/#operation/getTradeHistory   |
+| `get_trades_info`          | https://docs.kraken.com/rest/#operation/getTradesInfo     |
+| `get_open_positions`       | https://docs.kraken.com/rest/#operation/getOpenPositions  |
+| `get_ledgers_info`         | https://docs.kraken.com/rest/#operation/getLedgers        |
+| `get_ledgers`              | https://docs.kraken.com/rest/#operation/getLedgersInfo    |
+| `get_trade_volume`         | https://docs.kraken.com/rest/#operation/getTradeVolume    |
+| `request_export_report`    | https://docs.kraken.com/rest/#operation/addExport         |
+| `get_export_report_status` | https://docs.kraken.com/rest/#operation/exportStatus      |
+| `retrieve_export`          | https://docs.kraken.com/rest/#operation/retrieveExport    |
+| `delete_export_report`     | https://docs.kraken.com/rest/#operation/removeExport      |
 
 <a name="spottrade"></a>
 

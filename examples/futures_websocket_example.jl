@@ -17,7 +17,18 @@ function main()
 
     function on_message(msg::Union{Dict{String,Any},String})
         println(msg)
-        # implement your strategy here....
+        # implement your strategy here ...
+
+        #= 
+            Dont forget that you can also access public rest endpoints here.
+            If the `ws_client` instance is authenticated, you can also 
+            use private endpoints:
+
+        KrakenEx.FuturesMarketModule.cancel_order(
+            ws_client.rest_client,
+            txid="XXXXXX-XXXXXX-XXXXXX"
+        )
+        =#
     end
 
     #=

@@ -390,8 +390,8 @@ function main()
     )
 
     # market_endpoints(client)
-    # user_endpoints(private_client)
-    trade_endpoints(private_client)
+    user_endpoints(private_client)
+    # trade_endpoints(private_client)
     # funding_endpoints(private_client)
     # staking_endpoints(private_client)
 end

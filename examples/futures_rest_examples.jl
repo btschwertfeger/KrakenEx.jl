@@ -291,10 +291,10 @@ function main()
         DEMO=true
     )
 
-    # market_endpoints(client, private_sandbox_client)
-    # user_endpoints(private_client)
+    market_endpoints(client, private_sandbox_client)
+    user_endpoints(private_client)
     # funding_endpoints(private_client)
-    trade_endpoints(private_client)
+    # trade_endpoints(private_client)
 
 end
 

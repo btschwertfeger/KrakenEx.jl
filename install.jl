@@ -1,5 +1,5 @@
 
-#=This file only contain private notes=#
+#=This file only contains private notes=#
 import Pkg
 
 Pkg.add("HTTP")
