@@ -18,9 +18,11 @@ export create_order
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-data-get-your-fills](https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-data-get-your-fills)
 
+Returns information about the user-specific fills of all Futures contracts.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -52,9 +54,10 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-batch-order-management](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-batch-order-management)
 
+Creates a batch of order instructions to create, edit or even cancel multiple orders at the same time.
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -117,9 +120,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-all-orders](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-all-orders)
 
+Cancels all active orders of a user. 
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -167,11 +172,13 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-dead-man-39-s-switch](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-dead-man-39-s-switch)
 
+Enables the dead mans switch to prevent unwanted behaviour e.g. during system instabilities. Set `timeout=0` ro reset.
+
 Authenticated `client` required
 
 Set `timeout` to 0 to reset the death man switch.
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -209,9 +216,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-order](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-cancel-order)
 
+Cancels an order by `order_id` or `cliOrdId`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -270,9 +279,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-edit-order](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-edit-order)
 
+Enables editing placed orders which are still open.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -353,9 +364,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-get-the-current-status-for-specific-orders](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-get-the-current-status-for-specific-orders)
 
+Get information about (a) specific order(s) using `orderIds` or `cliOrdIds`. 
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")
@@ -420,9 +433,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-send-order](https://docs.futures.kraken.com/#http-api-trading-v3-api-order-management-send-order)
 
+Creates/places an order. 
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="secret-key")

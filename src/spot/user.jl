@@ -27,9 +27,11 @@ export get_websockets_token
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getAccountBalance](https://docs.kraken.com/rest/#operation/getAccountBalance)
 
+Returns the actual balances of all currencies.
+
 Authenticated `client` required
 
-# Example
+# Examples
 ```julia-repl 
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_account_balance(client))
@@ -58,7 +60,7 @@ Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradeBalance](https://d
 
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -99,9 +101,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOpenOrders](https://docs.kraken.com/rest/#operation/getOpenOrders)
 
+Retrurns the actual open orders.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -161,9 +165,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getClosedOrders](https://docs.kraken.com/rest/#operation/getClosedOrders)
 
+Returns information about the closed orders. 
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -234,9 +240,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo](https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo)
 
+Returns information about a specific order by `txid`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -298,9 +306,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradeHistory](https://docs.kraken.com/rest/#operation/getTradeHistory)
 
+Returns historical trades and information.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -352,9 +362,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradesInfo](https://docs.kraken.com/rest/#operation/getTradesInfo)
 
+Returns information about specific trades by `txid`. 
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -393,9 +405,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOpenPositions](https://docs.kraken.com/rest/#operation/getOpenPositions)
 
+Returns a list of open Margin positions.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -448,9 +462,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getLedgers](https://docs.kraken.com/rest/#operation/getLedgers)
 
+Returns information about the current ledergs.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -509,9 +525,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getLedgersInfo](https://docs.kraken.com/rest/#operation/getLedgersInfo)
 
+Returns information about specific ledergs by `id`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -544,9 +562,10 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradeVolume](https://docs.kraken.com/rest/#operation/getTradeVolume)
 
+Returns the actual 30-day trading volume.
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -577,9 +596,18 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/addExport](https://docs.kraken.com/rest/#operation/addExport)
 
+Initiates the export of a report and returns the export-`id`.
+
 Authenticated `client` required
 
-# Example
+# Attributes
+
+- `report` -- must be one of ["trades", "ledgers"] 
+
+...
+
+
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -617,9 +645,17 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/exportStatus](https://docs.kraken.com/rest/#operation/exportStatus)
 
+Returns information about the current export status.
+
 Authenticated `client` required
 
-# Example
+# Attributes
+
+- `report` -- must be one of ["trades", "ledgers"] 
+
+...
+
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -655,11 +691,13 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/retrieveExport](https://docs.kraken.com/rest/#operation/retrieveExport)
 
+Retrieves the initiated exprort. Can be used to save this report to csv.
+
 Authenticated `client` required
 
 The `id` is obtained when requesting the report using [`request_export_report`](@ref).
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -679,11 +717,16 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/removeExport](https://docs.kraken.com/rest/#operation/removeExport)
 
-valid values for `type` are: `"delete"` or `"cancel"`
+Removes an export by `id` from the system.
 
 Authenticated `client` required
 
-# Example
+# Attributes
+- `type` -- must be one of ["delete", "cancel"]
+
+...
+
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -703,9 +746,12 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#tag/Websockets-Authentication](https://docs.kraken.com/rest/#tag/Websockets-Authentication)
 
+Returns the websocket token. This is used by the when 
+managing private websocket feeds and subscriptions.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")

@@ -6,6 +6,8 @@ using ..Utils
 export get_deposit_methods
 export get_deposit_address
 export get_recend_deposits_status
+export withdraw_funds
+export get_withdrawal_info
 export get_recend_withdraw_status
 export cancel_withdraw
 export wallet_transfer
@@ -16,9 +18,11 @@ export wallet_transfer
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getDepositMethods](https://docs.kraken.com/rest/#operation/getDepositMethods)
 
+Returns the available deposit methods for a given `asset` (symbol/currency pair).
+    
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -45,9 +49,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getDepositAddresses](https://docs.kraken.com/rest/#operation/getDepositAddresses)
 
+Returns the available deposit adresses of a given `asset` (symbol/currency pair).
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -85,7 +91,12 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStatusRecentDeposits](https://docs.kraken.com/rest/#operation/getStatusRecentDeposits)
 
+Returns the status of the recend deposit.
+
 Authenticated `client` required
+
+# Examples
+
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(
@@ -116,9 +127,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/withdrawFunds](https://docs.kraken.com/rest/#operation/withdrawFunds)
 
+Initiates a withdraw and returns the `refid` to track the status.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -154,9 +167,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getWithdrawalInformation](https://docs.kraken.com/rest/#operation/getWithdrawalInformation)
 
+Returns information about a specific withdrawal. The `key` can be the `refid` returned by [`withdraw_funds`](@ref).
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -197,9 +212,12 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals](https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals)
 
+Returns information about the recend withdrawal.
+
 Authenticated `client` required
 
-# Example
+# Examples
+
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_recend_withdraw_status(client, asset="DOT"))
@@ -232,9 +250,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelWithdrawal](https://docs.kraken.com/rest/#operation/cancelWithdrawal)
 
+Cancels a withdrawal by `refid`. The `refid` returned by [`withdraw_funds`](@ref) when initiating a withdraw.
 Authenticated `client` required
 
-# Example
+# Examples
+
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> cancel_withdraw(client, asset="DOT", refid="VGBNO6T-KFPTAQ-LAKGA6")
@@ -259,9 +279,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/walletTransfer](https://docs.kraken.com/rest/#operation/walletTransfer)
 
+Enables the transfer of assets between different wallets e.g. from Spot to Futures wallet.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")

@@ -1,11 +1,11 @@
 module FuturesBaseAPIModule
 using ..ExceptionsModule: get_exception
 using ..Utils: get_nonce
-using Base64: base64decode, base64encode
-using HTTP: Messages.Response, delete, escapeuri, get, post, put
-using JSON: json, parse
-using Nettle: digest
-using StringEncodings: encode
+using Base64
+using HTTP
+using JSON
+using Nettle
+using StringEncodings
 
 #======= E X P O R T S ========#
 export FuturesBaseRESTAPI
@@ -18,7 +18,7 @@ Type that stores information about the client and can be used
 to access public and private endpoints of the Kraken API for 
 Futures trading.
 
-### Fields
+# Fields
 
 - `key`  -- Kraken Futures API key
 - `secret` -- Kraken Futures Secret key
@@ -30,7 +30,7 @@ Defualt:
 - `TIMEOUT`  -- Request timeout (default: 10)
 - `HEADERS`  -- Default headers (default: ["User-Agent" => "KrakenEx.jl"])
 
-### Examples
+# Examples
 
 - `FuturesBaseRESTAPI()` -- default, public client
 
@@ -66,7 +66,7 @@ function handle_error(kind::String, data::Dict{String,Any})
         exception = get_exception(data["error"])
 
         if !isnothing(exception)
-            throw(exception(message=json(data)))
+            throw(exception(message=JSON.json(data)))
         else
             return data
         end
@@ -76,7 +76,7 @@ function handle_error(kind::String, data::Dict{String,Any})
         if haskey(data, "sendStatus") && haskey(data, "sendStatus")
             exception = get_exception(data["sendStatus"]["status"])
             if !isnothing(exception)
-                throw(exception(message=json(data)))
+                throw(exception(message=JSON.json(data)))
             end
         end
         return data
@@ -89,7 +89,7 @@ function handle_error(kind::String, data::Dict{String,Any})
                 if haskey(status, "status")
                     exception = get_exception(status["status"])
                     if !isnothing(exception)
-                        throw(exception(message=json(data)))
+                        throw(exception(message=JSON.json(data)))
                     end
                 end
             end
@@ -103,11 +103,11 @@ end
 
 
 """
-    handle_response(response::Response, return_raw::Bool=false)
+    handle_response(response::HTTP.Response, return_raw::Bool=false)
 
 Handles incoming responses, returns the response and/or handles the error.
 """
-function handle_response(response::Response, return_raw::Bool=false)
+function handle_response(response::HTTP.Response, return_raw::Bool=false)
     if response.status ∈ ["200", 200]
         if return_raw
             return response.body
@@ -115,7 +115,7 @@ function handle_response(response::Response, return_raw::Bool=false)
 
         data = String(response.body)
         try
-            data = parse(data)
+            data = JSON.parse(data)
         catch err
             return data
             # error(err)
@@ -166,16 +166,16 @@ function request(
 
     query_string::String = ""
     if !isnothing(query_params)
-        query_string = escapeuri(query_params)
+        query_string = HTTP.escapeuri(query_params)
     end
 
     post_string::String = ""
     if !isnothing(post_params)
         if !do_json
-            post_string = escapeuri(post_params)
+            post_string = HTTP.escapeuri(post_params)
         else
-            post_params = json(post_params)
-            post_string = "json=" * escapeuri(post_params)
+            post_params = JSON.json(post_params)
+            post_string = "json=" * HTTP.escapeuri(post_params)
         end
     end
 
@@ -205,7 +205,7 @@ function request(
             url *= "?" * query_string
         end
 
-        method == "GET" ? method = get : method == delete
+        method == "GET" ? method = HTTP.get : method == HTTP.delete
         return handle_response(
             method(url, headers=headers, readtimeout=client.TIMEOUT),
             return_raw
@@ -213,7 +213,7 @@ function request(
 
     elseif method == "PUT"
         return handle_response(
-            put(
+            HTTP.put(
                 url * uri * "?" * query_string,
                 body=query_params,
                 headers=headers,
@@ -224,7 +224,7 @@ function request(
 
     elseif method == "POST"
         post_string != "" ? post_string = "?$post_string" : ""
-        return handle_response(post(
+        return handle_response(HTTP.post(
                 url * uri * post_string,
                 headers=headers,
                 body=post_params,
@@ -258,16 +258,16 @@ function get_kraken_signature(
         endpoint = endpoint[begin+length("/derivatives"):end]
     end
 
-    return base64encode(
+    return Base64.base64encode(
         transcode(
-            String, digest(
+            String, Nettle.digest(
                 "sha512",
-                base64decode(client.secret), # decoded 
+                Base64.base64decode(client.secret), # decoded 
                 transcode(
                     String,
-                    digest(
+                    Nettle.digest(
                         "sha256",
-                        encode(data * nonce * endpoint, "utf-8")
+                        StringEncodings.encode(data * nonce * endpoint, "utf-8")
                     )
                 ) # message
             )

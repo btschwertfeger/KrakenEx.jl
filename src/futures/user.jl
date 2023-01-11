@@ -17,9 +17,11 @@ export get_account_log_csv
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-wallets](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-wallets)
 
+Lists the user-specifc wallets.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -67,9 +69,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-orders](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-orders)
 
+Lists the open orders of this user.
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -90,9 +94,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-positions](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-open-positions)
 
+Lists the open positions of this user.
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -113,9 +119,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-subaccounts](https://docs.futures.kraken.com/#http-api-trading-v3-api-account-information-get-subaccounts)
 
+Lists the available subaccounts.
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -139,7 +147,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-account-i
 
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -160,9 +168,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-general-get-notifications](https://docs.futures.kraken.com/#http-api-trading-v3-api-general-get-notifications)
 
+Returns information defined by Kraken, e.g. "PostOnly mode at 01.01.2023 00:00:00"
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -191,9 +201,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-account-log](https://docs.futures.kraken.com/#http-api-history-account-log)
 
+Enables querying the log of specific events.
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -234,9 +246,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-account-log-get-recent-account-log-csv](https://docs.futures.kraken.com/#http-api-history-account-log-get-recent-account-log-csv)
 
+Enables requesting the account log to save it as for example as csv.
+
 Authenticated `client` required
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")

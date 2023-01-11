@@ -16,9 +16,11 @@ export list_staking_transactions
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/stake](https://docs.kraken.com/rest/#operation/stake)
 
+Initiates a staking action for a desired `asset`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -39,9 +41,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/unstake](https://docs.kraken.com/rest/#operation/unstake)
 
+Enables the unstaking of a staked `asset`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -63,9 +67,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStakingAssetInfo](https://docs.kraken.com/rest/#operation/getStakingAssetInfo)
 
+Lists the available assets to stake.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -97,9 +103,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStakingPendingDeposits](https://docs.kraken.com/rest/#operation/getStakingPendingDeposits)
 
+Returns a list of pending staking transactions of this user.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -126,9 +134,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStakingTransactions](https://docs.kraken.com/rest/#operation/getStakingTransactions)
 
+Returns the list of staking transactions for this user.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")

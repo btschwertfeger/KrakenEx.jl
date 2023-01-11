@@ -1,10 +1,10 @@
 module SpotBaseAPIModule
 using ..Utils: get_nonce
 using ..ExceptionsModule: get_exception
-using Base64: base64decode, base64encode
-using HTTP: Messages.Response, escapeuri, get, post
-using JSON: json, parse
-using Nettle: digest
+using Base64
+using HTTP
+using JSON
+using Nettle
 
 #======= E X P O R T S ========#
 export SpotBaseRESTAPI
@@ -17,7 +17,7 @@ Type that stores information about the client and can be used
 to access public and private endpoints of the Kraken API for 
 Spot trading.
 
-### Fields
+# Fields
 
 - `key`  -- Kraken Spot API key
 - `secret` -- Kraken Spot Secret key
@@ -28,7 +28,7 @@ Defualt:
 - `TIMEOUT`  -- Request timeout (default: 10)
 - `HEADERS`  -- Default headers {default: ["User-Agent" => "KrakenEx.jl"]}
 
-### Examples
+# Examples
 
 - `SpotBaseRESTAPI()` -- default, public client
 
@@ -56,18 +56,18 @@ function handle_error(data::Dict{String,Any})
 
     exception = get_exception(data["error"][begin])
     if !isnothing(exception)
-        throw(exception(message=json(data)))
+        throw(exception(message=JSON.json(data)))
     else
         return data
     end
 end
 
 """
-    handle_response(response::Response, return_raw::Bool=false)
+    handle_response(response::HTTP.Response, return_raw::Bool=false)
 
 Parses and returns the `response` and calls `handle_error` if required.
 """
-function handle_response(response::Response, return_raw::Bool=false)
+function handle_response(response::HTTP.Response, return_raw::Bool=false)
     if response.status ∉ ["200", 200]
         error(response.status * ": " * String(response.body))
     elseif return_raw
@@ -76,7 +76,7 @@ function handle_response(response::Response, return_raw::Bool=false)
 
     response_json = []
     try
-        response_json = parse(String(response.body))
+        response_json = JSON.parse(String(response.body))
     catch error
         error("Could not parse response.")
     end
@@ -114,7 +114,7 @@ function request(
     headers = deepcopy(client.HEADERS)
 
     if type == "GET"
-        return handle_response(get(url, headers=headers, query=data, readtimeout=client.TIMEOUT), return_raw)
+        return handle_response(HTTP.get(url, headers=headers, query=data, readtimeout=client.TIMEOUT), return_raw)
     elseif type == "POST"
         if auth
             if isnothing(client.key) || isnothing(client.secret)
@@ -125,7 +125,7 @@ function request(
             data["nonce"] = nonce
 
             if do_json
-                data = json(data)
+                data = JSON.json(data)
                 push!(headers, "Content-Type" => "application/json")
             else
                 push!(headers, "Content-Type" => "application/x-www-form-urlencoded; charset=utf-8")
@@ -135,7 +135,7 @@ function request(
             push!(headers, "API-Key" => client.key)
         end
 
-        return handle_response(post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
+        return handle_response(HTTP.post(url, headers=headers, body=data, readtimeout=client.TIMEOUT), return_raw)
     end
 end
 
@@ -156,14 +156,14 @@ function get_kraken_signature(
     data::Union{String,Dict{String,Any}},
     nonce::String
 )
-    typeof(data) == String ? post_data = data : post_data = escapeuri(data)
+    typeof(data) == String ? post_data = data : post_data = HTTP.escapeuri(data)
     endpoint = "/" * string(client.API_V) * endpoint
-    return base64encode(
+    return Base64.base64encode(
         transcode(
-            String, digest(
+            String, Nettle.digest(
                 "sha512",
-                base64decode(client.secret), # decoded 
-                endpoint * transcode(String, digest("sha256", nonce * post_data)) # message
+                Base64.base64decode(client.secret), # decoded 
+                endpoint * transcode(String, Nettle.digest("sha256", nonce * post_data)) # message
             )
         )
     )

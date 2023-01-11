@@ -38,13 +38,17 @@ export cancel_order_batch
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrder](https://docs.kraken.com/rest/#operation/addOrder)
 
+Enables the Spot trading mechanism. Various parameters can be specified for an individual trading preference. 
+
 Authenticated `client` required
 
 # Arguments
+
 `validate::Bool=false` -- Simulates order placement if set to `true`
+
 ...
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -149,11 +153,13 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrderBatch](https://docs.kraken.com/rest/#operation/addOrderBatch)
 
+Enables placing multiple orders and order-specific actions at once. 
+
 Authenticated `client` required
 
 The `validate` key can be submitted to orders to simulate the result (see [`create_order`](@ref)).
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -264,13 +270,15 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/editOrder](https://docs.kraken.com/rest/#operation/editOrder)
 
+Enables the editing of a placed order by `txid`.
+
 Authenticated `client` required
 
 # Arguments
 `validate::Bool=false` -- Simulates order placement if set to `true`
 ...
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -323,9 +331,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelOrder](https://docs.kraken.com/rest/#operation/cancelOrder)
 
+Cancels an order by `txid`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -341,9 +351,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrders](https://docs.kraken.com/rest/#operation/cancelAllOrders)
 
+Cancels all open orders.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -359,11 +371,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter](https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter)
 
+Cancels all open orders after `timeout` seconds. This can be used to avoid unwanted behavior in case of system instabilities. Set `timeout` to 0 to reset the timout.
+
 Authenticated `client` required
 
-Set `timeout` to 0 to reset the timout.
-
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
@@ -388,9 +400,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelOrderBatch](https://docs.kraken.com/rest/#operation/cancelOrderBatch)
 
+Enables the cancellation of multiple orders by `txid`.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")

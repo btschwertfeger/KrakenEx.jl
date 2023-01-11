@@ -19,7 +19,7 @@ export get_system_status
 
 Returns the server time of the Kraken Cryptocurrency Exchange API
 
-# Example
+# Examples
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_server_time(client))
@@ -35,9 +35,12 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getAssetInfo](https://docs.kraken.com/rest/#operation/getAssetInfo)
 
+Returns a list of available Spot assets as well as additional descriptions.
+
 Authenticated `client` not required
 
-# Example
+# Examples
+
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_assets(client))
@@ -80,9 +83,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradableAssetPairs](https://docs.kraken.com/rest/#operation/getTradableAssetPairs)
 
+Returns a list of available symbols (asset pairs) and additional informarion.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_tradable_asset_pair(client, pair=["XBTUSD"]))
@@ -138,7 +143,7 @@ Dict{String, Any}(
 )
 ```
 """
-function get_tradable_asset_pair(client::SpotBaseRESTAPI; pair::Vector{String}, info::String="info")
+function get_tradable_asset_pair(client::SpotBaseRESTAPI; pair::Union{Vector{String},String}, info::String="info")
     params = Dict{String,Any}(
         "pair" => vector_to_string(pair),
         "info" => info
@@ -151,9 +156,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTickerInformation](https://docs.kraken.com/rest/#operation/getTickerInformation)
 
+Returns the actual ticker of a given `pair` (asset pair/symbol).
+
 Authenticated `client` not required
 
-# Example 
+# Examples 
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_ticker(client, pair="DOTUSD"))
@@ -182,9 +189,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOHLCData](https://docs.kraken.com/rest/#operation/getOHLCData)
 
+Returns information about the open, high, low, close, vwap, and volume of a given `pair`.
+
 Authenticated `client` not required
 
-# Example 
+# Examples 
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> get_ohlc(client, pair="XBTUSD")
@@ -213,9 +222,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOrderBook](https://docs.kraken.com/rest/#operation/getOrderBook)
 
+Returns the current asks and bids (orderbook) of a given currency `pair`.
+
 Authenticated `client` not required
 
-# Example 
+# Examples 
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> get_order_book(client, pair="XBTUSD")
@@ -252,9 +263,12 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getRecentTrades](https://docs.kraken.com/rest/#operation/getRecentTrades)
 
+Returns the recent trades of a given `symbol` (currency pair).
+
 Authenticated `client` not required
 
-# Example
+# Examples
+
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_recent_trades(client, pair="XBTUSD"))
@@ -286,9 +300,11 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getRecentSpreads](https://docs.kraken.com/rest/#operation/getRecentSpreads)
 
+Returns the recend spreads of a currency `pair` (symbol).
+
 Authenticated `client` not required
 
-# Example
+# Examples
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_recend_spreads(client, pair="XBTUSD"))
@@ -318,7 +334,7 @@ Returns the system status of the Kraken API
 
 Authenticated `client` not required
 
-# Example
+# Examples
 ```julia-repl
 julia> client = SpotBaseRESTAPI()
 julia> println(get_system_status(client))

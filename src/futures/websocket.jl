@@ -1,12 +1,14 @@
 module FuturesWebSocketModule
 using HTTP
-using Dates: now, Second
-using JSON: json, parse
-using Base64: base64decode, base64encode
-using Nettle: digest
+using Dates
+using JSON
+using Base64
+using Nettle
 
 import ..ExceptionsModule as exc
+using ..FuturesBaseAPIModule: FuturesBaseRESTAPI
 
+#= E X P O R T S =#
 export FuturesWebSocketClient
 export subscribe
 export unsubscribe
@@ -19,7 +21,7 @@ Type that stores information about the client and can be used
 to establish public and private websocket connections for 
 Kraken Futures trading.
 
-### Fields
+# Fields
 
 - `key` -- Kraken Futures API key
 - `secret` -- Kraken Futures Secret key
@@ -41,13 +43,16 @@ The following will be managed by the connection:
 - `available_public_feeds` -- List of all public feeds
 - `available_private_feeds` -- List of all private feeds
 
-### Examples
+# Exampless
 
 - `FuturesWebSocketClient()` -- default, public client
 
 - `FuturesWebSocketClient("the-api-key", "the-api-secret-key")` -- authenticated client for public and private requests
 """
 mutable struct FuturesWebSocketClient
+
+    rest_client::FuturesBaseRESTAPI
+
     key::Union{String,Nothing}
     secret::Union{String,Nothing}
 
@@ -69,6 +74,7 @@ mutable struct FuturesWebSocketClient
     available_private_feeds::Vector{String}
 
     FuturesWebSocketClient() = new(
+        FuturesBaseRESTAPI(),       # REST client
         nothing,                    # key
         nothing,                    # secret
         nothing,                    # new_challenge
@@ -88,6 +94,7 @@ mutable struct FuturesWebSocketClient
         ]
     )
     FuturesWebSocketClient(key::String, secret::String) = new(
+        FuturesBaseRESTAPI(key=key, secret=secret), # REST client
         key,                            # key
         secret,                         # secret
         nothing,                        # new_challenge
@@ -117,7 +124,7 @@ end
 
 Subscribe to a websocket feed.
 
-# Example
+# Examples
 
 ```julia-repl
 julia> # ws_client = FuturesWebSocketClient() # unauthenticated
@@ -146,7 +153,7 @@ end
 
 Unsubscribe from a subscribed feed.
 
-# Example
+# Examples
 
 ```julia-repl
 julia> # ws_client = FuturesWebSocketClient() # unauthenticated
@@ -172,7 +179,7 @@ end
 Requests and wait for a new challenge to create a private request.
 """
 function wait_check_challenge_ready(client::FuturesWebSocketClient)
-    WebSockets.send(client.private_ws, json(Dict{String,Any}(
+    WebSockets.send(client.private_ws, JSON.json(Dict{String,Any}(
         "event" => "challenge",
         "key" => client.key
     )))
@@ -206,10 +213,10 @@ function send_message(
         message["key"] = client.key
         message["original_challenge"] = client.last_challenge
         message["signed_challenge"] = client.new_challenge
-        WebSockets.send(client.private_ws, json(message))
+        WebSockets.send(client.private_ws, JSON.json(message))
 
     elseif !isnothing(client.public_ws)
-        WebSockets.send(client.public_ws, json(message))
+        WebSockets.send(client.public_ws, JSON.json(message))
 
     else
         error("Could not send message $message")
@@ -301,12 +308,12 @@ end
 Signes the challenge based on the users credentials.
 """
 function get_sign_challenge(client::FuturesWebSocketClient, challenge::String)
-    return base64encode(
+    return Base64.base64encode(
         transcode(
-            String, digest(
+            String, Nettle.digest(
                 "sha512",
-                base64decode(client.secret), # decoded 
-                transcode(String, digest("sha256", challenge)) # message
+                Base64.base64decode(client.secret), # decoded 
+                transcode(String, Nettle.digest("sha256", challenge)) # message
             )
         )
     )
@@ -330,7 +337,7 @@ Parses the incoming messages; appending, removing subscriptions etc.
 """
 function parse_message(client::FuturesWebSocketClient, msg::String)
     try
-        message::Dict{String,Any} = parse(msg)
+        message::Dict{String,Any} = JSON.parse(msg)
 
         if haskey(message, "event")
             if message["event"] == "challenge" && haskey(message, "message")
@@ -394,17 +401,17 @@ function establish_connection(
 
         callback(parse_message(
             client,
-            json(Dict{String,String}("event" => "$auth WebSocket connected"))
+            JSON.json(Dict{String,String}("event" => "$auth WebSocket connected"))
         ))
 
         recover_subscriptions(client)
 
-        last_ping_time = now()
+        last_ping_time = Dates.now()
         @async while true
             check_pending_subscriptions(client, private)
-            if last_ping_time < now() - Second(15)
+            if last_ping_time < Dates.now() - Dates.Second(15)
                 WebSockets.ping(ws)
-                last_ping_time = now()
+                last_ping_time = Dates.now()
             end
             sleep(0.25)
         end
@@ -422,7 +429,7 @@ function establish_connection(
         finally
             callback(parse_message(
                 client,
-                json(Dict{String,String}("event" => "$auth connection closed"))
+                JSON.json(Dict{String,String}("event" => "$auth connection closed"))
             ))
         end
     end
@@ -450,7 +457,7 @@ websocket connections and privat feed subscriptions requre valid API keys on the
 - `private::Bool=false` -- switch to activate/deactivate the private websocket connection
 
 
-# Example
+# Examples
 
 ```julia-repl
 julia> # ws_client = FuturesWebSocketClient() # unauthenticated

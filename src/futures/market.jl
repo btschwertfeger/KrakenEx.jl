@@ -39,14 +39,14 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-charts-ohlc-get-ohlc](ht
 
 Authenticated `client` not required
 
-# Attributes
+# Arguments
 - `symbol::String`: asset of interest
 - `tick_type::String`: must be one of ["spot", "mark", "trade"]
 - `resolution::String`: must be one of ["1m", "5m", "15m", "30m", "1h", "4h", "12h", "1d", "1w"]
 - `from::Union{Int64,Nothing}=nothing`: timestamp of ohlc begin
 - `to::Union{Int64,Nothing}=nothing`: timestamp of ohlc end 
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -109,9 +109,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-charts-ohlc-get-tick-types](https://docs.futures.kraken.com/#http-api-charts-ohlc-get-tick-types)
 
+Returns the available tick types.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -128,12 +130,14 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-charts-ohlc-get-tradeable-products](https://docs.futures.kraken.com/#http-api-charts-ohlc-get-tradeable-products)
 
+Returns a list of available products for trading.
+
 Authenticated `client` not required
 
 # Attributes
 - `tick_type::String`: must be one of ["spot", "mark", "trade"]
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -154,9 +158,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-charts-ohlc-get-resolutions](https://docs.futures.kraken.com/#http-api-charts-ohlc-get-resolutions)
 
+Returns the list of available resolutions.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -173,9 +179,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-fee-schedules-get-fee-schedules](https://docs.futures.kraken.com/#http-api-trading-v3-api-fee-schedules-get-fee-schedules)
 
+Returns the list of maker and taker fees per asset.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -220,7 +228,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-fee-sched
 
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -245,9 +253,11 @@ end
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-orderbook](https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-orderbook),
 [https://support.kraken.com/hc/en-us/articles/360022839551-Order-Book](https://support.kraken.com/hc/en-us/articles/360022839551-Order-Book)
 
+Returns the current orderbook including asks and bids of given `symbol`.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -282,9 +292,11 @@ end
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-tickers](https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-tickers),
 [https://support.kraken.com/hc/en-us/articles/360022839531-Tickers](https://support.kraken.com/hc/en-us/articles/360022839531-Tickers)
 
+Returns the available ticker for all available Futures symbols.
+    
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -333,9 +345,11 @@ end
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instruments](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instruments),
 [https://support.kraken.com/hc/en-us/articles/360022635672-Instruments](https://support.kraken.com/hc/en-us/articles/360022635672-Instruments)
 
+Lists available instruments (tradeable products) and additional information.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -382,9 +396,11 @@ end
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list), 
 [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status)
 
+Returns the status of given `instrument`.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -414,9 +430,11 @@ end
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-trade-history](https://docs.futures.kraken.com/#http-api-trading-v3-api-market-data-get-trade-history),
 [https://support.kraken.com/hc/en-us/articles/360022839511-History](https://support.kraken.com/hc/en-us/articles/360022839511-History)
 
+Lists historical trades of this user.
+
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -465,9 +483,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-get-the-leverage-setting-for-a-market](https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-get-the-leverage-setting-for-a-market)
 
+Shows the user-specific leverage preference.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -491,9 +511,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-the-leverage-setting-for-a-market](https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-the-leverage-setting-for-a-market)
 
+Enables setting the leverage preference.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -515,9 +537,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-get-pnl-currency-preference-for-a-market](https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-get-pnl-currency-preference-for-a-market)
 
+Returns the current asset-specific pnl preference.
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -541,8 +565,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-pnl-currency-preference-for-a-market](https://docs.futures.kraken.com/#http-api-trading-v3-api-multi-collateral-set-pnl-currency-preference-for-a-market)
 
+Enables editing the current asset-specific pnl preference.
+
 Authenticated `client` required
-# Example
+
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -605,9 +632,11 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-get-execution-events](https://docs.futures.kraken.com/#http-api-history-market-history-get-execution-events)
 
+
+
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -653,7 +682,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-g
 
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -737,7 +766,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-g
 
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -835,7 +864,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-g
 
 Authenticated `client` not required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI()
@@ -909,7 +938,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-g
 
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -986,7 +1015,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-history-market-history-g
 
 Authenticated `client` required
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")

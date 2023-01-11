@@ -1,12 +1,12 @@
 module SpotWebSocketModule
 using HTTP
-using Dates: now, Second
-using JSON: json, parse
-
+using Dates
+using JSON
+using ..KrakenEx # important to get docstrings to work for Documenter.jl
 using ..SpotBaseAPIModule: SpotBaseRESTAPI
 using ..SpotUserModule: get_websockets_token
-import ..ExceptionsModule as exc
 
+#= E X P O R T S =#
 export SpotWebSocketClient
 export connect, subscribe, unsubscribe
 export create_order
@@ -22,29 +22,39 @@ Type that stores information about the client and can be used
 to establish public and private websocket connections for 
 Kraken Spot trading.
 
-### Fields
+# Fields
 
 - `key` -- Kraken Spot API key
 - `secret` -- Kraken Spot Secret key
+
+Adjustable attributes:
 - `cancel_public_connection` -- can be set disable the active public websocket connection
 - `cancel_private_connection` -- can be set to disable the active private websocket connection
 
-The following will be managed by the connection:
+The following will be managed by the constructor or connection:
+- `rest_client` -- public or private instance of [`SpotBaseRESTAPI`](@ref KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI) 
 - `public_url` -- default websocket url for Kraken public Spot trading (default: "ws.kraken.com")
 - `private_url` -- default websocket url for Kraken private Spot trading (default: "ws-auth.kraken.com")
 - `active_subscriptions` -- List of active subscribed feeds
 - `pending_subscriptions` -- List of pending subscribtions
 - `pending_messages` -- List of pending messages (e.g. `create_order` events)
 
-### Examples
+# Notes
+
+The attribute `rest_client` stores a valid [`SpotBaseRESTAPI`](@ref KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI) client,
+so REST endpoints can also be accessed using this attributes. If the  [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient) 
+is authenticated, so the `rest_client` can also access private endpoints.
+
+# Examples
 
 - `SpotWebSocketClient()` -- default, public client
 
 - `SpotWebSocketClient("the-api-key", "the-api-secret-key")` -- authenticated client for public and private requests
 """
 mutable struct SpotWebSocketClient
-    public_client::SpotBaseRESTAPI
-    private_client::Union{SpotBaseRESTAPI,Nothing}
+    rest_client::SpotBaseRESTAPI
+    auth::Bool
+
     private_ws_token::Union{String,Nothing}
     public_url::String
     private_url::String
@@ -58,7 +68,7 @@ mutable struct SpotWebSocketClient
 
     SpotWebSocketClient() = new(
         SpotBaseRESTAPI(),
-        nothing,
+        false,
         nothing,
         "ws.kraken.com",
         "ws-auth.kraken.com",
@@ -67,8 +77,8 @@ mutable struct SpotWebSocketClient
     )
 
     SpotWebSocketClient(key::String, secret::String) = new(
-        SpotBaseRESTAPI(),
         SpotBaseRESTAPI(key=key, secret=secret),
+        true,
         get_websockets_token(SpotBaseRESTAPI(key=key, secret=secret))["token"],
         "ws.kraken.com",
         "ws-auth.kraken.com",
@@ -99,7 +109,7 @@ function send_message(;
         message["token"] = client.private_ws_token
     end
 
-    WebSockets.send(ws, json(message))
+    WebSockets.send(ws, JSON.json(message))
 end
 
 """
@@ -264,7 +274,7 @@ Parses the incoming messages; appending, removing subscriptions etc.
 """
 function parse_message(client::SpotWebSocketClient, msg::String)
     try
-        message::Dict{String,Any} = parse(msg)
+        message::Dict{String,Any} = JSON.parse(msg)
 
         if haskey(message, "event")
             if message["event"] == "heartbeat"
@@ -322,10 +332,10 @@ function establish_connection(
     return @async WebSockets.open("wss://" * url) do ws
         callback(parse_message(
             client,
-            json(Dict{String,String}("event" => "$auth WebSocket connected"))
+            JSON.json(Dict{String,String}("event" => "$auth WebSocket connected"))
         ))
 
-        last_ping_time = now()
+        last_ping_time = Dates.now()
         msg::Union{String,Dict{String,Any},Nothing} = nothing
 
         recover_subscriptions(client)
@@ -337,9 +347,9 @@ function establish_connection(
                     check_pending_messages(client, ws)
                 end
 
-                if last_ping_time < now() - Second(15)
+                if last_ping_time < Dates.now() - Dates.Second(15)
                     WebSockets.ping(ws)
-                    last_ping_time = now()
+                    last_ping_time = Dates.now()
                 end
 
                 if !isnothing(msg)
@@ -351,7 +361,7 @@ function establish_connection(
         catch
             callback(parse_message(
                 client,
-                json(Dict{String,String}("event" => "connection closed"))
+                JSON.json(Dict{String,String}("event" => "connection closed"))
             ))
         end
     end
@@ -366,14 +376,14 @@ end
     )
     
 Can create up to two (one private and one public) websocket connections. The public and/or private
-websocket object will be stored within the [`SpotWebSocketClient`](@ref). Websocket feeds can be subscribed
-and unsubscribed after a successful connection. This function must be invoked using `@async`. Private 
-websocket connections and privat feed subscriptions requre valid API keys on the passed 
-[`SpotWebSocketClient`](@ref) object.
+websocket object will be stored within the [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient). 
+Websocket feeds can be subscribed and unsubscribed after a successful connection. 
+This function must be invoked using `@async`. Private websocket connections and privat feed 
+subscriptions requre valid API keys on the passed [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient) object.
 
 # Attributes
 
-- `client::SpotWebSocketClient` -- the [`SpotWebSocketClient`](@ref) instance
+- `client::SpotWebSocketClient` -- the [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient) instance
 - `callback::Core.Function` -- Callback function wich receives the websocket messages
 - `public::Bool=true` -- switch to activate/deactivate the public websocket connection
 - `private::Bool=false` -- switch to activate/deactivate the private websocket connection
@@ -419,7 +429,7 @@ function connect(
         public_task = nothing
     end
 
-    if !isnothing(client.private_client) && private
+    if client.auth && private
         @async while !client.cancel_private_connection
             private_task = establish_connection(client, callback, true)
             some_connected = true
@@ -465,6 +475,38 @@ end
     )
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-addOrder](https://docs.kraken.com/websockets/#message-addOrder)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> using KrakenEx.SpotWebsocketModule: 
+...        SpotWebSocketClient,
+...        connect, subscribe,
+...        create_order
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret")
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        if condition # set your own conditions ... 
+...            create_order(
+...                client,
+...                side="buy",
+...                pair="XBTUSD",
+...                volume="0.0001",
+...                ordertype="market",
+...             )
+...        end
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function create_order(client::SpotWebSocketClient;
     ordertype::String,
@@ -485,7 +527,7 @@ function create_order(client::SpotWebSocketClient;
     close_price2::Union{String,Nothing}=nothing,
     timeinforce::Union{String,Nothing}=nothing
 )
-    if isnothing(client.private_client)
+    if !client.auth
         error("Cannot create order without an authenticated client.")
     end
 
@@ -539,6 +581,36 @@ end
     )
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-editOrder](https://docs.kraken.com/websockets/#message-editOrder)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> using KrakenEx.SpotWebsocketModule: 
+...        SpotWebSocketClient,
+...        connect, subscribe,
+...        edit_order
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret")
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        if condition # set your own conditions ... 
+...            edit_order(
+...                client,
+...                txid="xxxxxx-xxxxxx-xxxxxx-xxxxxx",
+...                volume="0.0002",
+...             )
+...        end
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function edit_order(client::SpotWebSocketClient;
     txid::String,
@@ -552,7 +624,7 @@ function edit_order(client::SpotWebSocketClient;
     validate::Bool=false,
     userref::Union{Int32,Nothing}=nothing
 )
-    if isnothing(client.private_client)
+    if !client.auth
         error("Cannot create order without an authenticated client.")
     end
 
@@ -574,10 +646,39 @@ end
 """
     cancel_order(client::SpotWebSocketClient; txid::String)
 
-[https://docs.kraken.com/websockets/#message-cancelOrder](https://docs.kraken.com/websockets/#message-cancelOrder)
+Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelOrder](https://docs.kraken.com/websockets/#message-cancelOrder)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> using KrakenEx.SpotWebsocketModule: 
+...        SpotWebSocketClient,
+...        connect, subscribe,
+...        cancel_order
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret")
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        if condition # set your own conditions ... 
+...            cancel_order(
+...                client,
+...                txid="xxxxxx-xxxxxx-xxxxxx-xxxxxx",
+...             )
+...        end
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function cancel_order(client::SpotWebSocketClient; txid::String)
-    if isnothing(client.private_client)
+    if !client.auth
         error("Cannot create order without an authenticated client.")
     end
     add_message(client, Dict{String,Any}("txid" => txid), true)
@@ -587,21 +688,74 @@ end
     cancel_all_orders(client::SpotWebSocketClient)
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAll](https://docs.kraken.com/websockets/#message-cancelAll)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> using KrakenEx.SpotWebsocketModule: 
+...        SpotWebSocketClient,
+...        connect, subscribe,
+...        cancel_all_orders
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret")
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        if condition # set your own conditions ... 
+...            cancel_all_orders(client)
+...        end
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function cancel_all_orders(client::SpotWebSocketClient)
-    if isnothing(client.private_client)
+    if !client.auth
         error("Cannot create order without an authenticated client.")
     end
 
     add_message(client, Dict{String,Any}("event" => "cancelAll"), true)
 end
+
 """
     cancel_all_orders_after_x(client::SpotWebSocketClient, timeout::Int)
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter](https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter)
+
+Authenticated `client` required
+
+# Example
+
+```julia-repl
+julia> using KrakenEx.SpotWebsocketModule: 
+...        SpotWebSocketClient,
+...        connect, subscribe,
+...        cancel_all_orders_after_x
+julia> ws_client = SpotWebSocketClient("api-key", "api-secret")
+julia> function on_message(msg::Union{Dict{String,Any},String})
+...        println(msg)
+...        if condition # set your own conditions ... 
+...            cancel_all_orders_after_x(client, timeout=60)
+...        end
+...    end 
+julia> con = @async connect(ws_client, callback=on_message, private=true)
+julia> subscribe(
+...        client=ws_client,
+...        subscription=Dict{String,Any}("name" => "ticker"),
+...        pairs=["XBT/USD"]
+...    )
+julia> # do more stuff ... 
+julia> wait(conn)
+```
 """
 function cancel_all_orders_after_x(client::SpotWebSocketClient, timeout::Int)
-    if isnothing(client.private_client)
+    if !client.auth
         error("Cannot create order without an authenticated client.")
     end
 

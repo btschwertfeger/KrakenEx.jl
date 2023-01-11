@@ -13,7 +13,7 @@ export initiate_withdrawal_to_spot_wallet
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates](https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates)
 
-# Example 
+# Examples 
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -61,7 +61,7 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-wallet-transfer)
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -101,7 +101,7 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-sub-account-transfer)
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -145,7 +145,7 @@ end
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet](https://docs.futures.kraken.com/#http-api-trading-v3-api-transfers-initiate-withdrawal-to-spot-wallet)
 
-# Example
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
