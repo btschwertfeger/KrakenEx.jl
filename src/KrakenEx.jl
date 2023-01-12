@@ -1,9 +1,10 @@
 module KrakenEx
 
-include("utils.jl")
-
-include("exceptions/exceptions.jl")
 export SpotBaseRESTAPI
+
+#===> M I S C - I M P O R T S <===#
+include("utils.jl")
+include("exceptions/exceptions.jl")
 
 #===> S P O T - I M P O R T S <===#
 include("spot/spot_base_api.jl")

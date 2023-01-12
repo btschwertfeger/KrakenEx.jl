@@ -1,3 +1,8 @@
+"""
+    SpotTradeModule
+
+Enables accessing Spot trade endpoints using predefined methods.
+"""
 module SpotTradeModule
 
 using ..SpotBaseAPIModule: SpotBaseRESTAPI, request
@@ -331,7 +336,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelOrder](https://docs.kraken.com/rest/#operation/cancelOrder)
 
-Cancels an order by `txid`.
+Cancel an order by `txid`.
 
 Authenticated `client` required
 
@@ -351,7 +356,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrders](https://docs.kraken.com/rest/#operation/cancelAllOrders)
 
-Cancels all open orders.
+Cancel all open orders.
 
 Authenticated `client` required
 
@@ -371,7 +376,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter](https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter)
 
-Cancels all open orders after `timeout` seconds. This can be used to avoid unwanted behavior in case of system instabilities. Set `timeout` to 0 to reset the timout.
+Cancel all open orders after `timeout` seconds. This can be used to avoid unwanted behavior in case of system instabilities. Set `timeout` to 0 to reset the timout.
 
 Authenticated `client` required
 

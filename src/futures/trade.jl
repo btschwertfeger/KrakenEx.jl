@@ -1,3 +1,8 @@
+"""
+    FuturesTradeModule
+
+Enables accessing Futures trade endpoints using predefined methods.
+"""
 module FuturesTradeModule
 using ..FuturesBaseAPIModule: FuturesBaseRESTAPI, request
 using JSON: json

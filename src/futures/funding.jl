@@ -1,3 +1,8 @@
+"""
+    FuturesFundingModule
+
+Enables accessing Futures funding endpoints using predefined methods.
+"""
 module FuturesFundingModule
 using ..FuturesBaseAPIModule: FuturesBaseRESTAPI, request
 

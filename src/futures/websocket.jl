@@ -1,3 +1,8 @@
+"""
+    FuturesWebSocketModule
+
+Enables accessing the Kraken websocket API.
+"""
 module FuturesWebSocketModule
 using HTTP
 using Dates

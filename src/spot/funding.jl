@@ -1,3 +1,8 @@
+"""
+    SpotFundingModule
+
+Enables accessing Spot funding endpoints using predefined methods.
+"""
 module SpotFundingModule
 using ..SpotBaseAPIModule: SpotBaseRESTAPI, request
 using ..Utils

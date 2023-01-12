@@ -1,3 +1,8 @@
+"""
+    SpotWebSocketModule
+
+Enables accessing the Kraken websocket API.
+"""
 module SpotWebSocketModule
 using HTTP
 using Dates
@@ -43,7 +48,7 @@ The following will be managed by the constructor or connection:
 
 The attribute `rest_client` stores a valid [`SpotBaseRESTAPI`](@ref KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI) client,
 so REST endpoints can also be accessed using this attributes. If the  [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient) 
-is authenticated, so the `rest_client` can also access private endpoints.
+is authenticated, so the `rest_client` attribute can also access private endpoints.
 
 # Examples
 
@@ -379,7 +384,7 @@ Can create up to two (one private and one public) websocket connections. The pub
 websocket object will be stored within the [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient). 
 Websocket feeds can be subscribed and unsubscribed after a successful connection. 
 This function must be invoked using `@async`. Private websocket connections and privat feed 
-subscriptions requre valid API keys on the passed [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient) object.
+subscriptions requre an authenticated [`SpotWebSocketClient`](@ref KrakenEx.SpotWebSocketModule.SpotWebSocketClient).
 
 # Attributes
 
@@ -648,6 +653,8 @@ end
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelOrder](https://docs.kraken.com/websockets/#message-cancelOrder)
 
+Cancel an order by `txid`.
+
 Authenticated `client` required
 
 # Example
@@ -689,6 +696,8 @@ end
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAll](https://docs.kraken.com/websockets/#message-cancelAll)
 
+Cancel all orders.
+
 Authenticated `client` required
 
 # Example
@@ -727,6 +736,8 @@ end
     cancel_all_orders_after_x(client::SpotWebSocketClient, timeout::Int)
 
 Kraken Docs: [https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter](https://docs.kraken.com/websockets/#message-cancelAllOrdersAfter)
+
+Cancel all orders after `timeout` seconds. Set `timeout=0` to reset.
 
 Authenticated `client` required
 

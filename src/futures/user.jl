@@ -1,3 +1,8 @@
+"""
+    FuturesUserModule
+
+Enables accessing Futures user endpoints using predefined methods.
+"""
 module FuturesUserModule
 using ..FuturesBaseAPIModule: FuturesBaseRESTAPI, request
 

@@ -13,6 +13,9 @@
 
 <h3>
 This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia.
+
+This project is based on the [python-kraken-sdk](https://github.com/btschwertfeger/python-kraken-sdk).
+
 </h3>
 
 ---
@@ -49,19 +52,20 @@ General:
 - [ Futures Client Example Usage ](#futuresusage)
   - [REST API](#futuresrest)
   - [Websockets](#futuresws)
+- [ Base Clients Documentation ](#baseclients)
 - [ Spot Client Documentation ](#spotdocu)
-  - [ User ](#spotuser)
-  - [ Trade ](#spottrade)
-  - [ Market ](#spotmarket)
-  - [ Funding ](#spotfunding)
-  - [ Staking ](#spotstaking)
-  - [ KrakenSpotWSClient ](#spotwsclient)
+  - [ User Module ](#spotuser)
+  - [ Trade Module ](#spottrade)
+  - [ Market Module ](#spotmarket)
+  - [ Funding Module ](#spotfunding)
+  - [ Staking Module ](#spotstaking)
+  - [ WebSocket Module ](#spotwsclient)
 - [ Futures Client Documentation ](#futuresdocu)
-  - [ User ](#futuresuser)
-  - [ Trade ](#futurestrade)
-  - [ Market ](#futuresmarket)
-  - [ Funding ](#futuresfunding)
-  - [ KrakenFuturesWSClient ](#futureswsclient)
+  - [ User Module ](#futuresuser)
+  - [ Trade Module ](#futurestrade)
+  - [ Market Module ](#futuresmarket)
+  - [ Funding Module ](#futuresfunding)
+  - [ WebSocket Module ](#futureswsclient)
 - [ Troubleshooting ](#trouble)
 - [ Notes ](#notes)
 - [ References ](#references)
@@ -75,8 +79,7 @@ General:
 ### 1. Install the Julia Package:
 
 ```julia
-using Pkg
-Pkg.add("KrakenEx")
+using Pkg; Pkg.add("KrakenEx")
 ```
 
 ### 2. Register at Kraken and generate API Keys:
@@ -446,13 +449,23 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 ---
 
+<a name="baseclients"></a>
+
+# 📍 Base Clients Documentation
+
+`KrakenEx`
+| Type | Documentation |
+| -------------------------- | --------------------------------------------------------- |
+|`SpotBaseRESTAPI` | Base client for all Spot REST endpoints|
+|`FuturesBaseRESTAPI`|Base client for all Futures REST endpoints|
+
 <a name="spotdocu"></a>
 
 # 📖 Spot Client Documentation
 
 <a name="spotuser"></a>
 
-## User
+## SpotUserModule
 
 `KrakenEx.SpotUserModule`
 
@@ -476,7 +489,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="spottrade"></a>
 
-## Trade
+## SpotTradeModule
 
 `KrakenEx.SpotTradeModule`
 
@@ -492,7 +505,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="spotmarket"></a>
 
-## Market
+## SpotMarketModule
 
 `KrakenEx.SpotMarketModule`
 
@@ -509,7 +522,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="spotfunding"></a>
 
-## Funding
+## SpotFundingModule
 
 `KrakenEx.SpotFundingModule`
 
@@ -526,7 +539,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="spotstaking"></a>
 
-## Staking
+## SpotStakingModule
 
 `KrakenEx.SpotStakingModule`
 
@@ -540,7 +553,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="spotwsclient"></a>
 
-## KrakenSpotWSClient
+## SpotWebSocketModule
 
 `KrakenEx.SpotWebSocketModule`
 
@@ -564,7 +577,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="futuresuser"></a>
 
-## User
+## FuturesUserModule
 
 `KrakenEx.FuturesUserModule`
 
@@ -581,7 +594,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="futurestrade"></a>
 
-## Trade
+## FuturesTradeModule
 
 `KrakenEx.FuturesTradeModule`
 
@@ -598,9 +611,9 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="futuresmarket"></a>
 
-## Market
+## FuturesMarketModule
 
-`KrakenExFuturesMarketModule`
+`KrakenEx.FuturesMarketModule`
 
 | Method                         | Documentation                                                                                                                                                                                               |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -628,7 +641,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="futuresfunding"></a>
 
-## Funding
+## FuturesFundingModule
 
 `KrakenEx.FuturesFundingModule`
 
@@ -641,7 +654,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 
 <a name="futureswsclient"></a>
 
-## FuturesWebSocketClient
+## FuturesWebSocketModule
 
 `KrakenEx.FuturesWebSocketModule`
 

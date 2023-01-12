@@ -75,6 +75,8 @@ end
 main()
 ```
 
+---
+
 ## Spot WebSocket Example
 
 ```julia

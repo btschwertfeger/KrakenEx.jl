@@ -1,3 +1,7 @@
+```@meta
+   CurrentModule = KrakenEx
+```
+
 # KrakenEx.jl
 
 Futures and Spot Websocket and REST API Julia SDK for the Kraken Cryptocurrency Exchange 🐙
@@ -73,7 +77,7 @@ If any unexpected behavior occurs, please check your API permissions, rate limit
 
 - Coding standards are not always followed to make arguments and function names as similar as possible to those in the Kraken API documentations.
 
-- When calling endpoints for examlpe the futures funding endpoint and you submit spaces, braces,... in strings like `" )|] "` a KrakenAuthenticationError will be raised.
+- When calling endpoints for examlpe the futures funding endpoint and you submit spaces, braces, etc in strings like `" ()[]{}|/\*.+!^"` a [`KrakenAuthenticationError`](@ref KrakenEx.ExceptionsModule.KrakenAuthenticationError) will be raised.
 
 ## References
 

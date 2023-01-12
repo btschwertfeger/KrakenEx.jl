@@ -1,3 +1,8 @@
+"""
+    SpotStakingModule
+
+Enables accessing Spot staking endpoints using predefined methods.
+"""
 module SpotStakingModule
 
 using ..SpotBaseAPIModule: SpotBaseRESTAPI, request

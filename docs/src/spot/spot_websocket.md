@@ -16,6 +16,8 @@ Pages = ["spot_websocket.md"]
 SpotWebSocketClient
 ```
 
+---
+
 ## WebSocket utilities
 
 ```@docs

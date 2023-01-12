@@ -1,4 +1,11 @@
+
+"""
+    SpotMarketModule
+
+Enables accessing Spot market endpoints using predefined methods.
+"""
 module SpotMarketModule
+
 using ..SpotBaseAPIModule: SpotBaseRESTAPI, request
 using ..Utils
 

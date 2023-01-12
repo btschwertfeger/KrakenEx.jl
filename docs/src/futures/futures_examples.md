@@ -114,6 +114,8 @@ end
 main()
 ```
 
+---
+
 ## Futures WebSocket Example
 
 ```julia

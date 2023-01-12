@@ -1,3 +1,8 @@
+"""
+    ExceptionsModule
+
+Collection of custom exceptions for the Kraken.jl package.
+"""
 module ExceptionsModule
 using Base
 

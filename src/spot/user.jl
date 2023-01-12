@@ -1,3 +1,8 @@
+"""
+    SpotUserModule
+
+Enables accessing Spot user endpoints using predefined methods.
+"""
 module SpotUserModule
 
 using ..SpotBaseAPIModule: SpotBaseRESTAPI, request

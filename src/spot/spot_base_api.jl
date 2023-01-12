@@ -1,3 +1,8 @@
+"""
+    SpotBaseAPIModule
+
+Serves as base for all Spot REST and websocket endpoints.
+"""
 module SpotBaseAPIModule
 using ..Utils: get_nonce
 using ..ExceptionsModule: get_exception

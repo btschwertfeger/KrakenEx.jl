@@ -1,3 +1,8 @@
+"""
+    FuturesMarketModule
+
+Enables accessing Futures market endpoints using predefined methods.
+"""
 module FuturesMarketModule
 using ..FuturesBaseAPIModule: FuturesBaseRESTAPI, request
 

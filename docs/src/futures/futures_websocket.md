@@ -16,6 +16,8 @@ Pages = ["futures_websocket.md"]
 FuturesWebSocketClient
 ```
 
+---
+
 ## WebSocket utilities
 
 ```@docs

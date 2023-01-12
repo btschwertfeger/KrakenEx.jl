@@ -1,3 +1,8 @@
+"""
+    FuturesBaseAPIModule
+
+Serves as base for all Futures REST and websocket endpoints.
+"""
 module FuturesBaseAPIModule
 using ..ExceptionsModule: get_exception
 using ..Utils: get_nonce
