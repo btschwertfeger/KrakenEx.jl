@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Kraken Spot REST API · KrakenEx.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.webp" alt="KrakenEx.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">KrakenEx.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Introduction</a></li><li><span class="tocitem">Spot API</span><ul><li class="is-active"><a class="tocitem" href>Kraken Spot REST API</a><ul class="internal"><li><a class="tocitem" href="#SpotBaseRESTAPI"><span>SpotBaseRESTAPI</span></a></li><li><a class="tocitem" href="#Market"><span>Market</span></a></li><li><a class="tocitem" href="#User"><span>User</span></a></li><li><a class="tocitem" href="#Trade"><span>Trade</span></a></li><li><a class="tocitem" href="#Funding"><span>Funding</span></a></li><li><a class="tocitem" href="#Staking"><span>Staking</span></a></li></ul></li><li><a class="tocitem" href="../spot_websocket/">Kraken Spot WebSocket API</a></li><li><a class="tocitem" href="../spot_examples/">Kraken Spot Examples</a></li></ul></li><li><span class="tocitem">Futures API</span><ul><li><a class="tocitem" href="../../futures/futures/">Kraken Futures REST API</a></li><li><a class="tocitem" href="../../futures/futures_websocket/">Kraken Futures WebSocket API</a></li><li><a class="tocitem" href="../../futures/futures_examples/">Kraken Futures Examples</a></li></ul></li><li><a class="tocitem" href="../../exceptions/">Exceptions</a></li><li><a class="tocitem" href="../../license/">License</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Spot API</a></li><li class="is-active"><a href>Kraken Spot REST API</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Kraken Spot REST API</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/master/docs/src/spot/spot.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Kraken-Spot-REST-API"><a class="docs-heading-anchor" href="#Kraken-Spot-REST-API">Kraken Spot REST API</a><a id="Kraken-Spot-REST-API-1"></a><a class="docs-heading-anchor-permalink" href="#Kraken-Spot-REST-API" title="Permalink"></a></h1><p>The listed modules and functions allow to access public and private (authenticated) endpoints of the official Kraken Spot API. All functions of these endpoints require a <a href="#KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI"><code>SpotBaseRESTAPI</code></a> instance. For accessing private endpoints valid API keys must be generated at <a href="https://www.kraken.com/u/security/api">https://www.kraken.com/u/security/api</a>. Some endpoints require specific premissions enables, other may require a higer tier rank. Please see the official Kraken documentation in the <a href="../../#References">References</a> section for futher information.</p><p>The sample outputs are for illustrative purposes only and may vary depending on the user, request, and market behavior.</p><ul><li><a href="#Kraken-Spot-REST-API">Kraken Spot REST API</a></li><li class="no-marker"><ul><li><a href="#SpotBaseRESTAPI">SpotBaseRESTAPI</a></li><li><a href="#Market">Market</a></li><li><a href="#User">User</a></li><li><a href="#Trade">Trade</a></li><li><a href="#Funding">Funding</a></li><li><a href="#Staking">Staking</a></li></ul></li></ul><h2 id="SpotBaseRESTAPI"><a class="docs-heading-anchor" href="#SpotBaseRESTAPI">SpotBaseRESTAPI</a><a id="SpotBaseRESTAPI-1"></a><a class="docs-heading-anchor-permalink" href="#SpotBaseRESTAPI" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI" href="#KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI"><code>KrakenEx.SpotBaseAPIModule.SpotBaseRESTAPI</code></a> — <span class="docstring-category">Type</span></header><section><div><pre><code class="language-julia hljs">SpotBaseRESTAPI</code></pre><p>Type that stores information about the client and can be used to access public and private endpoints of the Kraken API for  Spot trading.</p><p><strong>Fields</strong></p><ul><li><code>key</code>  – Kraken Spot API key</li><li><code>secret</code> – Kraken Spot Secret key</li></ul><p>Defualt:</p><ul><li><code>BASE_URL</code>  – Kraken Spot API base url (default: &quot;https://api.kraken.com&quot;)</li><li><code>API_V</code>  – Kraken Spot API version (default: 0)</li><li><code>TIMEOUT</code>  – Request timeout (default: 10)</li><li><code>HEADERS</code>  – Default headers {default: [&quot;User-Agent&quot; =&gt; &quot;KrakenEx.jl&quot;]}</li></ul><p><strong>Examples</strong></p><ul><li><p><code>SpotBaseRESTAPI()</code> – default, public client</p></li><li><p><code>SpotBaseRESTAPI(key=&quot;the-api-key&quot;, secret=&quot;the-api-secret-key&quot;)</code> – authenticated client for public and private requests</p></li></ul></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/spot_base_api.jl#L18-L41">source</a></section></article><hr/><h2 id="Market"><a class="docs-heading-anchor" href="#Market">Market</a><a id="Market-1"></a><a class="docs-heading-anchor-permalink" href="#Market" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule" href="#KrakenEx.SpotMarketModule"><code>KrakenEx.SpotMarketModule</code></a> — <span class="docstring-category">Module</span></header><section><div><pre><code class="language-julia hljs">SpotMarketModule</code></pre><p>Enables accessing Spot market endpoints using predefined methods.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L2-L6">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_assets-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_assets-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_assets</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_assets(client::SpotBaseRESTAPI; assets::Union{Vector{String},String,Nothing}=nothing, aclass::Union{String,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getAssetInfo">https://docs.kraken.com/rest/#operation/getAssetInfo</a></p><p>Returns a list of available Spot assets as well as additional descriptions.</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_assets(client))
+Dict{String, Any}(
+    &quot;MOVR&quot; =&gt; Dict{String, Any}(
+        &quot;display_decimals&quot; =&gt; 5, 
+        &quot;decimals&quot; =&gt; 10, 
+        &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+        &quot;status&quot; =&gt; &quot;enabled&quot;, 
+        &quot;altname&quot; =&gt; &quot;MOVR&quot;
+    ), &quot;SXP&quot; =&gt; Dict{String, Any}(
+        &quot;display_decimals&quot; =&gt; 5, 
+        &quot;decimals&quot; =&gt; 10, 
+        &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+        &quot;status&quot; =&gt; &quot;enabled&quot;, 
+        &quot;altname&quot; =&gt; &quot;SXP&quot;
+    ), &quot;PHA&quot; =&gt; Dict{String, Any}(
+        &quot;display_decimals&quot; =&gt; 5, 
+        &quot;decimals&quot; =&gt; 10, 
+        &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+        &quot;status&quot; =&gt; &quot;enabled&quot;, 
+        &quot;altname&quot; =&gt; &quot;PHA&quot;
+    ), ...
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L40-L76">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_ohlc-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_ohlc-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_ohlc</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_ohlc(client::SpotBaseRESTAPI; pair::String, interval::Union{String,Nothing}=nothing, since::Union{Int64,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getOHLCData">https://docs.kraken.com/rest/#operation/getOHLCData</a></p><p>Returns information about the open, high, low, close, vwap, and volume of a given <code>pair</code>.</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; get_ohlc(client, pair=&quot;XBTUSD&quot;)
+Dict{String, Any}(
+    &quot;XXBTZUSD&quot; =&gt; Any[
+        Any[1673301660, &quot;17176.5&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;0.00499447&quot;, 3], 
+        Any[1673301720, &quot;17176.5&quot;, &quot;17176.5&quot;, &quot;17167.2&quot;, &quot;17168.1&quot;, &quot;17168.3&quot;, &quot;3.57307618&quot;, 45], 
+        Any[1673301780, &quot;17168.0&quot;, &quot;17168.1&quot;, &quot;17167.9&quot;, &quot;17168.1&quot;, &quot;17167.9&quot;, &quot;0.10257254&quot;, 16], 
+        Any[1673301840, &quot;17168.0&quot;, &quot;17176.5&quot;, &quot;17168.0&quot;, &quot;17176.5&quot;, &quot;17176.2&quot;, &quot;1.06103454&quot;, 19],
+        Any[1673301900, &quot;17176.4&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;0.20158908&quot;, 4], 
+        Any[1673301960, &quot;17176.5&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;17176.5&quot;, &quot;17176.4&quot;, &quot;0.04299818&quot;, 7], 
+        ...
+    ]
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L194-L219">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_order_book-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_order_book-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_order_book</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_order_book(client::SpotBaseRESTAPI; pair::String, count::Union{Int64,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getOrderBook">https://docs.kraken.com/rest/#operation/getOrderBook</a></p><p>Returns the current asks and bids (orderbook) of a given currency <code>pair</code>.</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; get_order_book(client, pair=&quot;XBTUSD&quot;)
+Dict{String, Any}(
+    &quot;XXBTZUSD&quot; =&gt; Dict{String, Any}(
+        &quot;asks&quot; =&gt; Any[
+            Any[&quot;17249.60000&quot;, &quot;0.750&quot;, 1673344930], Any[&quot;17249.80000&quot;, &quot;0.038&quot;, 1673344927], 
+            Any[&quot;17249.90000&quot;, &quot;0.067&quot;, 1673344930], Any[&quot;17250.10000&quot;, &quot;0.001&quot;, 1673344930], 
+            Any[&quot;17250.50000&quot;, &quot;4.348&quot;, 1673344903], Any[&quot;17251.10000&quot;, &quot;0.053&quot;, 1673344928], 
+            Any[&quot;17251.30000&quot;, &quot;1.157&quot;, 1673344928], Any[&quot;17251.50000&quot;, &quot;0.807&quot;, 1673344930], 
+            Any[&quot;17252.40000&quot;, &quot;0.369&quot;, 1673344921], Any[&quot;17252.60000&quot;, &quot;0.250&quot;, 1673344857], 
+            ...
+        ],
+        &quot;bids&quot; =&gt; Any[
+            Any[&quot;17249.50000&quot;, &quot;0.001&quot;, 1673344924], 
+            Any[&quot;17249.40000&quot;, &quot;0.001&quot;, 1673344916], 
+            Any[&quot;17249.30000&quot;, &quot;0.001&quot;, 1673344930], 
+            Any[&quot;17249.20000&quot;, &quot;0.001&quot;, 1673344927], 
+            Any[&quot;17249.10000&quot;, &quot;0.001&quot;, 1673344930], 
+            ...
+        ]
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L227-L261">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_recend_spreads-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_recend_spreads-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_recend_spreads</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_recend_spreads(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getRecentSpreads">https://docs.kraken.com/rest/#operation/getRecentSpreads</a></p><p>Returns the recend spreads of a currency <code>pair</code> (symbol).</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_recend_spreads(client, pair=&quot;XBTUSD&quot;))
+Dict{String, Any}(
+    &quot;XXBTZUSD&quot; =&gt; Any[
+        Any[1673363656, &quot;17346.40000&quot;, &quot;17348.20000&quot;], 
+        Any[1673363657, &quot;17346.40000&quot;, &quot;17347.90000&quot;],
+        Any[1673363657, &quot;17346.80000&quot;, &quot;17347.90000&quot;], 
+        Any[1673363660, &quot;17346.80000&quot;, &quot;17347.60000&quot;], 
+        Any[1673363660, &quot;17346.40000&quot;, &quot;17347.60000&quot;], 
+        Any[1673363660, &quot;17346.50000&quot;, &quot;17347.60000&quot;], 
+        ...
+    ], 
+    &quot;last&quot; =&gt; 1673363958)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L305-L330">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_recent_trades-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_recent_trades-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_recent_trades</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_recent_trades(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getRecentTrades">https://docs.kraken.com/rest/#operation/getRecentTrades</a></p><p>Returns the recent trades of a given <code>symbol</code> (currency pair).</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_recent_trades(client, pair=&quot;XBTUSD&quot;))
+Dict{String, Any}(
+    &quot;XXBTZUSD&quot; =&gt; Any[
+        Any[&quot;17265.50000&quot;, &quot;0.00515323&quot;, 1.673362549987055e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454372], 
+        Any[&quot;17265.50000&quot;, &quot;0.01203124&quot;, 1.6733625510070226e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454373], 
+        Any[&quot;17266.80000&quot;, &quot;0.08087410&quot;, 1.673362551007105e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454374], 
+        Any[&quot;17266.90000&quot;, &quot;0.56059466&quot;, 1.6733625510071838e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454375], 
+        Any[&quot;17267.00000&quot;, &quot;0.00900000&quot;, 1.6733625512079215e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454376], 
+        Any[&quot;17267.00000&quot;, &quot;0.00610000&quot;, 1.6733625522878373e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454377], 
+        Any[&quot;17267.00000&quot;, &quot;0.00208447&quot;, 1.6733625534015026e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454378], 
+        Any[&quot;17268.50000&quot;, &quot;0.01211553&quot;, 1.6733625534015663e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454379],
+        Any[&quot;17268.50000&quot;, &quot;0.00506894&quot;, 1.6733625536050434e9, &quot;b&quot;, &quot;l&quot;, &quot;&quot;, 54454380], 
+        ...
+    ], 
+    &quot;last&quot; =&gt; &quot;1673363844906015910&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L268-L298">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_server_time-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_server_time-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_server_time</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_server_time(client::SpotBaseRESTAPI)</code></pre><p>Returns the server time of the Kraken Cryptocurrency Exchange API</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_server_time(client))
+1673344450</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L24-L35">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_system_status-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_system_status-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_system_status</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_system_status(client::SpotBaseRESTAPI)</code></pre><p>Returns the system status of the Kraken API</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_system_status(client))
+Dict{String, Any}(&quot;status&quot; =&gt; &quot;online&quot;, &quot;timestamp&quot; =&gt; &quot;2023-01-10T15:20:20Z&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L337-L350">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_ticker-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_ticker-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_ticker</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_ticker(client::SpotBaseRESTAPI; pair::Union{Vector{String},String,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTickerInformation">https://docs.kraken.com/rest/#operation/getTickerInformation</a></p><p>Returns the actual ticker of a given <code>pair</code> (asset pair/symbol).</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_ticker(client, pair=&quot;DOTUSD&quot;))
+Dict{String, Any}(
+    &quot;DOTUSD&quot; =&gt; Dict{String, Any}(
+        &quot;v&quot; =&gt; Any[&quot;73347.09060256&quot;, &quot;831710.16212826&quot;], 
+        &quot;c&quot; =&gt; Any[&quot;4.91490&quot;, &quot;145.01800000&quot;], 
+        &quot;o&quot; =&gt; &quot;4.88630&quot;, &quot;t&quot; =&gt; Any[635, 3486], 
+        &quot;b&quot; =&gt; Any[&quot;4.91220&quot;, &quot;265&quot;, &quot;265.000&quot;], 
+        &quot;l&quot; =&gt; Any[&quot;4.82900&quot;, &quot;4.82900&quot;], 
+        &quot;a&quot; =&gt; Any[&quot;4.91290&quot;, &quot;82&quot;, &quot;82.000&quot;], 
+        &quot;p&quot; =&gt; Any[&quot;4.89699&quot;, &quot;4.97257&quot;], 
+        &quot;h&quot; =&gt; Any[&quot;4.93300&quot;, &quot;5.07400&quot;]
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L161-L187">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotMarketModule.get_tradable_asset_pair-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotMarketModule.get_tradable_asset_pair-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotMarketModule.get_tradable_asset_pair</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_tradable_asset_pair(client::SpotBaseRESTAPI; pair::Vector{String}, info::String=&quot;info&quot;)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTradableAssetPairs">https://docs.kraken.com/rest/#operation/getTradableAssetPairs</a></p><p>Returns a list of available symbols (asset pairs) and additional informarion.</p><p>Authenticated <code>client</code> not required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI()
+julia&gt; println(get_tradable_asset_pair(client, pair=[&quot;XBTUSD&quot;]))
+Dict{String, Any}(
+    &quot;XXBTZUSD&quot; =&gt; Dict{String, Any}(
+        &quot;margin_call&quot; =&gt; 80, 
+        &quot;leverage_sell&quot; =&gt; Any[2, 3, 4, 5], 
+        &quot;cost_decimals&quot; =&gt; 5, 
+        &quot;lot_multiplier&quot; =&gt; 1, 
+        &quot;long_position_limit&quot; =&gt; 270, 
+        &quot;short_position_limit&quot; =&gt; 180, 
+        &quot;fees_maker&quot; =&gt; Any[
+            Any[0, 0.16], 
+            Any[50000, 0.14], 
+            Any[100000, 0.12], 
+            Any[250000, 0.1], 
+            Any[500000, 0.08], 
+            Any[1000000, 0.06], 
+            Any[2500000, 0.04], 
+            Any[5000000, 0.02], 
+            Any[10000000, 0.0], 
+            Any[100000000, 0.0]
+        ], 
+        &quot;ordermin&quot; =&gt; &quot;0.0001&quot;, 
+        &quot;aclass_base&quot; =&gt; &quot;currency&quot;, 
+        &quot;fee_volume_currency&quot; =&gt; &quot;ZUSD&quot;, 
+        &quot;status&quot; =&gt; &quot;online&quot;, 
+        &quot;altname&quot; =&gt; &quot;XBTUSD&quot;, 
+        &quot;aclass_quote&quot; =&gt; &quot;currency&quot;, 
+        &quot;margin_stop&quot; =&gt; 40, 
+        &quot;fees&quot; =&gt; Any[
+            Any[0, 0.26], 
+            Any[50000, 0.24],
+            Any[100000, 0.22], 
+            Any[250000, 0.2],
+            Any[500000, 0.18],
+            Any[1000000, 0.16],
+            Any[2500000, 0.14],
+            Any[5000000, 0.12],
+            Any[10000000, 0.1], 
+            Any[100000000, 0.08]
+        ], 
+        &quot;quote&quot; =&gt; &quot;ZUSD&quot;, 
+        &quot;base&quot; =&gt; &quot;XXBT&quot;,
+        &quot;lot&quot; =&gt; &quot;unit&quot;, 
+        &quot;pair_decimals&quot; =&gt; 1, 
+        &quot;wsname&quot; =&gt; &quot;XBT/USD&quot;, 
+        &quot;costmin&quot; =&gt; &quot;0.5&quot;, 
+        &quot;tick_size&quot; =&gt; &quot;0.1&quot;, 
+        &quot;lot_decimals&quot; =&gt; 8, 
+        &quot;leverage_buy&quot; =&gt; Any[2, 3, 4, 5]
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/market.jl#L88-L152">source</a></section></article><hr/><h2 id="User"><a class="docs-heading-anchor" href="#User">User</a><a id="User-1"></a><a class="docs-heading-anchor-permalink" href="#User" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule" href="#KrakenEx.SpotUserModule"><code>KrakenEx.SpotUserModule</code></a> — <span class="docstring-category">Module</span></header><section><div><pre><code class="language-julia hljs">SpotUserModule</code></pre><p>Enables accessing Spot user endpoints using predefined methods.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L1-L5">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.delete_export_report-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.delete_export_report-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.delete_export_report</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">delete_export_report(client::SpotBaseRESTAPI; id::String, type::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/removeExport">https://docs.kraken.com/rest/#operation/removeExport</a></p><p>Removes an export by <code>id</code> from the system.</p><p>Authenticated <code>client</code> required</p><p><strong>Attributes</strong></p><ul><li><code>type</code> – must be one of [&quot;delete&quot;, &quot;cancel&quot;]</li></ul><p>...</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(delete_export_report(client, type=&quot;delete&quot;, id=&quot;PFEZ))
+Dict{String, Any}(&quot;delete&quot; =&gt; true)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L720-L741">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_account_balance-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_account_balance-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_account_balance</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_account_balance(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getAccountBalance">https://docs.kraken.com/rest/#operation/getAccountBalance</a></p><p>Returns the actual balances of all currencies.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_account_balance(client))
+Dict{String, Any}(
+    &quot;KFEE&quot; =&gt; &quot;9431.54&quot;, 
+    &quot;BCH&quot; =&gt; &quot;123.0000077100&quot;,
+    &quot;ZUSD&quot; =&gt; &quot;798.5491&quot;, 
+    &quot;XETH&quot; =&gt; &quot;14.0119368320&quot;, 
+    &quot;DOT&quot; =&gt; &quot;671.0153183000&quot;, 
+    &quot;ZEUR&quot; =&gt; &quot;101.12000&quot;, 
+    &quot;XXBT&quot; =&gt; &quot;1.0011888110&quot;, 
+    &quot;XXLM&quot; =&gt; &quot;2030121.00001212&quot;, 
+    &quot;EOS&quot; =&gt; &quot;24.0000065500&quot;, 
+    &quot;TRX&quot; =&gt; &quot;9121230.00000000&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L30-L56">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_closed_orders-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_closed_orders-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_closed_orders</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_closed_orders(client::SpotBaseRESTAPI;
+    trades::Bool=false,
+    userref::Union{Int64,Nothing}=nothing,
+    start::Union{Int64,Nothing}=nothing,
+    end_::Union{Int64,Nothing}=nothing,
+    ofs::Union{Int64,String,Nothing}=nothing,
+    closetime::String=&quot;both&quot;
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getClosedOrders">https://docs.kraken.com/rest/#operation/getClosedOrders</a></p><p>Returns information about the closed orders. </p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_closed_orders(client))
+Dict{String, Any}(
+    &quot;closed&quot; =&gt; Dict{String, Any}(
+        &quot;OLGRP5-M42MC-YOFF7T&quot; =&gt; Dict{String, Any}(
+            &quot;price&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;vol&quot; =&gt; &quot;40.36280000&quot;, 
+            &quot;status&quot; =&gt; &quot;canceled&quot;, 
+            &quot;vol_exec&quot; =&gt; &quot;0.00000000&quot;, 
+            &quot;oflags&quot; =&gt; &quot;fciq&quot;, 
+            &quot;reason&quot; =&gt; &quot;User requested&quot;, 
+            &quot;starttm&quot; =&gt; 0, 
+            &quot;stopprice&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;refid&quot; =&gt; nothing, 
+            &quot;userref&quot; =&gt; 0, 
+            &quot;expiretm&quot; =&gt; 0,
+            &quot;cost&quot; =&gt; &quot;0.00000&quot;,
+            &quot;fee&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;misc&quot; =&gt; &quot;&quot;, 
+            &quot;limitprice&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;opentm&quot; =&gt; 1.6730201392732968e9, 
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+                &quot;price&quot; =&gt; &quot;40.5842&quot;, 
+                &quot;pair&quot; =&gt; &quot;DOTUSD&quot;, 
+                &quot;order&quot; =&gt; &quot;buy 40.36280000 DOTUSD @ limit 4.5842&quot;, 
+                &quot;leverage&quot; =&gt; &quot;none&quot;,
+                &quot;type&quot; =&gt; &quot;buy&quot;, 
+                &quot;close&quot; =&gt; &quot;&quot;, 
+                &quot;price2&quot; =&gt; &quot;0&quot;
+            ), 
+            &quot;closetm&quot; =&gt; 1.673225209430317e9
+        ), 
+        &quot;OUSQ7U-2TP3Q-PBKOIP&quot; =&gt; Dict{String, Any}(
+            ...
+        )
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L161-L219">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_export_report_status-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_export_report_status-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_export_report_status</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_export_report_status(client::SpotBaseRESTAPI; report::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/exportStatus">https://docs.kraken.com/rest/#operation/exportStatus</a></p><p>Returns information about the current export status.</p><p>Authenticated <code>client</code> required</p><p><strong>Attributes</strong></p><ul><li><code>report</code> – must be one of [&quot;trades&quot;, &quot;ledgers&quot;] </li></ul><p>...</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_export_report_status(client, report=&quot;ledgers&quot;))
+Any[Dict{String, Any}(
+    &quot;report&quot; =&gt; &quot;ledgers&quot;, 
+    &quot;fields&quot; =&gt; &quot;all&quot;, 
+    &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+    &quot;endtm&quot; =&gt; &quot;1673368394&quot;, 
+    &quot;createdtm&quot; =&gt; &quot;1673368394&quot;, 
+    &quot;format&quot; =&gt; &quot;CSV&quot;, 
+    &quot;status&quot; =&gt; &quot;Queued&quot;, 
+    &quot;id&quot; =&gt; &quot;OFEZ&quot;, 
+    &quot;subtype&quot; =&gt; &quot;all&quot;, 
+    &quot;starttm&quot; =&gt; &quot;1672531200&quot;,
+    &quot;dataendtm&quot; =&gt; &quot;1673368394&quot;, 
+    &quot;completedtm&quot; =&gt; &quot;0&quot;, 
+    &quot;datastarttm&quot; =&gt; &quot;1672531200&quot;, 
+    &quot;expiretm&quot; =&gt; &quot;1674577994&quot;, 
+    &quot;flags&quot; =&gt; &quot;0&quot;, 
+    &quot;asset&quot; =&gt; &quot;all&quot;, 
+    &quot;descr&quot; =&gt; &quot;myLedgersExport&quot;
+)]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L648-L688">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_ledgers-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_ledgers-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_ledgers</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_ledgers(client::SpotBaseRESTAPI; id::Union{String,Vector{String}}, trades::Bool=false)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getLedgersInfo">https://docs.kraken.com/rest/#operation/getLedgersInfo</a></p><p>Returns information about specific ledergs by <code>id</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_ledgers(client, id=&quot;LNYQGU-SUR5U-UXTOWM&quot;))
+Dict{String, Any}(
+    &quot;LNYQGU-SUR5U-UXTOWM&quot; =&gt; Dict{String, Any}(
+        &quot;amount&quot; =&gt; &quot;2001.0000&quot;,
+        &quot;balance&quot; =&gt; &quot;2001.0082&quot;, 
+        &quot;fee&quot; =&gt; &quot;0.0000&quot;, 
+        &quot;time&quot; =&gt; 1.668681189483613e9, 
+        &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+        &quot;asset&quot; =&gt; &quot;EUR&quot;, 
+        &quot;subtype&quot; =&gt; &quot;&quot;, 
+        &quot;refid&quot; =&gt; &quot;QYSCWYA-S54CSU-RDHRV3&quot;, 
+        &quot;type&quot; =&gt; &quot;deposit&quot;
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L528-L556">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_ledgers_info-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_ledgers_info-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_ledgers_info</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_ledgers_info(client::SpotBaseRESTAPI;
+    asset::Union{String,Vector{String}}=&quot;all&quot;,
+    aclass::String=&quot;currency&quot;,
+    type::String=&quot;all&quot;,
+    start::Union{Int64,Nothing}=nothing,
+    end_::Union{Int64,Nothing}=nothing,
+    ofs::Union{Int64,String,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getLedgers">https://docs.kraken.com/rest/#operation/getLedgers</a></p><p>Returns information about the current ledergs.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_ledgers_info(client))
+Dict{String, Any}(
+    &quot;count&quot; =&gt; 1068, 
+    &quot;ledger&quot; =&gt; Dict{String, Any}(
+        &quot;LWSAYQ-GD2N2-IM3I6O&quot; =&gt; Dict{String, Any}(
+            &quot;amount&quot; =&gt; &quot;0.00&quot;, 
+            &quot;balance&quot; =&gt; &quot;9437.94&quot;, 
+            &quot;fee&quot; =&gt; &quot;6.43&quot;, 
+            &quot;time&quot; =&gt; 1.6732795570751212e9, 
+            &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+            &quot;asset&quot; =&gt; &quot;KFEE&quot;, 
+            &quot;subtype&quot; =&gt; &quot;&quot;, 
+            &quot;refid&quot; =&gt; &quot;TYQEFQ-NYADC-R4LII6&quot;, 
+            &quot;type&quot; =&gt; &quot;trade&quot;
+        ), 
+        &quot;LP6VNL-HDXPP-JLVG73&quot; =&gt; Dict{String, Any}(
+            &quot;amount&quot; =&gt; &quot;-0.0300000000&quot;, 
+            &quot;balance&quot; =&gt; &quot;0.0119368320&quot;, 
+            &quot;fee&quot; =&gt; &quot;0.0000000000&quot;, 
+            &quot;time&quot; =&gt; 1.6732795570750895e9, 
+            &quot;aclass&quot; =&gt; &quot;currency&quot;, 
+            &quot;asset&quot; =&gt; &quot;XETH&quot;, 
+            &quot;subtype&quot; =&gt; &quot;&quot;, 
+            &quot;refid&quot; =&gt; &quot;TYQEFQ-NYADC-R4LII6&quot;, 
+            &quot;type&quot; =&gt; &quot;trade&quot;
+        ), ....
+    )
+)
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L458-L508">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_open_orders-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_open_orders-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_open_orders</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_open_orders(client::SpotBaseRESTAPI; trades::Bool=false, userref::Union{Int64,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getOpenOrders">https://docs.kraken.com/rest/#operation/getOpenOrders</a></p><p>Retrurns the actual open orders.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_open_orders(client))
+Dict{String, Any}(
+    &quot;open&quot; =&gt; Dict{String, Any}(
+        &quot;OAQZLS-7SFKK-PAA6BW&quot; =&gt; Dict{String, Any}(
+            &quot;price&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;vol&quot; =&gt; &quot;20.11513967&quot;, 
+            &quot;status&quot; =&gt; &quot;open&quot;, 
+            &quot;vol_exec&quot; =&gt; &quot;0.00000000&quot;, 
+            &quot;oflags&quot; =&gt; &quot;fciq&quot;, 
+            &quot;starttm&quot; =&gt; 0, 
+            &quot;stopprice&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;refid&quot; =&gt; nothing, 
+            &quot;userref&quot; =&gt; 0, 
+            &quot;expiretm&quot; =&gt; 0, 
+            &quot;cost&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;fee&quot; =&gt; &quot;0.00000&quot;,
+            &quot;misc&quot; =&gt; &quot;&quot;, 
+            &quot;limitprice&quot; =&gt; &quot;0.00000&quot;, 
+            &quot;opentm&quot; =&gt; 1.6678760796400564e9, 
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;ordertype&quot; =&gt; &quot;limit&quot;, 
+                &quot;price&quot; =&gt; &quot;7.1288&quot;, 
+                &quot;pair&quot; =&gt; &quot;DOTUSD&quot;, 
+                &quot;order&quot; =&gt; &quot;sell 20.11513967 DOTUSD @ limit 7.1288&quot;, 
+                &quot;leverage&quot; =&gt; &quot;none&quot;, 
+                &quot;type&quot; =&gt; &quot;sell&quot;, 
+                &quot;close&quot; =&gt; &quot;&quot;, 
+                &quot;price2&quot; =&gt; &quot;0&quot;
+            )
+        ), 
+        &quot;OPNPFB-NRZY3-O6T46Y&quot; =&gt; Dict{String, Any}(
+            &quot;price&quot; =&gt; &quot;0.00000&quot;, 
+            ...
+        )
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L104-L154">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_open_positions-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_open_positions-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_open_positions</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_open_positions(client::SpotBaseRESTAPI;
+    txid::Union{String,Vector{String},Nothing}=nothing,
+    docalcs::Bool=false,
+    consolidation::String=&quot;market&quot;
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getOpenPositions">https://docs.kraken.com/rest/#operation/getOpenPositions</a></p><p>Returns a list of open Margin positions.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_open_positions(client))
+Dict{String,Any}(
+    &quot;ZBR4YTU-ND7TDJ-OZ8LR&quot; =&gt; Dict{String,Any}(
+        &quot;ordertxid&quot; =&gt; &quot;03YHGT-P82PNP-D9DY85&quot;,
+        &quot;posstatus&quot; =&gt; &quot;open&quot;,
+        &quot;pair&quot; =&gt; &quot;XXBTZUSD&quot;,
+        &quot;time&quot; =&gt; 1605280097.8294,
+        &quot;type&quot; =&gt; &quot;buy&quot;,
+        &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+        &quot;cost&quot; =&gt; &quot;104610.52842&quot;,
+        &quot;fee&quot; =&gt; &quot;289.06565&quot;,
+        &quot;vol&quot; =&gt; &quot;8.82412861&quot;,
+        &quot;vol_closed&quot; =&gt; &quot;0.20200000&quot;,
+        &quot;margin&quot; =&gt; &quot;20922.10568&quot;,
+        &quot;value&quot; =&gt; &quot;258797.5&quot;,
+        &quot;net&quot; =&gt; &quot;+154186.9728&quot;,
+        &quot;terms&quot; =&gt; &quot;0.0100% per 4 hours&quot;,
+        &quot;rollovertm&quot; =&gt; &quot;1616672637&quot;,
+        &quot;misc&quot; =&gt; &quot;&quot;,
+        &quot;oflags&quot; =&gt; &quot;&quot;
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L404-L444">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_orders_info-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_orders_info-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_orders_info</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_orders_info(client::SpotBaseRESTAPI;
+    txid::Union{String,Vector{String}},
+    trades::Bool=false,
+    userref::Union{Int64,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo">https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo</a></p><p>Returns information about a specific order by <code>txid</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_orders_info(client, txid=&quot;OLGRP5-M42MC-YOFF7T&quot;))
+Dict{String, Any}
+    &quot;OLGRP5-M42MC-YOFF7T&quot; =&gt; Dict{String, Any}(
+        &quot;price&quot; =&gt; &quot;0.00000&quot;, 
+        &quot;vol&quot; =&gt; &quot;40.36280000&quot;, 
+        &quot;status&quot; =&gt; &quot;canceled&quot;, 
+        &quot;vol_exec&quot; =&gt; &quot;0.00000000&quot;, 
+        &quot;oflags&quot; =&gt; &quot;fciq&quot;, 
+        &quot;reason&quot; =&gt; &quot;User requested&quot;, 
+        &quot;starttm&quot; =&gt; 0, 
+        &quot;stopprice&quot; =&gt; &quot;0.00000&quot;, 
+        &quot;refid&quot; =&gt; nothing, 
+        &quot;userref&quot; =&gt; 0, 
+        &quot;expiretm&quot; =&gt; 0,
+        &quot;cost&quot; =&gt; &quot;0.00000&quot;,
+        &quot;fee&quot; =&gt; &quot;0.00000&quot;, 
+        &quot;misc&quot; =&gt; &quot;&quot;, 
+        &quot;limitprice&quot; =&gt; &quot;0.00000&quot;, 
+        &quot;opentm&quot; =&gt; 1.6730201392732968e9, 
+        &quot;descr&quot; =&gt; Dict{String, Any}(
+            &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+            &quot;price&quot; =&gt; &quot;40.5842&quot;, 
+            &quot;pair&quot; =&gt; &quot;DOTUSD&quot;, 
+            &quot;order&quot; =&gt; &quot;buy 40.36280000 DOTUSD @ limit 4.5842&quot;, 
+            &quot;leverage&quot; =&gt; &quot;none&quot;,
+            &quot;type&quot; =&gt; &quot;buy&quot;, 
+            &quot;close&quot; =&gt; &quot;&quot;, 
+            &quot;price2&quot; =&gt; &quot;0&quot;
+        ), 
+        &quot;closetm&quot; =&gt; 1.673225209430317e9
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L239-L289">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_trade_balance-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_trade_balance-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_trade_balance</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_trade_balance(client::SpotBaseRESTAPI; asset::Union{String,Nothing}=nothing)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTradeBalance">https://docs.kraken.com/rest/#operation/getTradeBalance</a></p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_trade_balance(client))
+Dict{String, Any}(
+    &quot;v&quot; =&gt; &quot;0.0000&quot;, 
+    &quot;tb&quot; =&gt; &quot;113145.4781&quot;, 
+    &quot;mf&quot; =&gt; &quot;113145.4781&quot;, 
+    &quot;uv&quot; =&gt; &quot;0.0000&quot;, 
+    &quot;m&quot; =&gt; &quot;0.0000&quot;, 
+    &quot;c&quot; =&gt; &quot;0.0000&quot;, 
+    &quot;e&quot; =&gt; &quot;113112.4781&quot;,
+    &quot;eb&quot; =&gt; &quot;116412.4143&quot;, 
+    &quot;n&quot; =&gt; &quot;0.0000&quot;
+)
+julia&gt; println(get_trade_balance(client, asset=&quot;DOT&quot;))
+Dict{String, Any}(
+    &quot;v&quot; =&gt; &quot;0.0000000000&quot;, 
+    &quot;tb&quot; =&gt; &quot;2301.0859297648&quot;, 
+    &quot;mf&quot; =&gt; &quot;2301.0859297648&quot;, 
+    &quot;uv&quot; =&gt; &quot;0.0000000000&quot;, 
+    &quot;m&quot; =&gt; &quot;0.0000000000&quot;, 
+    &quot;c&quot; =&gt; &quot;0.0000000000&quot;, 
+    &quot;e&quot; =&gt; &quot;2301.0859297648&quot;, 
+    &quot;eb&quot; =&gt; &quot;2367.7876343538&quot;, 
+    &quot;n&quot; =&gt; &quot;0.0000000000&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L61-L97">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_trade_volume-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_trade_volume-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_trade_volume</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_trade_volume(client::SpotBaseRESTAPI; pair::Union{String,Vector{String},Nothing}=nothing, fee_info::Bool=true)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTradeVolume">https://docs.kraken.com/rest/#operation/getTradeVolume</a></p><p>Returns the actual 30-day trading volume. Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_trade_volume(client))
+Dict{String, Any}(
+    &quot;currency&quot; =&gt; &quot;ZUSD&quot;, 
+    &quot;volume&quot; =&gt; &quot;204212.9762&quot;,
+    &quot;fees_maker&quot; =&gt; nothing, 
+    &quot;fees&quot; =&gt; nothing
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L565-L585">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_trades_history-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_trades_history-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_trades_history</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_trades_history(client::SpotBaseRESTAPI;
+    type::String=&quot;all&quot;,
+    trades::Bool=false,
+    start::Union{Int64,Nothing}=nothing,
+    end_::Union{Int64,Nothing}=nothing,
+    ofs::Union{String,Int64,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTradeHistory">https://docs.kraken.com/rest/#operation/getTradeHistory</a></p><p>Returns historical trades and information.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_trades_history(client, type=&quot;all&quot;, start=1668431675, trades=true))
+Dict{String, Any}(
+    &quot;count&quot; =&gt; 182, 
+    &quot;trades&quot; =&gt; Dict{String, Any}(
+        &quot;TRZUTT-EZZ7C-NYDTL3&quot; =&gt; Dict{String, Any}(
+            &quot;price&quot; =&gt; &quot;4.29780&quot;, 
+            &quot;time&quot; =&gt; 1.6722627506350572e9, 
+            &quot;ordertxid&quot; =&gt; &quot;OGFLW2-CZKU3-XKCBMB&quot;,
+            &quot;trade_id&quot; =&gt; 8737419, 
+            &quot;vol&quot; =&gt; &quot;46.5350000&quot;, 
+            &quot;pair&quot; =&gt; &quot;DOTUSD&quot;, 
+            &quot;postxid&quot; =&gt; &quot;TKH2SE-M7IF5-CFI7LT&quot;, 
+            &quot;ordertype&quot; =&gt; &quot;limit&quot;, 
+            &quot;cost&quot; =&gt; &quot;199.9981&quot;, 
+            &quot;fee&quot; =&gt; &quot;0.3200&quot;, 
+            &quot;misc&quot; =&gt; &quot;&quot;, 
+            &quot;leverage&quot; =&gt; &quot;0&quot;, 
+            &quot;margin&quot; =&gt; &quot;0.00000&quot;,
+            &quot;type&quot; =&gt; &quot;buy&quot;
+        ), &quot;TNJFKJ-YLYX7-ETYS66&quot; =&gt; Dict{String, Any}(
+            ...
+        )
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L303-L347">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_trades_info-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_trades_info-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_trades_info</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_trades_info(client::SpotBaseRESTAPI; txid::Union{String,Vector{String}}, trades::Bool=false)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getTradesInfo">https://docs.kraken.com/rest/#operation/getTradesInfo</a></p><p>Returns information about specific trades by <code>txid</code>. </p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_trades_info(private_client, txid=&quot;2QMIXRF-I0EXWP-WQ6459&quot;))
+Dict{String,Any)(
+    &quot;2QMIXRF-I0EXWP-WQ6459&quot; =&gt; Dict{String,Any}(
+        &quot;ordertxid&quot; =&gt; &quot;OQCLML-BW3P3-BUCMWZ&quot;,
+        &quot;postxid&quot; =&gt; &quot;0H90AJ-M4W3ZY-66GF8Y&quot;,
+        &quot;pair&quot; =&gt; &quot;XXBTZUSD&quot;,
+        &quot;time&quot; =&gt; 1616667796.8802,
+        &quot;type&quot; =&gt; &quot;buy&quot;,
+        &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+        &quot;price&quot; =&gt; &quot;30010.00000&quot;,
+        &quot;cost&quot; =&gt; &quot;600.20000&quot;,
+        &quot;fee&quot; =&gt; &quot;0.00000&quot;,
+        &quot;vol&quot; =&gt; &quot;0.02000000&quot;,
+        &quot;margin&quot; =&gt; &quot;0.00000&quot;,
+        &quot;misc&quot; =&gt; &quot;&quot;
+    )
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L365-L396">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.get_websockets_token-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.get_websockets_token-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.get_websockets_token</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_websockets_token(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#tag/Websockets-Authentication">https://docs.kraken.com/rest/#tag/Websockets-Authentication</a></p><p>Returns the websocket token. This is used by the when  managing private websocket feeds and subscriptions.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_websockets_token(client))
+Dict{String,Any}(
+    &quot;token&quot;: &quot;1Agc3liasQPoAkAkadohsSNMFhs1ende06d1von3YFEMq&quot;,
+    &quot;expires&quot;: 900
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L749-L769">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.request_export_report-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.request_export_report-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.request_export_report</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">request_export_report(client::SpotBaseRESTAPI;
+    report::String,
+    description::String,
+    format::String=&quot;CSV&quot;,
+    fields::String=&quot;all&quot;,
+    starttm::Union{Int64,Nothing}=nothing,
+    endtm::Union{Int64,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/addExport">https://docs.kraken.com/rest/#operation/addExport</a></p><p>Initiates the export of a report and returns the export-<code>id</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Attributes</strong></p><ul><li><code>report</code> – must be one of [&quot;trades&quot;, &quot;ledgers&quot;] </li></ul><p>...</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(request_export_report(
+...        client, 
+...        report=&quot;ledgers&quot;, 
+...        description=&quot;myLedgersExport&quot;, 
+...        format=&quot;CSV&quot;
+...    ) 
+Dict{String, Any}(&quot;id&quot; =&gt; &quot;OFEZ&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L592-L627">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotUserModule.retrieve_export-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotUserModule.retrieve_export-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotUserModule.retrieve_export</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">retrieve_export(client::SpotBaseRESTAPI; id::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/retrieveExport">https://docs.kraken.com/rest/#operation/retrieveExport</a></p><p>Retrieves the initiated exprort. Can be used to save this report to csv.</p><p>Authenticated <code>client</code> required</p><p>The <code>id</code> is obtained when requesting the report using <a href="#KrakenEx.SpotUserModule.request_export_report-Tuple{SpotBaseRESTAPI}"><code>request_export_report</code></a>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; report = retrieve_export(private_client, id=&quot;OFEZ&quot;) 
+julia&gt; open(&quot;myExport.zip&quot;, &quot;w&quot;) do io
+...        write(io, report)
+...    end
+</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/user.jl#L694-L715">source</a></section></article><hr/><h2 id="Trade"><a class="docs-heading-anchor" href="#Trade">Trade</a><a id="Trade-1"></a><a class="docs-heading-anchor-permalink" href="#Trade" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule" href="#KrakenEx.SpotTradeModule"><code>KrakenEx.SpotTradeModule</code></a> — <span class="docstring-category">Module</span></header><section><div><pre><code class="language-julia hljs">SpotTradeModule</code></pre><p>Enables accessing Spot trade endpoints using predefined methods.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L1-L5">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.cancel_all_orders-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.cancel_all_orders-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.cancel_all_orders</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">cancel_all_orders(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/cancelAllOrders">https://docs.kraken.com/rest/#operation/cancelAllOrders</a></p><p>Cancel all open orders.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(cancel_all_orders(client))</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L354-L369">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.cancel_all_orders_after_x-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.cancel_all_orders_after_x-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.cancel_all_orders_after_x</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">cancel_all_orders_after_x(client::SpotBaseRESTAPI; timeout::Int)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter">https://docs.kraken.com/rest/#operation/cancelAllOrdersAfter</a></p><p>Cancel all open orders after <code>timeout</code> seconds. This can be used to avoid unwanted behavior in case of system instabilities. Set <code>timeout</code> to 0 to reset the timout.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(cancel_all_orders_after_x(client, timeout=60))
+Dict{String, Any}(
+    &quot;currentTime&quot; =&gt; &quot;2023-01-10T17:01:57Z&quot;, 
+    &quot;triggerTime&quot; =&gt; &quot;2023-01-10T17:02:57Z&quot;
+)
+julia&gt; println(cancel_all_orders_after_x(client, timeout=0))
+Dict{String, Any}(
+    &quot;currentTime&quot; =&gt; &quot;2023-01-10T17:01:59Z&quot;, 
+    &quot;triggerTime&quot; =&gt; &quot;0&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L374-L398">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.cancel_order-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.cancel_order-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.cancel_order</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">cancel_order(client::SpotBaseRESTAPI; txid::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/cancelOrder">https://docs.kraken.com/rest/#operation/cancelOrder</a></p><p>Cancel an order by <code>txid</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(cancel_order(client, txid=&quot;O2JLFP-VYFIW-35ZAAE&quot;))</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L334-L349">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.cancel_order_batch-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.cancel_order_batch-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.cancel_order_batch</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">cancel_order_batch(client::SpotBaseRESTAPI; orders::Vector{String})</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/cancelOrderBatch">https://docs.kraken.com/rest/#operation/cancelOrderBatch</a></p><p>Enables the cancellation of multiple orders by <code>txid</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(cancel_order_batch(
+...        client, 
+...        orders=[
+...            &quot;O2JLFP-VYFIW-35ZAAE&quot;, &quot;O523KJ-DO4M2-KAT243&quot;, 
+...            &quot;OCDIAL-YC66C-DOF7HS&quot;, &quot;OVFPZ2-DA2GV-VBFVVI&quot;
+...        ]
+...    ))</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L403-L424">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.create_order-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.create_order-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.create_order</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">create_order(client::SpotBaseRESTAPI;
+    ordertype::String,
+    side::String,
+    pair::String,
+    volume::Union{Float64,Int64,String},
+    price::Union{Float64,Int64,String,Nothing}=nothing,
+    price2::Union{Float64,Int64,String,Nothing}=nothing,
+    trigger::Union{String,Nothing}=nothing,
+    leverage::Union{Float64,Int64,String,Nothing}=nothing,
+    stp_type::String=&quot;cancel-newest&quot;,
+    oflags::Union{String,Vector{String},Nothing}=nothing,
+    timeinforce::Union{String,Nothing}=nothing,
+    starttm::String=&quot;0&quot;,
+    expiretim::String=&quot;0&quot;,
+    close_ordertype::Union{String,Nothing}=nothing,
+    close_price::Union{String,Nothing}=nothing,
+    close_price2::Union{String,Nothing}=nothing,
+    deadline::Union{String,Nothing}=nothing,
+    validate::Bool=false,
+    userref::Union{Int32,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/addOrder">https://docs.kraken.com/rest/#operation/addOrder</a></p><p>Enables the Spot trading mechanism. Various parameters can be specified for an individual trading preference. </p><p>Authenticated <code>client</code> required</p><p><strong>Arguments</strong></p><p><code>validate::Bool=false</code> – Simulates order placement if set to <code>true</code></p><p>...</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(
+...        create_order(
+...            private_client,
+...            ordertype=&quot;limit&quot;,
+...            side=&quot;buy&quot;,
+...            volume=0.3,
+...            pair=&quot;XBTUSD&quot;,
+...            price=&quot;17000&quot;,
+...            oflags=&quot;post&quot;
+...        )
+...    )
+Dict{String,Any}(
+    &quot;descr&quot; =&gt; Dict{String,Any}(
+        &quot;order&quot; =&gt; &quot;buy 0.30000000 XBTUSD @ limit 17000.0&quot;,
+    ),
+    &quot;txid&quot; =&gt; [&quot;0ZH90J-M4W3ZY-66GF8Y&quot;]
+)
+julia&gt; println(
+...        create_order(
+...            private_client,
+...            ordertype=&quot;market&quot;,
+...            side=&quot;buy&quot;,
+...            volume=0.001,
+...            pair=&quot;XBTUSD&quot;,
+...            validate=true
+...        )
+...    )
+Dict{String,Any}(
+    &quot;descr&quot; =&gt; Dict{String,Any}(
+        &quot;order&quot; =&gt; &quot;buy 0.00100000 XBTUSD @ market&quot;,
+    ),
+    &quot;txid&quot; =&gt; [&quot;T4HSG14-TYRCOC-7SWPQ0&quot;]
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L21-L94">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.create_order_batch-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.create_order_batch-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.create_order_batch</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">create_order_batch(client::SpotBaseRESTAPI;
+    orders::Vector{Dict{String,Any}},
+    pair::String,
+    deadline::Union{String,Nothing}=nothing,
+    validate::Bool=false
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/addOrderBatch">https://docs.kraken.com/rest/#operation/addOrderBatch</a></p><p>Enables placing multiple orders and order-specific actions at once. </p><p>Authenticated <code>client</code> required</p><p>The <code>validate</code> key can be submitted to orders to simulate the result (see <a href="#KrakenEx.SpotTradeModule.create_order-Tuple{SpotBaseRESTAPI}"><code>create_order</code></a>).</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(
+...        create_order_batch(
+...            client,
+...            orders=[
+...                Dict{String,Any}(
+...                    &quot;close&quot; =&gt; Dict{String,Any}(
+...                        &quot;ordertype&quot; =&gt; &quot;stop-loss-limit&quot;,
+...                       &quot;price&quot; =&gt; 1000,
+...                       &quot;price2&quot; =&gt; 900
+...                   ),
+...                   &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+...                   &quot;price&quot; =&gt; 40000,
+...                   &quot;timeinforce&quot; =&gt; &quot;GTC&quot;,
+...                   &quot;type&quot; =&gt; &quot;buy&quot;,
+...                   &quot;userref&quot; =&gt; Int32(123),
+...                   &quot;volume&quot; =&gt; 2
+...                ),
+...                Dict{String,Any}(
+...                    &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+...                    &quot;price&quot; =&gt; 42000,
+...                    &quot;starttm&quot; =&gt; &quot;1668455555&quot;,
+...                    &quot;timeinforce&quot; =&gt; &quot;GTC&quot;,
+...                    &quot;type&quot; =&gt; &quot;sell&quot;,
+...                    &quot;userref&quot; =&gt; Int32(999),
+...                    &quot;volume&quot; =&gt; 5
+...                ),
+...                Dict{String,Any}(
+...                    &quot;ordertype&quot; =&gt; &quot;market&quot;,
+...                    &quot;volume&quot; =&gt; 2,
+...                    &quot;type&quot; =&gt; &quot;buy&quot;
+...                ),
+...                Dict{String,Any}(
+...                    &quot;ordertype&quot; =&gt; &quot;limit&quot;,
+...                    &quot;price&quot; =&gt; 43000,
+...                    &quot;starttm&quot; =&gt; &quot;1668455555&quot;,
+...                    &quot;timeinforce&quot; =&gt; &quot;GTC&quot;,
+...                    &quot;type&quot; =&gt; &quot;sell&quot;,
+...                    &quot;userref&quot; =&gt; Int32(999),
+...                    &quot;volume&quot; =&gt; 5
+...                )
+...            ],
+...            pair=&quot;XBTUSD&quot;,
+...        )
+...    )
+...)
+Dict{String, Any}(
+    &quot;orders&quot; =&gt; Any[
+        Dict{String, Any}(
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;order&quot; =&gt; &quot;buy 2.00000000 XBTUSD @ limit 40000.0&quot;, 
+                &quot;close&quot; =&gt; &quot;close position @ stop loss 1000.0 -&gt; limit 900.0&quot;,
+                &quot;txid&quot; =&gt; &quot;N5F2Y6-E898J5-8Y6QE0&quot;
+            )
+        ), 
+        Dict{String, Any}(
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;order&quot; =&gt; &quot;sell 5.00000000 XBTUSD @ limit 42000.0&quot;,
+                &quot;txid&quot; =&gt; &quot;3YHGOT-P82PNP-D9DY85&quot;
+            )
+        ), 
+        Dict{String, Any}(
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;order&quot; =&gt; &quot;buy 2.00000000 XBTUSD @ market&quot;,
+                &quot;txid&quot; =&gt; &quot;IZXJ1O-9HER70-XJ0PCD&quot;
+            )
+        ), 
+        Dict{String, Any}(
+            &quot;descr&quot; =&gt; Dict{String, Any}(
+                &quot;order&quot; =&gt; &quot;sell 5.00000000 XBTUSD @ limit 43000.0&quot;,
+                &quot;txid&quot; =&gt; &quot;3YHGOT-P82PNP-D9DY85&quot;
+            )
+        )
+    ]
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L151-L246">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotTradeModule.edit_order-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotTradeModule.edit_order-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotTradeModule.edit_order</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">edit_order(client::SpotBaseRESTAPI;
+    txid::String,
+    pair::String,
+    volume::Union{String,Int64,Float64,Nothing}=nothing,
+    price::Union{String,Int64,Float64,Nothing}=nothing,
+    price2::Union{String,Int64,Float64,Nothing}=nothing,
+    oflags::Union{String,Vector{String},Nothing}=nothing,
+    deadline::Union{String,Nothing}=nothing,
+    cancel_response::Bool=false,
+    validate::Bool=false,
+    userref::Union{Int32,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/editOrder">https://docs.kraken.com/rest/#operation/editOrder</a></p><p>Enables the editing of a placed order by <code>txid</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Arguments</strong></p><p><code>validate::Bool=false</code> – Simulates order placement if set to <code>true</code> ...</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(
+...        edit_order(
+...            client,
+...            txid=&quot;O2JLFP-VYFIW-35ZAAE&quot;,
+...            pair=&quot;XBTUSD&quot;,
+...            volume=4.2,
+...            price=17000
+...        )
+...    )
+Dict{String, Any}(
+    &quot;status&quot; =&gt; &quot;ok&quot;, 
+    &quot;originaltxid&quot; =&gt; &quot;O2JLFP-VYFIW-35ZAAE&quot;, 
+    &quot;orders_cancelled&quot; =&gt; 0, 
+    &quot;descr&quot; =&gt; Dict{String, Any}(&quot;order&quot; =&gt; &quot;Order edited&quot;)
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/trade.jl#L262-L306">source</a></section></article><hr/><h2 id="Funding"><a class="docs-heading-anchor" href="#Funding">Funding</a><a id="Funding-1"></a><a class="docs-heading-anchor-permalink" href="#Funding" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule" href="#KrakenEx.SpotFundingModule"><code>KrakenEx.SpotFundingModule</code></a> — <span class="docstring-category">Module</span></header><section><div><pre><code class="language-julia hljs">SpotFundingModule</code></pre><p>Enables accessing Spot funding endpoints using predefined methods.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L1-L5">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.cancel_withdraw-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.cancel_withdraw-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.cancel_withdraw</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">cancel_withdraw(client::SpotBaseRESTAPI; asset::String, refid::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/cancelWithdrawal">https://docs.kraken.com/rest/#operation/cancelWithdrawal</a></p><p>Cancels a withdrawal by <code>refid</code>. The <code>refid</code> returned by <a href="#KrakenEx.SpotFundingModule.withdraw_funds-Tuple{SpotBaseRESTAPI}"><code>withdraw_funds</code></a> when initiating a withdraw. Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; cancel_withdraw(client, asset=&quot;DOT&quot;, refid=&quot;VGBNO6T-KFPTAQ-LAKGA6&quot;)
+true</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L253-L268">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.get_deposit_address-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.get_deposit_address-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.get_deposit_address</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_deposit_address(
+    client::SpotBaseRESTAPI; 
+    asset::String, 
+    method::String, 
+    new::Bool=false
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getDepositAddresses">https://docs.kraken.com/rest/#operation/getDepositAddresses</a></p><p>Returns the available deposit adresses of a given <code>asset</code> (symbol/currency pair).</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_deposit_address(client, asset=&quot;DOT&quot;, method=&quot;Polkadot&quot;))
+Any[
+    Dict{String, Any}(
+        &quot;new&quot; =&gt; true, 
+        &quot;expiretm&quot; =&gt; &quot;0&quot;, 
+        &quot;address&quot; =&gt; &quot;14MvdTudtJppS4WrUXg5mQiQiq6baUXt3KwhxxEDXnB7nMYv&quot;
+    ), Dict{String, Any}(
+        &quot;new&quot; =&gt; true, 
+        &quot;expiretm&quot; =&gt; &quot;0&quot;, 
+        &quot;address&quot; =&gt; &quot;15mK6NDReFAxkP6menxPRZdGNzRJY31vDMe9uSUPWfZj64Vy&quot;
+    ), ...
+]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L47-L78">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.get_deposit_methods-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.get_deposit_methods-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.get_deposit_methods</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_deposit_methods(client::SpotBaseRESTAPI; asset::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getDepositMethods">https://docs.kraken.com/rest/#operation/getDepositMethods</a></p><p>Returns the available deposit methods for a given <code>asset</code> (symbol/currency pair).</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; get_deposit_methods(client, asset=&quot;DOT&quot;)
+Any[Dict{String, Any}(
+    &quot;gen-address&quot; =&gt; true, 
+    &quot;method&quot; =&gt; 
+    &quot;Polkadot&quot;, 
+    &quot;limit&quot; =&gt; false
+)]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L21-L42">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.get_recend_deposits_status-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.get_recend_deposits_status-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.get_recend_deposits_status</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_recend_deposits_status(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    method::Union{String,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getStatusRecentDeposits">https://docs.kraken.com/rest/#operation/getStatusRecentDeposits</a></p><p>Returns the status of the recend deposit.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(
+...        get_recend_deposits_status(
+...             client, asset=&quot;DOT&quot;, method=&quot;Polkadot&quot;
+...        )
+...    )
+Any[]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L90-L114">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.get_recend_withdraw_status-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.get_recend_withdraw_status-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.get_recend_withdraw_status</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_recend_withdraw_status(
+    client::SpotBaseRESTAPI; 
+    asset::String,
+    method::Union{String,Nothing}=nothing
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals">https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals</a></p><p>Returns information about the recend withdrawal.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_recend_withdraw_status(client, asset=&quot;DOT&quot;))
+Dict{String,Any}(
+    &quot;method&quot;: =&gt;&quot;Bitcoin&quot;,
+    &quot;aclass&quot; =&gt; &quot;currency&quot;,
+    &quot;asset&quot; =&gt; &quot;XXBT&quot;,
+    &quot;refid&quot; =&gt; &quot;AGBZNBO-5P2XSB-RFVF6J&quot;,
+    &quot;txid&quot; =&gt; &quot;THVRQM-33VKH-UCI7BS&quot;,
+    &quot;info&quot; =&gt; &quot;mzp6yUVMRxfasyfwzTZjjy38dHqMX7Z3GR&quot;,
+    &quot;amount&quot; =&gt; &quot;0.72485000&quot;,
+    &quot;fee&quot; =&gt; &quot;0.00015000&quot;,
+    &quot;time&quot; =&gt; 1617014586,
+    &quot;status&quot; =&gt; &quot;Pending&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L211-L242">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.get_withdrawal_info-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.get_withdrawal_info-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.get_withdrawal_info</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_withdrawal_info(
+    client::SpotBaseRESTAPI;
+    asset::String, 
+    key::String, 
+    amount::Union{Float64,Int64,String}
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getWithdrawalInformation">https://docs.kraken.com/rest/#operation/getWithdrawalInformation</a></p><p>Returns information about a specific withdrawal. The <code>key</code> can be the <code>refid</code> returned by <a href="#KrakenEx.SpotFundingModule.withdraw_funds-Tuple{SpotBaseRESTAPI}"><code>withdraw_funds</code></a>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_withdrawal_info(
+...        client, 
+...        asset=&quot;DOT&quot;, 
+...        key=&quot;pwallet1&quot;, 
+...        amount=&quot;200&quot;
+...    ))
+)
+Dict{String,Any}(
+    &quot;method&quot; =&gt; &quot;Bitcoin&quot;,
+    &quot;limit&quot; =&gt; &quot;332.00956139&quot;,
+    &quot;amount&quot; =&gt; &quot;0.72485000&quot;,
+    &quot;fee&quot; =&gt; &quot;0.00015000&quot;
+)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L165-L197">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.wallet_transfer-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.wallet_transfer-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.wallet_transfer</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">wallet_transfer(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    from::String,
+    to::String,
+    amount::Union{Float64,Int64,String}
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/walletTransfer">https://docs.kraken.com/rest/#operation/walletTransfer</a></p><p>Enables the transfer of assets between different wallets e.g. from Spot to Futures wallet.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(wallet_transfer(
+...        client, 
+...        asset=&quot;XLM&quot;, 
+...        from=&quot;Spot Wallet&quot;, 
+...        to=&quot;Futures Wallet&quot;, 
+...        amount=200
+...    ))
+Dict{String,Any}(&quot;refid&quot; =&gt; &quot;AJGLAE5-KSKMGR4-VPNPNV&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L276-L304">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotFundingModule.withdraw_funds-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotFundingModule.withdraw_funds-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotFundingModule.withdraw_funds</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">withdraw_funds(
+    client::SpotBaseRESTAPI;
+    asset::String,
+    key::String,
+    amount::Union{Float64,Int64,String}
+)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/withdrawFunds">https://docs.kraken.com/rest/#operation/withdrawFunds</a></p><p>Initiates a withdraw and returns the <code>refid</code> to track the status.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(withdraw_funds(
+...         client, 
+...         asset=&quot;DOT&quot;, 
+...         key=&quot;some-widthdrawal-id-from-gui&quot;, 
+...         amount=200
+...     ))
+Dict{String,Any}(&quot;refid&quot; =&gt; &quot;AGBSO6T-UFMTTQ-I7KGS6&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/funding.jl#L125-L151">source</a></section></article><hr/><h2 id="Staking"><a class="docs-heading-anchor" href="#Staking">Staking</a><a id="Staking-1"></a><a class="docs-heading-anchor-permalink" href="#Staking" title="Permalink"></a></h2><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule" href="#KrakenEx.SpotStakingModule"><code>KrakenEx.SpotStakingModule</code></a> — <span class="docstring-category">Module</span></header><section><div><pre><code class="language-julia hljs">SpotStakingModule</code></pre><p>Enables accessing Spot staking endpoints using predefined methods.</p></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L1-L5">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule.get_pending_staking_transactions-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotStakingModule.get_pending_staking_transactions-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotStakingModule.get_pending_staking_transactions</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">get_pending_staking_transactions(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getStakingPendingDeposits">https://docs.kraken.com/rest/#operation/getStakingPendingDeposits</a></p><p>Returns a list of pending staking transactions of this user.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(get_pending_staking_transactions(client))
+Any[Dict{String,Any}(
+    &quot;method&quot; =&gt; &quot;polkadot-staked&quot;,
+    &quot;aclass&quot; =&gt; &quot;currency&quot;,
+    &quot;asset&quot; =&gt; &quot;DOT.S&quot;,
+    &quot;refid&quot; =&gt; &quot;CN1EVQO-MOWU97-89F1D5&quot;,
+    &quot;amount&quot; =&gt; &quot;2010&quot;,
+    &quot;fee&quot; =&gt; &quot;0.01&quot;,
+    &quot;time&quot; =&gt; 1622988877,
+    &quot;status&quot; =&gt; &quot;Initial&quot;,
+    &quot;type&quot; =&gt; &quot;bonding&quot;
+), ...]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L106-L132">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule.list_stakeable_assets-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotStakingModule.list_stakeable_assets-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotStakingModule.list_stakeable_assets</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">list_stakeable_assets(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getStakingAssetInfo">https://docs.kraken.com/rest/#operation/getStakingAssetInfo</a></p><p>Lists the available assets to stake.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(list_stakeable_assets(client))
+Any[Dict{String,Any}(
+    &quot;method&quot; =&gt; &quot;polkadot-staked&quot;,
+    &quot;asset&quot; =&gt; &quot;DOT&quot;,
+    &quot;staking_asset&quot;: &quot;DOT.S&quot;,
+    &quot;rewards&quot; =&gt; Dict{String,ANy}()
+        &quot;reward&quot; =&gt; &quot;12.00&quot;,
+        &quot;type&quot; =&gt; &quot;percentage&quot;
+    ),
+    &quot;on_chain&quot; =&gt; true,
+    &quot;can_stake&quot; =&gt; true,
+    &quot;can_unstake&quot; =&gt; true,
+    &quot;minimum_amount&quot; =&gt; Dict{String,Any}(
+        &quot;staking&quot; =&gt; &quot;0.0000000000&quot;,
+        &quot;unstaking&quot; =&gt; &quot;0.0000000000&quot;
+    )
+), ...]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L70-L101">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule.list_staking_transactions-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotStakingModule.list_staking_transactions-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotStakingModule.list_staking_transactions</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">list_staking_transactions(client::SpotBaseRESTAPI)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/getStakingTransactions">https://docs.kraken.com/rest/#operation/getStakingTransactions</a></p><p>Returns the list of staking transactions for this user.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(list_staking_transactions(client))
+Any[Dict{String,Any}(
+    &quot;method&quot; =&gt; &quot;xbt-staked&quot;,
+    &quot;aclass&quot; =&gt; &quot;currency&quot;,
+    &quot;asset&quot; =&gt; &quot;XBT.M&quot;,
+    &quot;refid&quot; =&gt; &quot;2BPOYNJ-Q3P855-5B9BL4&quot;,
+    &quot;amount&quot; =&gt; &quot;0.612&quot;,
+    &quot;fee&quot; =&gt; &quot;0.0000000000&quot;,
+    &quot;time&quot; =&gt; 1623132481,
+    &quot;status&quot; =&gt; &quot;Success&quot;,
+    &quot;type&quot; =&gt; &quot;bonding&quot;,
+    &quot;bond_start&quot; =&gt; 1623132481,
+    &quot;bond_end&quot; =&gt; 1623132481
+), ...]</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L137-L165">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule.stake_asset-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotStakingModule.stake_asset-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotStakingModule.stake_asset</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">stake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String}, method::String)</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/stake">https://docs.kraken.com/rest/#operation/stake</a></p><p>Initiates a staking action for a desired <code>asset</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(stake_asset(client, asset=&quot;DOT&quot;, amount=2000, method=&quot;polkadot-staked&quot;))
+Dict{String,Any}(&quot;refid&quot; =&gt; &quot;ABFPN4-KSKVP4-VPNALT&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L19-L35">source</a></section></article><article class="docstring"><header><a class="docstring-binding" id="KrakenEx.SpotStakingModule.unstake_asset-Tuple{SpotBaseRESTAPI}" href="#KrakenEx.SpotStakingModule.unstake_asset-Tuple{SpotBaseRESTAPI}"><code>KrakenEx.SpotStakingModule.unstake_asset</code></a> — <span class="docstring-category">Method</span></header><section><div><pre><code class="language-julia hljs">unstake_asset(client::SpotBaseRESTAPI; asset::String, amount::Union{Float64,Int64,String})</code></pre><p>Kraken Docs: <a href="https://docs.kraken.com/rest/#operation/unstake">https://docs.kraken.com/rest/#operation/unstake</a></p><p>Enables the unstaking of a staked <code>asset</code>.</p><p>Authenticated <code>client</code> required</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl hljs">julia&gt; client = SpotBaseRESTAPI(key=&quot;api-key&quot;, secret=&quot;secret-key&quot;)
+julia&gt; println(unstake_asset(client, asset=&quot;DOT&quot;, amount=2000))
+Dict{String,Any}(&quot;refid&quot; =&gt; &quot;GT01XVK-1VCDWO-7HR18B&quot;)</code></pre></div><a class="docs-sourcelink" target="_blank" href="https://github.com/btschwertfeger/KrakenEx.jl/blob/181056cbca2ff328b0051c1a8fde15af4efced80/src/spot/staking.jl#L44-L60">source</a></section></article></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Introduction</a><a class="docs-footer-nextpage" href="../spot_websocket/">Kraken Spot WebSocket API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Sunday 15 January 2023 08:45">Sunday 15 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
