@@ -9,9 +9,10 @@
 [![CI](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml)
 [![Documentation](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml/badge.svg)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml)
 
-<!-- [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/stable) -->
+<!-- [![KrakenEx Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/KrakenEx)](https://pkgs.genieframework.com?packages=KrakenEx) -->
 
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/dev)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/stable)
+[![devDocs](https://img.shields.io/badge/docs-dev-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/dev)
 
 </div>
 
