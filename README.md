@@ -5,13 +5,16 @@
 [![GitHub](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/btschwertfeger/KrakenEx.jl)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Generic badge](https://img.shields.io/badge/julia-1.8+-orange.svg)](https://shields.io/)
+[![version](https://juliahub.com/docs/KrakenEx/version.svg)](https://juliahub.com/ui/Packages/KrakenEx/C18NY)
 
 [![CI](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml)
 [![Documentation](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml/badge.svg)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml)
+[![pkgeval](https://juliahub.com/docs/KrakenEx/pkgeval.svg)](https://juliahub.com/ui/Packages/KrakenEx/C18NY)
 
 <!-- [![KrakenEx Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/KrakenEx)](https://pkgs.genieframework.com?packages=KrakenEx) -->
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/stable)
+[![Julia Doc](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.juliahub.com/KrakenEx/C18NY/0.1.0/)
+[![stableDocs](https://img.shields.io/badge/docs-stable-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/stable)
 [![devDocs](https://img.shields.io/badge/docs-dev-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/dev)
 
 </div>

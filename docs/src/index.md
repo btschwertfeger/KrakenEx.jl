@@ -9,6 +9,7 @@ Futures and Spot Websocket and REST API Julia SDK for the Kraken Cryptocurrency 
 [![GitHub](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/btschwertfeger/KrakenEx.jl)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-orange.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Generic badge](https://img.shields.io/badge/julia-1.8+-orange.svg)](https://shields.io/)
+[![version](https://juliahub.com/docs/KrakenEx/version.svg)](https://juliahub.com/ui/Packages/KrakenEx/C18NY)
 [![CI](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/CI.yml)
 [![Documentation](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml/badge.svg)](https://github.com/btschwertfeger/KrakenEx.jl/actions/workflows/Documentation.yml)
 
@@ -55,8 +56,8 @@ julia> using Pkg; Pkg.add("KrakenEx")
 
 ### 3. Start using the provided example scripts
 
-- [Spot REST Examples](@ref)
-- [Futures REST Examples](@ref)
+- [Kraken Spot Examples](@ref)
+- [Kraken Futures Examples](@ref)
 
 ### 4. Error handling
 
