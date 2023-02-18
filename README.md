@@ -16,6 +16,7 @@
 [![Julia Doc](https://img.shields.io/badge/docs-latest-blue.svg)](https://docs.juliahub.com/KrakenEx/C18NY/0.1.0/)
 [![stableDocs](https://img.shields.io/badge/docs-stable-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/stable)
 [![devDocs](https://img.shields.io/badge/docs-dev-blue.svg)](https://btschwertfeger.github.io/KrakenEx.jl/dev)
+[![DOI](https://zenodo.org/badge/581435997.svg)](https://zenodo.org/badge/latestdoi/581435997)
 
 </div>
 
