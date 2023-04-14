@@ -20,12 +20,10 @@
 
 </div>
 
-<h3>
-This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia.
+> ⚠️ This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia. Payward Ltd. and Kraken are in no way associated with the authors of this module and documentation.
 
 This project is based on the [python-kraken-sdk](https://github.com/btschwertfeger/python-kraken-sdk).
 
-</h3>
 
 ---
 
