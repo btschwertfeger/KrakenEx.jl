@@ -13,7 +13,7 @@ using .KrakenEx.SpotMarketModule:
     get_ohlc,
     get_order_book,
     get_recent_trades,
-    get_recend_spreads,
+    get_recent_spreads,
     get_system_status
 
 using .KrakenEx.SpotUserModule:
@@ -46,10 +46,10 @@ using .KrakenEx.SpotTradeModule:
 using .KrakenEx.SpotFundingModule:
     get_deposit_methods,
     get_deposit_address,
-    get_recend_deposits_status,
+    get_recent_deposits_status,
     withdraw_funds,
     get_withdrawal_info,
-    get_recend_withdraw_status,
+    get_recent_withdraw_status,
     cancel_withdraw,
     wallet_transfer
 
@@ -71,7 +71,7 @@ function market_endpoints(client::SpotBaseRESTAPI)
     println(get_ohlc(client, pair="XBTUSD"))
     println(get_order_book(client, pair="XBTUSD"))
     println(get_recent_trades(client, pair="XBTUSD"))
-    println(get_recend_spreads(client, pair="XBTUSD"))
+    println(get_recent_spreads(client, pair="XBTUSD"))
     println(get_system_status(client))
 end
 
@@ -309,7 +309,7 @@ function funding_endpoints(private_client::SpotBaseRESTAPI)
     #===> F U N D I N G <===#
     println(get_deposit_methods(private_client, asset="DOT"))
     println(get_deposit_address(private_client, asset="DOT", method="Polkadot"))
-    println(get_recend_deposits_status(private_client, asset="DOT", method="Polkadot"))
+    println(get_recent_deposits_status(private_client, asset="DOT", method="Polkadot"))
 
     # if false println(withdraw_funds(private_client, asset="DOT", key="pwallet1", amount=200)) end
 
@@ -323,7 +323,7 @@ function funding_endpoints(private_client::SpotBaseRESTAPI)
             end
         end
     end
-    println(get_recend_withdraw_status(private_client, asset="DOT"))
+    println(get_recent_withdraw_status(private_client, asset="DOT"))
 
     try
         println(cancel_withdraw(private_client, asset="DOT", refid="1234"))

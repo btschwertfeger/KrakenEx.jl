@@ -524,7 +524,7 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 | `get_ohlc`                | https://docs.kraken.com/rest/#operation/getOHLCData           |
 | `get_order_book`          | https://docs.kraken.com/rest/#operation/getOrderBook          |
 | `get_recent_trades`       | https://docs.kraken.com/rest/#operation/getRecentTrades       |
-| `get_recend_spreads`      | https://docs.kraken.com/rest/#operation/getRecentSpreads      |
+| `get_recent_spreads`      | https://docs.kraken.com/rest/#operation/getRecentSpreads      |
 | `get_system_status`       | checks if Kraken is online                                    |
 
 <a name="spotfunding"></a>
@@ -537,10 +537,10 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 | ---------------------------- | ------------------------------------------------------------------ |
 | `get_deposit_methods`        | https://docs.kraken.com/rest/#operation/getDepositMethods          |
 | `get_deposit_address`        | https://docs.kraken.com/rest/#operation/getDepositAddresses        |
-| `get_recend_deposits_status` | https://docs.kraken.com/rest/#operation/getStatusRecentDeposits    |
+| `get_recent_deposits_status` | https://docs.kraken.com/rest/#operation/getStatusRecentDeposits    |
 | `get_withdrawal_info`        | https://docs.kraken.com/rest/#operation/getWithdrawalInformation   |
 | `withdraw_funds`             | https://docs.kraken.com/rest/#operation/withdrawFund               |
-| `get_recend_withdraw_status` | https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals |
+| `get_recent_withdraw_status` | https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals |
 | `cancel_withdraw`            | https://docs.kraken.com/rest/#operation/cancelWithdrawal           |
 | `wallet_transfer`            | https://docs.kraken.com/rest/#operation/walletTransfer             |
 
@@ -688,8 +688,6 @@ Note: Authenticated Futures websocket clients can also un/subscribe from/to publ
 <a name="notes"></a>
 
 # 📝 Notes:
-
-- Pull requests will be ignored until the owner finished the core idea
 
 - Coding standards are not always followed to make arguments and function names as similar as possible to those in the Kraken API documentations.
 

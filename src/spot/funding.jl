@@ -10,10 +10,10 @@ using ..Utils
 #======= E X P O R T S ========#
 export get_deposit_methods
 export get_deposit_address
-export get_recend_deposits_status
+export get_recent_deposits_status
 export withdraw_funds
 export get_withdrawal_info
-export get_recend_withdraw_status
+export get_recent_withdraw_status
 export cancel_withdraw
 export wallet_transfer
 
@@ -24,7 +24,7 @@ export wallet_transfer
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getDepositMethods](https://docs.kraken.com/rest/#operation/getDepositMethods)
 
 Returns the available deposit methods for a given `asset` (symbol/currency pair).
-    
+
 Authenticated `client` required
 
 # Examples
@@ -33,9 +33,9 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> get_deposit_methods(client, asset="DOT")
 Any[Dict{String, Any}(
-    "gen-address" => true, 
-    "method" => 
-    "Polkadot", 
+    "gen-address" => true,
+    "method" =>
+    "Polkadot",
     "limit" => false
 )]
 ```
@@ -46,9 +46,9 @@ end
 
 """
     get_deposit_address(
-        client::SpotBaseRESTAPI; 
-        asset::String, 
-        method::String, 
+        client::SpotBaseRESTAPI;
+        asset::String,
+        method::String,
         new::Bool=false
     )
 
@@ -65,12 +65,12 @@ julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_deposit_address(client, asset="DOT", method="Polkadot"))
 Any[
     Dict{String, Any}(
-        "new" => true, 
-        "expiretm" => "0", 
+        "new" => true,
+        "expiretm" => "0",
         "address" => "14MvdTudtJppS4WrUXg5mQiQiq6baUXt3KwhxxEDXnB7nMYv"
     ), Dict{String, Any}(
-        "new" => true, 
-        "expiretm" => "0", 
+        "new" => true,
+        "expiretm" => "0",
         "address" => "15mK6NDReFAxkP6menxPRZdGNzRJY31vDMe9uSUPWfZj64Vy"
     ), ...
 ]
@@ -88,7 +88,7 @@ function get_deposit_address(
 end
 
 """
-    get_recend_deposits_status(
+    get_recent_deposits_status(
         client::SpotBaseRESTAPI;
         asset::String,
         method::Union{String,Nothing}=nothing
@@ -96,7 +96,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStatusRecentDeposits](https://docs.kraken.com/rest/#operation/getStatusRecentDeposits)
 
-Returns the status of the recend deposit.
+Returns the status of the recent deposit.
 
 Authenticated `client` required
 
@@ -105,14 +105,14 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(
-...        get_recend_deposits_status(
+...        get_recent_deposits_status(
 ...             client, asset="DOT", method="Polkadot"
 ...        )
 ...    )
 Any[]
 ```
 """
-function get_recend_deposits_status(
+function get_recent_deposits_status(
     client::SpotBaseRESTAPI;
     asset::String,
     method::Union{String,Nothing}=nothing
@@ -141,9 +141,9 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(withdraw_funds(
-...         client, 
-...         asset="DOT", 
-...         key="some-widthdrawal-id-from-gui", 
+...         client,
+...         asset="DOT",
+...         key="some-widthdrawal-id-from-gui",
 ...         amount=200
 ...     ))
 Dict{String,Any}("refid" => "AGBSO6T-UFMTTQ-I7KGS6")
@@ -165,8 +165,8 @@ end
 """
     get_withdrawal_info(
         client::SpotBaseRESTAPI;
-        asset::String, 
-        key::String, 
+        asset::String,
+        key::String,
         amount::Union{Float64,Int64,String}
     )
 
@@ -181,9 +181,9 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_withdrawal_info(
-...        client, 
-...        asset="DOT", 
-...        key="pwallet1", 
+...        client,
+...        asset="DOT",
+...        key="pwallet1",
 ...        amount="200"
 ...    ))
 )
@@ -209,15 +209,15 @@ function get_withdrawal_info(
 end
 
 """
-    get_recend_withdraw_status(
-        client::SpotBaseRESTAPI; 
+    get_recent_withdraw_status(
+        client::SpotBaseRESTAPI;
         asset::String,
         method::Union{String,Nothing}=nothing
     )
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals](https://docs.kraken.com/rest/#operation/getStatusRecentWithdrawals)
 
-Returns information about the recend withdrawal.
+Returns information about the recent withdrawal.
 
 Authenticated `client` required
 
@@ -225,7 +225,7 @@ Authenticated `client` required
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
-julia> println(get_recend_withdraw_status(client, asset="DOT"))
+julia> println(get_recent_withdraw_status(client, asset="DOT"))
 Dict{String,Any}(
     "method": =>"Bitcoin",
     "aclass" => "currency",
@@ -240,7 +240,7 @@ Dict{String,Any}(
 )
 ```
 """
-function get_recend_withdraw_status(
+function get_recent_withdraw_status(
     client::SpotBaseRESTAPI;
     asset::String,
     method::Union{String,Nothing}=nothing
@@ -293,10 +293,10 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(wallet_transfer(
-...        client, 
-...        asset="XLM", 
-...        from="Spot Wallet", 
-...        to="Futures Wallet", 
+...        client,
+...        asset="XLM",
+...        from="Spot Wallet",
+...        to="Futures Wallet",
 ...        amount=200
 ...    ))
 Dict{String,Any}("refid" => "AJGLAE5-KSKMGR4-VPNPNV")

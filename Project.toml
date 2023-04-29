@@ -1,7 +1,7 @@
 name = "KrakenEx"
 uuid = "905906f8-4650-4186-8b30-13842c9f1f1c"
 authors = ["Benjamin Thomas Schwertfeger"]
-version = "0.1.0"
+version = "1.0.0"
 
 [deps]
 Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
@@ -14,12 +14,12 @@ StringEncodings = "69024149-9ee7-55f6-a4c4-859efe599b68"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
+Documenter = "0.27"
 HTTP = "1"
 JSON = "0.21"
 Nettle = "1"
+StringEncodings = "0.3"
 julia = "1.8"
-StringEncodings = "0.3" 
-Documenter = "0.27"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

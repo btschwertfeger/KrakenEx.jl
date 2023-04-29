@@ -24,11 +24,11 @@ using Test
 
     @test typeof(SpotMarket.get_order_book(client, pair="XBTUSD")) == Dict{String,Any}
 
-    @test typeof(SpotMarket.get_recend_spreads(client, pair="XBTUSD")) == Dict{String,Any}
+    @test typeof(SpotMarket.get_recent_spreads(client, pair="XBTUSD")) == Dict{String,Any}
 
     @test typeof(SpotMarket.get_system_status(client)) == Dict{String,Any}
 
-    # ... 
+    # ...
 end
 
 @testset "KrakenEx Futures REST Market Endpoints" begin
@@ -69,5 +69,5 @@ end
     @test typeof(FuturesMarket.get_trade_history(client, symbol="PI_XBTUSD")) == Dict{String,Any}
 
     @test typeof(FuturesMarket.get_public_execution_events(client, tradeable="PI_XBTUSD")) == Dict{String,Any}
-    # ... 
+    # ...
 end
