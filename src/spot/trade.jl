@@ -23,11 +23,11 @@ export cancel_order_batch
         ordertype::String,
         side::String,
         pair::String,
-        volume::Union{Float64,Int64,String},
-        price::Union{Float64,Int64,String,Nothing}=nothing,
-        price2::Union{Float64,Int64,String,Nothing}=nothing,
+        volume::Union{Float64,Int,String},
+        price::Union{Float64,Int,String,Nothing}=nothing,
+        price2::Union{Float64,Int,String,Nothing}=nothing,
         trigger::Union{String,Nothing}=nothing,
-        leverage::Union{Float64,Int64,String,Nothing}=nothing,
+        leverage::Union{Float64,Int,String,Nothing}=nothing,
         stp_type::String="cancel-newest",
         oflags::Union{String,Vector{String},Nothing}=nothing,
         timeinforce::Union{String,Nothing}=nothing,
@@ -39,7 +39,7 @@ export cancel_order_batch
         deadline::Union{String,Nothing}=nothing,
         validate::Bool=false,
         reduce_only::Bool=false,
-        displayvol::Union{Float64,Int64,String,Nothing}=nothing,
+        displayvol::Union{Float64,Int,String,Nothing}=nothing,
         userref::Union{Int32,Nothing}=nothing
     )
 
@@ -98,11 +98,11 @@ function create_order(client::SpotBaseRESTAPI;
     ordertype::String,
     side::String,
     pair::String,
-    volume::Union{Float64,Int64,String},
-    price::Union{Float64,Int64,String,Nothing}=nothing,
-    price2::Union{Float64,Int64,String,Nothing}=nothing,
+    volume::Union{Float64,Int,String},
+    price::Union{Float64,Int,String,Nothing}=nothing,
+    price2::Union{Float64,Int,String,Nothing}=nothing,
     trigger::Union{String,Nothing}=nothing,
-    leverage::Union{Float64,Int64,String,Nothing}=nothing,
+    leverage::Union{Float64,Int,String,Nothing}=nothing,
     stp_type::String="cancel-newest",
     oflags::Union{String,Vector{String},Nothing}=nothing,
     timeinforce::Union{String,Nothing}=nothing,
@@ -114,8 +114,8 @@ function create_order(client::SpotBaseRESTAPI;
     deadline::Union{String,Nothing}=nothing,
     validate::Bool=false,
     reduce_only::Bool=false,
-    displayvol::Union{Float64,Int64,String,Nothing}=nothing,
-    userref::Union{Int32,Nothing}=nothing
+    displayvol::Union{Float64,Int,String,Nothing}=nothing,
+    userref::Union{Int,Nothing}=nothing
 )
     params = Dict{String,Any}(
         "ordertype" => ordertype,
@@ -259,9 +259,9 @@ end
     edit_order(client::SpotBaseRESTAPI;
         txid::String,
         pair::String,
-        volume::Union{String,Int64,Float64,Nothing}=nothing,
-        price::Union{String,Int64,Float64,Nothing}=nothing,
-        price2::Union{String,Int64,Float64,Nothing}=nothing,
+        volume::Union{String,Int,Float64,Nothing}=nothing,
+        price::Union{String,Int,Float64,Nothing}=nothing,
+        price2::Union{String,Int,Float64,Nothing}=nothing,
         oflags::Union{String,Vector{String},Nothing}=nothing,
         deadline::Union{String,Nothing}=nothing,
         cancel_response::Bool=false,
@@ -303,9 +303,9 @@ Dict{String, Any}(
 function edit_order(client::SpotBaseRESTAPI;
     txid::String,
     pair::String,
-    volume::Union{String,Int64,Float64,Nothing}=nothing,
-    price::Union{String,Int64,Float64,Nothing}=nothing,
-    price2::Union{String,Int64,Float64,Nothing}=nothing,
+    volume::Union{String,Int,Float64,Nothing}=nothing,
+    price::Union{String,Int,Float64,Nothing}=nothing,
+    price2::Union{String,Int,Float64,Nothing}=nothing,
     oflags::Union{String,Vector{String},Nothing}=nothing,
     deadline::Union{String,Nothing}=nothing,
     cancel_response::Bool=false,

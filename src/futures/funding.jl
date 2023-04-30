@@ -18,7 +18,7 @@ export initiate_withdrawal_to_spot_wallet
 
 Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates](https://docs.futures.kraken.com/#http-api-trading-v3-api-historical-funding-rates-historicalfundingrates)
 
-# Examples 
+# Examples
 
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
@@ -26,23 +26,23 @@ julia> println(get_historical_funding_rates(client, symbol="PI_XBTUSD"))
 Dict{String, Any}(
     "rates" => Any[
         Dict{String, Any}(
-            "fundingRate" => 1.0327058177e-8, 
-            "timestamp" => "2018-08-31T16:00:00.000Z", 
+            "fundingRate" => 1.0327058177e-8,
+            "timestamp" => "2018-08-31T16:00:00.000Z",
             "relativeFundingRate" => 7.182407e-5
-        ), 
+        ),
         Dict{String, Any}(
             "fundingRate" => -1.2047162502e-8,
             "timestamp" => "2018-08-31T20:00:00.000Z",
             "relativeFundingRate" => -8.4873103125e-5
-        ), 
+        ),
         Dict{String, Any}(
-            "fundingRate" => -9.645113378e-9, 
-            "timestamp" => "2018-09-01T00:00:00.000Z", 
+            "fundingRate" => -9.645113378e-9,
+            "timestamp" => "2018-09-01T00:00:00.000Z",
             "relativeFundingRate" => -6.76651e-5
-        ), 
+        ),
         Dict{String, Any}(
-            "fundingRate" => -8.028122964e-9, 
-            "timestamp" => "2018-09-01T04:00:00.000Z", 
+            "fundingRate" => -8.028122964e-9,
+            "timestamp" => "2018-09-01T04:00:00.000Z",
             "relativeFundingRate" => -5.66897875e-5
         ), ...
     ]
@@ -131,7 +131,7 @@ function initiate_subccount_transfer(
     toUser::String
 )
     return request(client, "POST", "/derivatives/api/v3/transfer/subaccount", post_params=Dict{String,Any}(
-            "amount" => amount,
+            "amount" => string(amount),
             "fromAccount" => fromAccount,
             "fromUser" => fromUser,
             "toAccount" => toAccount,

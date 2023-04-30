@@ -22,6 +22,8 @@
 
 > ⚠️ This is an unofficial collection of REST and websocket clients for Spot and Futures trading on the Kraken cryptocurrency exchange using Julia. Payward Ltd. and Kraken are in no way associated with the authors of this module and documentation.
 
+Documentation: [https://btschwertfeger.github.io/KrakenEx.jl/stable/](https://btschwertfeger.github.io/KrakenEx.jl/stable/)
+
 This project is based on the [python-kraken-sdk](https://github.com/btschwertfeger/python-kraken-sdk).
 
 
@@ -46,6 +48,7 @@ General:
 
 - access both public and private endpoints
 - responsive error handling and custom exceptions
+- tested using unit tests (see `test/*`)
 - extensive example scripts (see `/examples`)
 
 ---
