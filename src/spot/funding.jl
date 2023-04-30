@@ -82,15 +82,15 @@ function get_deposit_address(
     method::String,
     new::Bool=false
 )
-    return request(client, "POST", "/private/DepositAddresses", data=Dict{String,Any}([
+    return request(client, "POST", "/private/DepositAddresses", data=Dict{String,Any}(
             "asset" => asset, "method" => method, "new" => string(new)
-        ]), auth=true)
+        ), auth=true)
 end
 
 """
     get_recent_deposits_status(
         client::SpotBaseRESTAPI;
-        asset::String,
+        asset::Union{String,Nothing}=Nothing,
         method::Union{String,Nothing}=nothing
     )
 
@@ -114,10 +114,11 @@ Any[]
 """
 function get_recent_deposits_status(
     client::SpotBaseRESTAPI;
-    asset::String,
+    asset::Union{String,Nothing}=nothing,
     method::Union{String,Nothing}=nothing
 )
-    params = Dict{String,Any}("asset" => asset)
+    params = Dict{String,Any}()
+    !isnothing(asset) ? params["asset"] = asset : nothing
     !isnothing(method) ? params["method"] = method : nothing
     return request(client, "POST", "/private/DepositStatus", data=params, auth=true)
 end

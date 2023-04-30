@@ -25,6 +25,7 @@ export get_export_report_status
 export retrieve_export
 export delete_export_report
 export get_websockets_token
+export create_subaccount
 
 #======= F U N C T I O N S ========#
 """
@@ -37,19 +38,19 @@ Returns the actual balances of all currencies.
 Authenticated `client` required
 
 # Examples
-```julia-repl 
+```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_account_balance(client))
 Dict{String, Any}(
-    "KFEE" => "9431.54", 
+    "KFEE" => "9431.54",
     "BCH" => "123.0000077100",
-    "ZUSD" => "798.5491", 
-    "XETH" => "14.0119368320", 
-    "DOT" => "671.0153183000", 
-    "ZEUR" => "101.12000", 
-    "XXBT" => "1.0011888110", 
-    "XXLM" => "2030121.00001212", 
-    "EOS" => "24.0000065500", 
+    "ZUSD" => "798.5491",
+    "XETH" => "14.0119368320",
+    "DOT" => "671.0153183000",
+    "ZEUR" => "101.12000",
+    "XXBT" => "1.0011888110",
+    "XXLM" => "2030121.00001212",
+    "EOS" => "24.0000065500",
     "TRX" => "9121230.00000000"
 )
 ```
@@ -71,26 +72,26 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_trade_balance(client))
 Dict{String, Any}(
-    "v" => "0.0000", 
-    "tb" => "113145.4781", 
-    "mf" => "113145.4781", 
-    "uv" => "0.0000", 
-    "m" => "0.0000", 
-    "c" => "0.0000", 
+    "v" => "0.0000",
+    "tb" => "113145.4781",
+    "mf" => "113145.4781",
+    "uv" => "0.0000",
+    "m" => "0.0000",
+    "c" => "0.0000",
     "e" => "113112.4781",
-    "eb" => "116412.4143", 
+    "eb" => "116412.4143",
     "n" => "0.0000"
 )
 julia> println(get_trade_balance(client, asset="DOT"))
 Dict{String, Any}(
-    "v" => "0.0000000000", 
-    "tb" => "2301.0859297648", 
-    "mf" => "2301.0859297648", 
-    "uv" => "0.0000000000", 
-    "m" => "0.0000000000", 
-    "c" => "0.0000000000", 
-    "e" => "2301.0859297648", 
-    "eb" => "2367.7876343538", 
+    "v" => "0.0000000000",
+    "tb" => "2301.0859297648",
+    "mf" => "2301.0859297648",
+    "uv" => "0.0000000000",
+    "m" => "0.0000000000",
+    "c" => "0.0000000000",
+    "e" => "2301.0859297648",
+    "eb" => "2367.7876343538",
     "n" => "0.0000000000"
 )
 ```
@@ -118,34 +119,34 @@ julia> println(get_open_orders(client))
 Dict{String, Any}(
     "open" => Dict{String, Any}(
         "OAQZLS-7SFKK-PAA6BW" => Dict{String, Any}(
-            "price" => "0.00000", 
-            "vol" => "20.11513967", 
-            "status" => "open", 
-            "vol_exec" => "0.00000000", 
-            "oflags" => "fciq", 
-            "starttm" => 0, 
-            "stopprice" => "0.00000", 
-            "refid" => nothing, 
-            "userref" => 0, 
-            "expiretm" => 0, 
-            "cost" => "0.00000", 
+            "price" => "0.00000",
+            "vol" => "20.11513967",
+            "status" => "open",
+            "vol_exec" => "0.00000000",
+            "oflags" => "fciq",
+            "starttm" => 0,
+            "stopprice" => "0.00000",
+            "refid" => nothing,
+            "userref" => 0,
+            "expiretm" => 0,
+            "cost" => "0.00000",
             "fee" => "0.00000",
-            "misc" => "", 
-            "limitprice" => "0.00000", 
-            "opentm" => 1.6678760796400564e9, 
+            "misc" => "",
+            "limitprice" => "0.00000",
+            "opentm" => 1.6678760796400564e9,
             "descr" => Dict{String, Any}(
-                "ordertype" => "limit", 
-                "price" => "7.1288", 
-                "pair" => "DOTUSD", 
-                "order" => "sell 20.11513967 DOTUSD @ limit 7.1288", 
-                "leverage" => "none", 
-                "type" => "sell", 
-                "close" => "", 
+                "ordertype" => "limit",
+                "price" => "7.1288",
+                "pair" => "DOTUSD",
+                "order" => "sell 20.11513967 DOTUSD @ limit 7.1288",
+                "leverage" => "none",
+                "type" => "sell",
+                "close" => "",
                 "price2" => "0"
             )
-        ), 
+        ),
         "OPNPFB-NRZY3-O6T46Y" => Dict{String, Any}(
-            "price" => "0.00000", 
+            "price" => "0.00000",
             ...
         )
     )
@@ -170,7 +171,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getClosedOrders](https://docs.kraken.com/rest/#operation/getClosedOrders)
 
-Returns information about the closed orders. 
+Returns information about the closed orders.
 
 Authenticated `client` required
 
@@ -182,34 +183,34 @@ julia> println(get_closed_orders(client))
 Dict{String, Any}(
     "closed" => Dict{String, Any}(
         "OLGRP5-M42MC-YOFF7T" => Dict{String, Any}(
-            "price" => "0.00000", 
-            "vol" => "40.36280000", 
-            "status" => "canceled", 
-            "vol_exec" => "0.00000000", 
-            "oflags" => "fciq", 
-            "reason" => "User requested", 
-            "starttm" => 0, 
-            "stopprice" => "0.00000", 
-            "refid" => nothing, 
-            "userref" => 0, 
+            "price" => "0.00000",
+            "vol" => "40.36280000",
+            "status" => "canceled",
+            "vol_exec" => "0.00000000",
+            "oflags" => "fciq",
+            "reason" => "User requested",
+            "starttm" => 0,
+            "stopprice" => "0.00000",
+            "refid" => nothing,
+            "userref" => 0,
             "expiretm" => 0,
             "cost" => "0.00000",
-            "fee" => "0.00000", 
-            "misc" => "", 
-            "limitprice" => "0.00000", 
-            "opentm" => 1.6730201392732968e9, 
+            "fee" => "0.00000",
+            "misc" => "",
+            "limitprice" => "0.00000",
+            "opentm" => 1.6730201392732968e9,
             "descr" => Dict{String, Any}(
                 "ordertype" => "limit",
-                "price" => "40.5842", 
-                "pair" => "DOTUSD", 
-                "order" => "buy 40.36280000 DOTUSD @ limit 4.5842", 
+                "price" => "40.5842",
+                "pair" => "DOTUSD",
+                "order" => "buy 40.36280000 DOTUSD @ limit 4.5842",
                 "leverage" => "none",
-                "type" => "buy", 
-                "close" => "", 
+                "type" => "buy",
+                "close" => "",
                 "price2" => "0"
-            ), 
+            ),
             "closetm" => 1.673225209430317e9
-        ), 
+        ),
         "OUSQ7U-2TP3Q-PBKOIP" => Dict{String, Any}(
             ...
         )
@@ -240,7 +241,8 @@ end
     get_orders_info(client::SpotBaseRESTAPI;
         txid::Union{String,Vector{String}},
         trades::Bool=false,
-        userref::Union{Int64,Nothing}=nothing
+        userref::Union{Int64,Nothing}=nothing,
+        consolidate_taker::Bool=true,
     )
 
 Kraken Docs: [https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo](https://docs.kraken.com/rest/#tag/User-Data/operation/getOrdersInfo)
@@ -256,32 +258,32 @@ julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_orders_info(client, txid="OLGRP5-M42MC-YOFF7T"))
 Dict{String, Any}
     "OLGRP5-M42MC-YOFF7T" => Dict{String, Any}(
-        "price" => "0.00000", 
-        "vol" => "40.36280000", 
-        "status" => "canceled", 
-        "vol_exec" => "0.00000000", 
-        "oflags" => "fciq", 
-        "reason" => "User requested", 
-        "starttm" => 0, 
-        "stopprice" => "0.00000", 
-        "refid" => nothing, 
-        "userref" => 0, 
+        "price" => "0.00000",
+        "vol" => "40.36280000",
+        "status" => "canceled",
+        "vol_exec" => "0.00000000",
+        "oflags" => "fciq",
+        "reason" => "User requested",
+        "starttm" => 0,
+        "stopprice" => "0.00000",
+        "refid" => nothing,
+        "userref" => 0,
         "expiretm" => 0,
         "cost" => "0.00000",
-        "fee" => "0.00000", 
-        "misc" => "", 
-        "limitprice" => "0.00000", 
-        "opentm" => 1.6730201392732968e9, 
+        "fee" => "0.00000",
+        "misc" => "",
+        "limitprice" => "0.00000",
+        "opentm" => 1.6730201392732968e9,
         "descr" => Dict{String, Any}(
             "ordertype" => "limit",
-            "price" => "40.5842", 
-            "pair" => "DOTUSD", 
-            "order" => "buy 40.36280000 DOTUSD @ limit 4.5842", 
+            "price" => "40.5842",
+            "pair" => "DOTUSD",
+            "order" => "buy 40.36280000 DOTUSD @ limit 4.5842",
             "leverage" => "none",
-            "type" => "buy", 
-            "close" => "", 
+            "type" => "buy",
+            "close" => "",
             "price2" => "0"
-        ), 
+        ),
         "closetm" => 1.673225209430317e9
     )
 )
@@ -290,11 +292,13 @@ Dict{String, Any}
 function get_orders_info(client::SpotBaseRESTAPI;
     txid::Union{String,Vector{String}},
     trades::Bool=false,
-    userref::Union{Int64,Nothing}=nothing
+    userref::Union{Int64,Nothing}=nothing,
+    consolidate_taker::Bool=true
 )
     params = Dict{String,Any}(
         "txid" => vector_to_string(txid),
-        "trades" => string(trades)
+        "trades" => string(trades),
+        "consolidate_taker" => consolidate_taker
     )
     !isnothing(userref) ? params["userref"] = userref : nothing
     return request(client, "POST", "/private/QueryOrders"; data=params, auth=true)
@@ -321,21 +325,21 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_trades_history(client, type="all", start=1668431675, trades=true))
 Dict{String, Any}(
-    "count" => 182, 
+    "count" => 182,
     "trades" => Dict{String, Any}(
         "TRZUTT-EZZ7C-NYDTL3" => Dict{String, Any}(
-            "price" => "4.29780", 
-            "time" => 1.6722627506350572e9, 
+            "price" => "4.29780",
+            "time" => 1.6722627506350572e9,
             "ordertxid" => "OGFLW2-CZKU3-XKCBMB",
-            "trade_id" => 8737419, 
-            "vol" => "46.5350000", 
-            "pair" => "DOTUSD", 
-            "postxid" => "TKH2SE-M7IF5-CFI7LT", 
-            "ordertype" => "limit", 
-            "cost" => "199.9981", 
-            "fee" => "0.3200", 
-            "misc" => "", 
-            "leverage" => "0", 
+            "trade_id" => 8737419,
+            "vol" => "46.5350000",
+            "pair" => "DOTUSD",
+            "postxid" => "TKH2SE-M7IF5-CFI7LT",
+            "ordertype" => "limit",
+            "cost" => "199.9981",
+            "fee" => "0.3200",
+            "misc" => "",
+            "leverage" => "0",
             "margin" => "0.00000",
             "type" => "buy"
         ), "TNJFKJ-YLYX7-ETYS66" => Dict{String, Any}(
@@ -367,7 +371,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getTradesInfo](https://docs.kraken.com/rest/#operation/getTradesInfo)
 
-Returns information about specific trades by `txid`. 
+Returns information about specific trades by `txid`.
 
 Authenticated `client` required
 
@@ -477,28 +481,28 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_ledgers_info(client))
 Dict{String, Any}(
-    "count" => 1068, 
+    "count" => 1068,
     "ledger" => Dict{String, Any}(
         "LWSAYQ-GD2N2-IM3I6O" => Dict{String, Any}(
-            "amount" => "0.00", 
-            "balance" => "9437.94", 
-            "fee" => "6.43", 
-            "time" => 1.6732795570751212e9, 
-            "aclass" => "currency", 
-            "asset" => "KFEE", 
-            "subtype" => "", 
-            "refid" => "TYQEFQ-NYADC-R4LII6", 
+            "amount" => "0.00",
+            "balance" => "9437.94",
+            "fee" => "6.43",
+            "time" => 1.6732795570751212e9,
+            "aclass" => "currency",
+            "asset" => "KFEE",
+            "subtype" => "",
+            "refid" => "TYQEFQ-NYADC-R4LII6",
             "type" => "trade"
-        ), 
+        ),
         "LP6VNL-HDXPP-JLVG73" => Dict{String, Any}(
-            "amount" => "-0.0300000000", 
-            "balance" => "0.0119368320", 
-            "fee" => "0.0000000000", 
-            "time" => 1.6732795570750895e9, 
-            "aclass" => "currency", 
-            "asset" => "XETH", 
-            "subtype" => "", 
-            "refid" => "TYQEFQ-NYADC-R4LII6", 
+            "amount" => "-0.0300000000",
+            "balance" => "0.0119368320",
+            "fee" => "0.0000000000",
+            "time" => 1.6732795570750895e9,
+            "aclass" => "currency",
+            "asset" => "XETH",
+            "subtype" => "",
+            "refid" => "TYQEFQ-NYADC-R4LII6",
             "type" => "trade"
         ), ....
     )
@@ -542,13 +546,13 @@ julia> println(get_ledgers(client, id="LNYQGU-SUR5U-UXTOWM"))
 Dict{String, Any}(
     "LNYQGU-SUR5U-UXTOWM" => Dict{String, Any}(
         "amount" => "2001.0000",
-        "balance" => "2001.0082", 
-        "fee" => "0.0000", 
-        "time" => 1.668681189483613e9, 
-        "aclass" => "currency", 
-        "asset" => "EUR", 
-        "subtype" => "", 
-        "refid" => "QYSCWYA-S54CSU-RDHRV3", 
+        "balance" => "2001.0082",
+        "fee" => "0.0000",
+        "time" => 1.668681189483613e9,
+        "aclass" => "currency",
+        "asset" => "EUR",
+        "subtype" => "",
+        "refid" => "QYSCWYA-S54CSU-RDHRV3",
         "type" => "deposit"
     )
 )
@@ -576,9 +580,9 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_trade_volume(client))
 Dict{String, Any}(
-    "currency" => "ZUSD", 
+    "currency" => "ZUSD",
     "volume" => "204212.9762",
-    "fees_maker" => nothing, 
+    "fees_maker" => nothing,
     "fees" => nothing
 )
 ```
@@ -607,7 +611,7 @@ Authenticated `client` required
 
 # Attributes
 
-- `report` -- must be one of ["trades", "ledgers"] 
+- `report` -- must be one of ["trades", "ledgers"]
 
 ...
 
@@ -617,11 +621,11 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(request_export_report(
-...        client, 
-...        report="ledgers", 
-...        description="myLedgersExport", 
+...        client,
+...        report="ledgers",
+...        description="myLedgersExport",
 ...        format="CSV"
-...    ) 
+...    )
 Dict{String, Any}("id" => "OFEZ")
 ```
 """
@@ -656,7 +660,7 @@ Authenticated `client` required
 
 # Attributes
 
-- `report` -- must be one of ["trades", "ledgers"] 
+- `report` -- must be one of ["trades", "ledgers"]
 
 ...
 
@@ -666,22 +670,22 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(get_export_report_status(client, report="ledgers"))
 Any[Dict{String, Any}(
-    "report" => "ledgers", 
-    "fields" => "all", 
-    "aclass" => "currency", 
-    "endtm" => "1673368394", 
-    "createdtm" => "1673368394", 
-    "format" => "CSV", 
-    "status" => "Queued", 
-    "id" => "OFEZ", 
-    "subtype" => "all", 
+    "report" => "ledgers",
+    "fields" => "all",
+    "aclass" => "currency",
+    "endtm" => "1673368394",
+    "createdtm" => "1673368394",
+    "format" => "CSV",
+    "status" => "Queued",
+    "id" => "OFEZ",
+    "subtype" => "all",
     "starttm" => "1672531200",
-    "dataendtm" => "1673368394", 
-    "completedtm" => "0", 
-    "datastarttm" => "1672531200", 
-    "expiretm" => "1674577994", 
-    "flags" => "0", 
-    "asset" => "all", 
+    "dataendtm" => "1673368394",
+    "completedtm" => "0",
+    "datastarttm" => "1672531200",
+    "expiretm" => "1674577994",
+    "flags" => "0",
+    "asset" => "all",
     "descr" => "myLedgersExport"
 )]
 ```
@@ -706,7 +710,7 @@ The `id` is obtained when requesting the report using [`request_export_report`](
 
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
-julia> report = retrieve_export(private_client, id="OFEZ") 
+julia> report = retrieve_export(private_client, id="OFEZ")
 julia> open("myExport.zip", "w") do io
 ...        write(io, report)
 ...    end
@@ -751,7 +755,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#tag/Websockets-Authentication](https://docs.kraken.com/rest/#tag/Websockets-Authentication)
 
-Returns the websocket token. This is used by the when 
+Returns the websocket token. This is used by the when
 managing private websocket feeds and subscriptions.
 
 Authenticated `client` required
@@ -770,4 +774,25 @@ Dict{String,Any}(
 function get_websockets_token(client::SpotBaseRESTAPI)
     return request(client, "POST", "/private/GetWebSocketsToken", auth=true)
 end
+
+"""
+    create_subaccount(client::SpotBaseRESTAPI, username::String, email::String)
+
+Kraken Docs: [https://docs.kraken.com/rest/#tag/User-Subaccounts](https://docs.kraken.com/rest/#tag/User-Subaccountsc
+)
+
+Create a subaccount for trading. This is currently *only available
+for institutional clients*.
+
+Authenticated `client` required
+"""
+function create_subaccount(client::SpotBaseRESTAPI, username::String, email::String)
+    return request(
+        client,
+        "POST",
+        "private/CreateSubaccount",
+        params=Dict{String,String}("username" => username, "email" => email)
+    )
 end
+end
+

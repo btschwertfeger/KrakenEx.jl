@@ -38,12 +38,14 @@ export cancel_order_batch
         close_price2::Union{String,Nothing}=nothing,
         deadline::Union{String,Nothing}=nothing,
         validate::Bool=false,
+        reduce_only::Bool=false,
+        displayvol::Union{Float64,Int64,String,Nothing}=nothing,
         userref::Union{Int32,Nothing}=nothing
     )
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrder](https://docs.kraken.com/rest/#operation/addOrder)
 
-Enables the Spot trading mechanism. Various parameters can be specified for an individual trading preference. 
+Enables the Spot trading mechanism. Various parameters can be specified for an individual trading preference.
 
 Authenticated `client` required
 
@@ -111,6 +113,8 @@ function create_order(client::SpotBaseRESTAPI;
     close_price2::Union{String,Nothing}=nothing,
     deadline::Union{String,Nothing}=nothing,
     validate::Bool=false,
+    reduce_only::Bool=false,
+    displayvol::Union{Float64,Int64,String,Nothing}=nothing,
     userref::Union{Int32,Nothing}=nothing
 )
     params = Dict{String,Any}(
@@ -123,19 +127,7 @@ function create_order(client::SpotBaseRESTAPI;
         "expiretim" => expiretim,
         "validate" => string(validate)
     )
-    if !isnothing(trigger)
-        if ordertype ∈ ["stop-loss", "stop-loss-limit", "take-profit-limit", "take-profit-limit"]
-            if !isnothing(timeinforce)
-                params["trigger"] = trigger
-            else
-                error("Cannot use trigger " * trigger * " and timeinforce " * timeinforce * " together.")
-            end
-        else
-            error("Cannot use trigger on ordertype " * ordertype * ".")
-        end
-    elseif !isnothing(timeinforce)
-        params["timeinforce"] = timeinforce
-    end
+
     !isnothing(price) ? params["price"] = price : nothing
     !isnothing(price2) ? params["price2"] = price2 : nothing
     !isnothing(leverage) ? params["leverage"] = leverage : nothing
@@ -145,6 +137,10 @@ function create_order(client::SpotBaseRESTAPI;
     !isnothing(close_price2) ? params["close_price2"] = close_price2 : nothing
     !isnothing(deadline) ? params["deadline"] = deadline : nothing
     !isnothing(userref) ? params["userref"] = userref : nothing
+    !isnothing(displayvol) ? params["displayvol"] = displayvol : nothing
+    !isnothing(timeinforce) ? params["timeinforce"] = timeinforce : nothing
+    !isnothing(trigger) ? params["trigger"] = trigger : nothing
+    (reduce_only) ? params["reduce_only"] = reduce_only : nothing
     return request(client, "POST", "/private/AddOrder", data=params, auth=true)
 end
 
@@ -158,7 +154,7 @@ end
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/addOrderBatch](https://docs.kraken.com/rest/#operation/addOrderBatch)
 
-Enables placing multiple orders and order-specific actions at once. 
+Enables placing multiple orders and order-specific actions at once.
 
 Authenticated `client` required
 
@@ -217,23 +213,23 @@ Dict{String, Any}(
     "orders" => Any[
         Dict{String, Any}(
             "descr" => Dict{String, Any}(
-                "order" => "buy 2.00000000 XBTUSD @ limit 40000.0", 
+                "order" => "buy 2.00000000 XBTUSD @ limit 40000.0",
                 "close" => "close position @ stop loss 1000.0 -> limit 900.0",
                 "txid" => "N5F2Y6-E898J5-8Y6QE0"
             )
-        ), 
+        ),
         Dict{String, Any}(
             "descr" => Dict{String, Any}(
                 "order" => "sell 5.00000000 XBTUSD @ limit 42000.0",
                 "txid" => "3YHGOT-P82PNP-D9DY85"
             )
-        ), 
+        ),
         Dict{String, Any}(
             "descr" => Dict{String, Any}(
                 "order" => "buy 2.00000000 XBTUSD @ market",
                 "txid" => "IZXJ1O-9HER70-XJ0PCD"
             )
-        ), 
+        ),
         Dict{String, Any}(
             "descr" => Dict{String, Any}(
                 "order" => "sell 5.00000000 XBTUSD @ limit 43000.0",
@@ -297,9 +293,9 @@ julia> println(
 ...        )
 ...    )
 Dict{String, Any}(
-    "status" => "ok", 
-    "originaltxid" => "O2JLFP-VYFIW-35ZAAE", 
-    "orders_cancelled" => 0, 
+    "status" => "ok",
+    "originaltxid" => "O2JLFP-VYFIW-35ZAAE",
+    "orders_cancelled" => 0,
     "descr" => Dict{String, Any}("order" => "Order edited")
 )
 ```
@@ -386,12 +382,12 @@ Authenticated `client` required
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(cancel_all_orders_after_x(client, timeout=60))
 Dict{String, Any}(
-    "currentTime" => "2023-01-10T17:01:57Z", 
+    "currentTime" => "2023-01-10T17:01:57Z",
     "triggerTime" => "2023-01-10T17:02:57Z"
 )
 julia> println(cancel_all_orders_after_x(client, timeout=0))
 Dict{String, Any}(
-    "currentTime" => "2023-01-10T17:01:59Z", 
+    "currentTime" => "2023-01-10T17:01:59Z",
     "triggerTime" => "0"
 )
 ```
@@ -414,9 +410,9 @@ Authenticated `client` required
 ```julia-repl
 julia> client = SpotBaseRESTAPI(key="api-key", secret="secret-key")
 julia> println(cancel_order_batch(
-...        client, 
+...        client,
 ...        orders=[
-...            "O2JLFP-VYFIW-35ZAAE", "O523KJ-DO4M2-KAT243", 
+...            "O2JLFP-VYFIW-35ZAAE", "O523KJ-DO4M2-KAT243",
 ...            "OCDIAL-YC66C-DOF7HS", "OVFPZ2-DA2GV-VBFVVI"
 ...        ]
 ...    ))
