@@ -14,7 +14,9 @@ using Test
 
     @test typeof(SpotMarket.get_server_time(client)) == Int64
 
-    @test typeof(SpotMarket.get_assets(client)) == Dict{String,Any}
+    @test typeof(SpotMarket.get_assets(client, assets="BTC", aclass="currency")) == Dict{String,Any}
+
+    @test typeof(SpotMarket.get_assets(client, assets=["BTC", "DOT"], aclass="currency")) == Dict{String,Any}
 
     @test typeof(SpotMarket.get_tradable_asset_pair(client, pair=["XBTUSD"])) == Dict{String,Any}
 
@@ -22,9 +24,13 @@ using Test
 
     @test typeof(SpotMarket.get_ohlc(client, pair="XBTUSD")) == Dict{String,Any}
 
-    @test typeof(SpotMarket.get_order_book(client, pair="XBTUSD")) == Dict{String,Any}
+    @test typeof(SpotMarket.get_ohlc(client, pair="XBTUSD", interval=60, since=1675066107)) == Dict{String,Any}
 
-    @test typeof(SpotMarket.get_recent_spreads(client, pair="XBTUSD")) == Dict{String,Any}
+    @test typeof(SpotMarket.get_order_book(client, pair="XBTUSD", count=4)) == Dict{String,Any}
+
+    @test typeof(SpotMarket.get_recent_trades(client, pair="XBTUSD", since=1675066107)) == Dict{String,Any}
+
+    @test typeof(SpotMarket.get_recent_spreads(client, pair="XBTUSD", since=1675066107)) == Dict{String,Any}
 
     @test typeof(SpotMarket.get_system_status(client)) == Dict{String,Any}
 
@@ -66,8 +72,11 @@ end
 
     @test typeof(FuturesMarket.get_instruments_status(client)) == Dict{String,Any}
 
-    @test typeof(FuturesMarket.get_trade_history(client, symbol="PI_XBTUSD")) == Dict{String,Any}
+    @test typeof(FuturesMarket.get_trade_history(client, symbol="PI_XBTUSD", lastTime="2020-08-27T17:03:33.196Z")) == Dict{String,Any}
 
-    @test typeof(FuturesMarket.get_public_execution_events(client, tradeable="PI_XBTUSD")) == Dict{String,Any}
-    # ...
+    @test typeof(FuturesMarket.get_public_execution_events(client, tradeable="PI_XBTUSD", before=1675176107, since=1675066107, sort="asc")) == Dict{String,Any}
+
+    @test typeof(FuturesMarket.get_public_order_events(client, tradeable="PI_XBTUSD", before=1675176107, since=1675066107, sort="desc")) == Dict{String,Any}
+
+    @test typeof(FuturesMarket.get_public_mark_price_events(client, tradeable="PI_XBTUSD", before=1675176107, since=1675066107, sort="desc")) == Dict{String,Any}
 end

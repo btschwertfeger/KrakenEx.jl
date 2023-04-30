@@ -49,7 +49,7 @@ Authenticated `client` not required
 - `tick_type::String`: must be one of ["spot", "mark", "trade"]
 - `resolution::String`: must be one of ["1m", "5m", "15m", "30m", "1h", "4h", "12h", "1d", "1w"]
 - `from::Union{Int64,Nothing}=nothing`: timestamp of ohlc begin
-- `to::Union{Int64,Nothing}=nothing`: timestamp of ohlc end 
+- `to::Union{Int64,Nothing}=nothing`: timestamp of ohlc end
 
 # Examples
 
@@ -63,21 +63,21 @@ julia> println(get_ohlc(client,
 ...        to=1668999233
 ...    ))
 Dict{String, Any}(
-    "more_candles" => true, 
+    "more_candles" => true,
     "candles" => Any[
         Dict{String, Any}(
-            "high" => "16152.50000000000", 
-            "volume" => 7674, 
-            "time" => 1668989280000, 
-            "open" => "16100.00000000000", 
-            "low" => "16100.00000000000", 
+            "high" => "16152.50000000000",
+            "volume" => 7674,
+            "time" => 1668989280000,
+            "open" => "16100.00000000000",
+            "low" => "16100.00000000000",
             "close" => "16144.50000000000"
-        ), 
+        ),
         Dict{String, Any}(
-            "high" => "16159.00000000000", 
-            "volume" => 483, "time" => 1668989340000, 
-            "open" => "16144.50000000000", 
-            "low" => "16144.50000000000", 
+            "high" => "16159.00000000000",
+            "volume" => 483, "time" => 1668989340000,
+            "open" => "16144.50000000000",
+            "low" => "16144.50000000000",
             "close" => "16144.50000000000"
         ), ...
     ]
@@ -196,28 +196,28 @@ julia> println(get_fee_schedules(client))
 Dict{String, Any}(
     "feeSchedules" => Any[
         Dict{String, Any}(
-            "name" => "KF USD Multi-Collateral Fees", 
+            "name" => "KF USD Multi-Collateral Fees",
             "tiers" => Any[
                 Dict{String, Any}(
-                    "makerFee" => 0.02, 
-                    "takerFee" => 0.05, 
+                    "makerFee" => 0.02,
+                    "takerFee" => 0.05,
                     "usdVolume" => 0.0
-                ), 
+                ),
                 Dict{String, Any}(
-                    "makerFee" => 0.015, 
-                    "takerFee" => 0.04, 
+                    "makerFee" => 0.015,
+                    "takerFee" => 0.04,
                     "usdVolume" => 100000.0
-                ), 
+                ),
                 Dict{String, Any}(
-                    "makerFee" => 0.0125, 
-                    "takerFee" => 0.03, 
+                    "makerFee" => 0.0125,
+                    "takerFee" => 0.03,
                     "usdVolume" => 1.0e6
                 ), ...
-            ], 
+            ],
             "uid" => "your-user-id"
         )
-    ], 
-    "serverTime" => "2023-01-10T17:59:20.057Z", 
+    ],
+    "serverTime" => "2023-01-10T17:59:20.057Z",
     "result" => "success"
 )
 ```
@@ -239,11 +239,11 @@ Authenticated `client` required
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
 julia> println(get_fee_schedules_vol(client))
 Dict{String, Any}(
-    "serverTime" => "2023-01-10T18:01:27.478Z", 
+    "serverTime" => "2023-01-10T18:01:27.478Z",
     "volumesByFeeSchedule" => Dict{String, Any}(
         "7fc4d7c0-464f-4029-a9bb-55856d0c5247" => 0,
         "d46c2190-81e3-4370-a333-424f24387829" => 0
-    ), 
+    ),
     "result" => "success"
 )
 ```
@@ -270,10 +270,10 @@ julia> println(get_orderbook(client, symbol="PI_XBTUSD"))
 Dict{String, Any}(
     "orderBook" => Dict{String, Any}(
         "asks" => Any[
-            Any[17335.5, 328], Any[17339.5, 1721], Any[17340, 1770], 
-            Any[17341.5, 2736], Any[17343, 10379], Any[17344, 3000], 
-            Any[17344.5, 10366], Any[17346, 22052], Any[17346.5, 39912], 
-            Any[17347.5, 19052], Any[17348.5, 6000], Any[17349, 19052], 
+            Any[17335.5, 328], Any[17339.5, 1721], Any[17340, 1770],
+            Any[17341.5, 2736], Any[17343, 10379], Any[17344, 3000],
+            Any[17344.5, 10366], Any[17346, 22052], Any[17346.5, 39912],
+            Any[17347.5, 19052], Any[17348.5, 6000], Any[17349, 19052],
             ...
         ],
         "bids" => Any[
@@ -298,7 +298,7 @@ Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-market-da
 [https://support.kraken.com/hc/en-us/articles/360022839531-Tickers](https://support.kraken.com/hc/en-us/articles/360022839531-Tickers)
 
 Returns the available ticker for all available Futures symbols.
-    
+
 Authenticated `client` not required
 
 # Examples
@@ -307,33 +307,33 @@ Authenticated `client` not required
 julia> client = FuturesBaseRESTAPI()
 julia> println(get_tickers(client))
 Dict{String, Any}(
-    "serverTime" => "2023-01-10T18:04:18.210Z", 
+    "serverTime" => "2023-01-10T18:04:18.210Z",
     "tickers" => Any[
         Dict{String, Any}(
-            "fundingRate" => 3.6841376588881e-5, 
-            "lastSize" => 2.6, "bid" => 35.48, 
-            "fundingRatePrediction" => -0.000541681480000012, 
-            "lastTime" => "2023-01-10T11:42:04.518Z", 
-            "pair" => "COMP:USD", 
-            "bidSize" => 14, 
-            "volumeQuote" => 331.9023, 
-            "last" => 35.419, 
-            "suspended" => false, 
-            "askSize" => 17, 
-            "postOnly" => false, 
-            "symbol" => "pf_compusd", 
-            "openInterest" => 617.5, 
-            "markPrice" => 35.527, 
-            "ask" => 35.575, 
-            "tag" => "perpetual", 
-            "vol24h" => 9.3, 
-            "open24h" => 36, 
+            "fundingRate" => 3.6841376588881e-5,
+            "lastSize" => 2.6, "bid" => 35.48,
+            "fundingRatePrediction" => -0.000541681480000012,
+            "lastTime" => "2023-01-10T11:42:04.518Z",
+            "pair" => "COMP:USD",
+            "bidSize" => 14,
+            "volumeQuote" => 331.9023,
+            "last" => 35.419,
+            "suspended" => false,
+            "askSize" => 17,
+            "postOnly" => false,
+            "symbol" => "pf_compusd",
+            "openInterest" => 617.5,
+            "markPrice" => 35.527,
+            "ask" => 35.575,
+            "tag" => "perpetual",
+            "vol24h" => 9.3,
+            "open24h" => 36,
             "indexPrice" => 35.524
         ), Dict{String, Any}(
-            "lastSize" => 250, 
-            "bid" => 80.27, 
-            "lastTime" => "2023-01-10T18:03:31.516Z", 
-            "pair" => "LTC:USD", 
+            "lastSize" => 250,
+            "bid" => 80.27,
+            "lastTime" => "2023-01-10T18:03:31.516Z",
+            "pair" => "LTC:USD",
             ...
         ), ...
     ]
@@ -398,7 +398,7 @@ end
 """
     get_instruments_status(client::FuturesBaseRESTAPI; instrument::Union{String,Nothing}=nothing)
 
-Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list), 
+Kraken Docs: [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status-list),
 [https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status](https://docs.futures.kraken.com/#http-api-trading-v3-api-instrument-details-get-instrument-status)
 
 Returns the status of given `instrument`.
@@ -411,12 +411,12 @@ Authenticated `client` not required
 julia> client = FuturesBaseRESTAPI()
 julia> println(get_instruments_status(client, instrument="PI_XBTUSD"))
 Dict{String, Any}(
-    "tradeable" => "PI_XBTUSD", 
-    "experiencingDislocation" => false, 
-    "extremeVolatilityInitialMarginMultiplier" => 1, 
-    "priceDislocationDirection" => nothing, 
-    "serverTime" => "2023-01-10T18:08:20.613Z", 
-    "experiencingExtremeVolatility" => false, 
+    "tradeable" => "PI_XBTUSD",
+    "experiencingDislocation" => false,
+    "extremeVolatilityInitialMarginMultiplier" => 1,
+    "priceDislocationDirection" => nothing,
+    "serverTime" => "2023-01-10T18:08:20.613Z",
+    "experiencingExtremeVolatility" => false,
     "result" => "success"
 )
 ```
@@ -439,6 +439,9 @@ Lists historical trades of this user.
 
 Authenticated `client` not required
 
+# Note
+`lastTime` must be in the format like: `2020-08-27T17:03:33.196Z`
+
 # Examples
 
 ```julia-repl
@@ -447,20 +450,20 @@ julia> println(get_trade_history(client, symbol="PI_XBTUSD"))
 Dict{String, Any}(
     "history" => Any[
         Dict{String, Any}(
-            "price" => 17308.5, 
-            "time" => "2023-01-10T16:58:58.667Z", 
-            "side" => "sell", 
-            "uid" => "15e8ea9f-6ccf-4545-b29f-18b9e8f93949", 
-            "size" => 1730, 
-            "type" => "fill", 
+            "price" => 17308.5,
+            "time" => "2023-01-10T16:58:58.667Z",
+            "side" => "sell",
+            "uid" => "15e8ea9f-6ccf-4545-b29f-18b9e8f93949",
+            "size" => 1730,
+            "type" => "fill",
             "trade_id" => 100
         ), Dict{String, Any}(
-            "price" => 17289.5, 
-            "time" => "2023-01-10T17:01:13.391Z", 
-            "side" => "buy", 
-            "uid" => "1475a325-0d14-46bd-9fb7-0deab5746e1c", 
-            "size" => 4524, 
-            "type" => "fill", 
+            "price" => 17289.5,
+            "time" => "2023-01-10T17:01:13.391Z",
+            "side" => "buy",
+            "uid" => "1475a325-0d14-46bd-9fb7-0deab5746e1c",
+            "size" => 4524,
+            "type" => "fill",
             "trade_id" => 99
         ), ...
     ],
@@ -616,9 +619,9 @@ function _get_historical_events(
     auth::Bool=true
 )
     params::Dict{String,Any} = Dict{String,Any}()
-    isnothing(before) ? nothing : params["before"] = before
+    isnothing(before) ? nothing : params["before"] = string(before)
     isnothing(continuation_token) ? nothing : params["continuation_token"] = continuation_token
-    isnothing(since) ? nothing : params["since"] = since
+    isnothing(since) ? nothing : params["since"] = string(since)
     isnothing(sort) ? nothing : params["sort"] = sort
     isnothing(tradeable) ? nothing : params["tradeable"] = tradeable
 
@@ -647,7 +650,7 @@ Authenticated `client` required
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
 julia> println(get_execution_events(client))
 Dict{String, Any}(
-    "accountUid" => "12f9bd01-d65c-4f83-9a3e-bb9464f88a35", 
+    "accountUid" => "12f9bd01-d65c-4f83-9a3e-bb9464f88a35",
     "elements" => Any[], "len" => 0
 )
 ```
@@ -693,45 +696,45 @@ Authenticated `client` not required
 julia> client = FuturesBaseRESTAPI()
 julia> println(get_public_execution_events(client, tradeable="PI_XBTUSD"))
 Dict{String, Any}(
-    "continuationToken" => "MTY3MzM0NDAyMzMyNy83ODc0OTY5NjI4NQ==", 
+    "continuationToken" => "MTY3MzM0NDAyMzMyNy83ODc0OTY5NjI4NQ==",
     "elements" => Any[Dict{String, Any}(
         "event" => Dict{String, Any}(
             "Execution" => Dict{String, Any}(
                 "execution" => Dict{String, Any}(
                     "takerOrder" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
-                        "orderType" => "IoC", 
-                        "reduceOnly" => false, 
-                        "uid" => "b77f469e-7548-4ab5-a921-98bab50dbbb7", 
-                        "lastUpdateTimestamp" => 1673374561273, 
-                        "direction" => "Buy", 
-                        "timestamp" => 1673374561273, 
-                        "quantity" => "8999.00000000", 
+                        "tradeable" => "PI_XBTUSD",
+                        "orderType" => "IoC",
+                        "reduceOnly" => false,
+                        "uid" => "b77f469e-7548-4ab5-a921-98bab50dbbb7",
+                        "lastUpdateTimestamp" => 1673374561273,
+                        "direction" => "Buy",
+                        "timestamp" => 1673374561273,
+                        "quantity" => "8999.00000000",
                         "limitPrice" => "17352.50000000"
-                    ), 
-                    "markPrice" => "17338.91438972669", 
-                    "price" => "17352.5", 
-                    "limitFilled" => false, 
-                    "uid" => "dd6b4ad4-a985-4428-8689-11e7f7fe5d4c", 
+                    ),
+                    "markPrice" => "17338.91438972669",
+                    "price" => "17352.5",
+                    "limitFilled" => false,
+                    "uid" => "dd6b4ad4-a985-4428-8689-11e7f7fe5d4c",
                     "makerOrder" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
-                        "orderType" => "Post", 
-                        "reduceOnly" => false, 
-                        "uid" => "82e8ff43-4dc7-4670-8f46-6a523c077ba8", 
-                        "lastUpdateTimestamp" => 1673374561257, 
-                        "direction" => "Sell", 
-                        "timestamp" => 1673374559677, 
-                        "quantity" => "27907.00000000", 
+                        "tradeable" => "PI_XBTUSD",
+                        "orderType" => "Post",
+                        "reduceOnly" => false,
+                        "uid" => "82e8ff43-4dc7-4670-8f46-6a523c077ba8",
+                        "lastUpdateTimestamp" => 1673374561257,
+                        "direction" => "Sell",
+                        "timestamp" => 1673374559677,
+                        "quantity" => "27907.00000000",
                         "limitPrice" => "17352.5"
-                    ), 
-                    "timestamp" => 1673374561273, 
-                    "usdValue" => "8999.00", 
+                    ),
+                    "timestamp" => 1673374561273,
+                    "usdValue" => "8999.00",
                     "quantity" => "8999.00000000"
-                ), 
+                ),
                 "takerReducedQuantity" => ""
             )
         ),
-        "uid" => "63b6a497-b554-4af5-81bd-787f7e2bf1c7", 
+        "uid" => "63b6a497-b554-4af5-81bd-787f7e2bf1c7",
         "timestamp" => 1673374561273
     ), ...]
 )
@@ -777,62 +780,62 @@ Authenticated `client` not required
 julia> client = FuturesBaseRESTAPI()
 julia> println(get_public_order_events(client, tradeable="PI_XBTUSD"))
 Dict{String, Any}(
-    "continuationToken" => "MTY3MzM3NDczMjg2MC83ODc4OTc0NDU2OA==", 
+    "continuationToken" => "MTY3MzM3NDczMjg2MC83ODc4OTc0NDU2OA==",
     "elements" => Any[
         Dict{String, Any}(
             event" => Dict{String, Any}(
                 "OrderPlaced" => Dict{String, Any}(
-                    "reducedQuantity" => "", 
+                    "reducedQuantity" => "",
                     "order" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
+                        "tradeable" => "PI_XBTUSD",
                         "orderType" => "Post",
-                        "reduceOnly" => false, 
-                        "uid" => "68fb6c2e-5f85-44b9-a6f2-aae9ac6cd0c5", 
-                        "lastUpdateTimestamp" => 1673374745391, 
-                        "direction" => "Buy", 
+                        "reduceOnly" => false,
+                        "uid" => "68fb6c2e-5f85-44b9-a6f2-aae9ac6cd0c5",
+                        "lastUpdateTimestamp" => 1673374745391,
+                        "direction" => "Buy",
                         "timestamp" => 1673374745391,
-                        "quantity" => "118", 
+                        "quantity" => "118",
                         "limitPrice" => "17167.0"
-                    ), 
+                    ),
                     "reason" => "new_user_order"
                 )
-            ), 
-            "uid" => "58733df7-f573-4ddd-96c5-bf4978b6568d", 
+            ),
+            "uid" => "58733df7-f573-4ddd-96c5-bf4978b6568d",
             "timestamp" => 1673374745391
         ), Dict{String, Any}(
             "event" => Dict{String, Any}(
                 "OrderUpdated" => Dict{String, Any}(
-                    "reducedQuantity" => "0", 
+                    "reducedQuantity" => "0",
                     "oldOrder" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
-                        "orderType" => "Post", 
-                        "reduceOnly" => false, 
-                        "uid" => "54de25df-f2e4-49d1-8281-c6a867fa2e8e", 
-                        "lastUpdateTimestamp" => 1673374745228, 
-                        "direction" => "Sell", 
-                        "timestamp" => 1673352860129, 
-                        "quantity" => "300000", 
+                        "tradeable" => "PI_XBTUSD",
+                        "orderType" => "Post",
+                        "reduceOnly" => false,
+                        "uid" => "54de25df-f2e4-49d1-8281-c6a867fa2e8e",
+                        "lastUpdateTimestamp" => 1673374745228,
+                        "direction" => "Sell",
+                        "timestamp" => 1673352860129,
+                        "quantity" => "300000",
                         "limitPrice" => "17381.0"
-                    ), 
+                    ),
                     "newOrder" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
-                        "orderType" => "Post", 
-                        "reduceOnly" => false, 
-                        "uid" => "54de25df-f2e4-49d1-8281-c6a867fa2e8e", 
-                        "lastUpdateTimestamp" => 1673374745384, 
-                        "direction" => "Sell", 
-                        "timestamp" => 1673352860129, 
-                        "quantity" => "300000", 
+                        "tradeable" => "PI_XBTUSD",
+                        "orderType" => "Post",
+                        "reduceOnly" => false,
+                        "uid" => "54de25df-f2e4-49d1-8281-c6a867fa2e8e",
+                        "lastUpdateTimestamp" => 1673374745384,
+                        "direction" => "Sell",
+                        "timestamp" => 1673352860129,
+                        "quantity" => "300000",
                         "limitPrice" => "17383.0"
-                    ), 
+                    ),
                     "reason" => "edited_by user"
                 )
-            ), 
-            "uid" => "f741b4a5-44d6-45a7-b287-77eba4a167b7", 
+            ),
+            "uid" => "f741b4a5-44d6-45a7-b287-77eba4a167b7",
             "timestamp" => 1673374745384
         ), ...
     ]
-)    
+)
 ```
 """
 function get_public_order_events(
@@ -875,36 +878,36 @@ Authenticated `client` not required
 julia> client = FuturesBaseRESTAPI()
 julia> println(get_public_mark_price_events(client, tradeable="PI_XBTUSD"))
 Dict{String, Any}(
-    "continuationToken" => "MTY3MzM3NDg4NjM4MC83ODc4OTkxMDM4Nw==", 
+    "continuationToken" => "MTY3MzM3NDg4NjM4MC83ODc4OTkxMDM4Nw==",
     "elements" => Any[Dict{String, Any}(
         "event" => Dict{String, Any}(
             "OrderUpdated" => Dict{String, Any}(
-                "reducedQuantity" => "0", 
+                "reducedQuantity" => "0",
                 "oldOrder" => Dict{String, Any}(
-                    "tradeable" => "PI_XBTUSD", 
-                    "orderType" => "Post", 
-                    "reduceOnly" => false, 
-                    "uid" => "28e2dc51-e473-4621-ad30-88d289e2258e", 
-                    "lastUpdateTimestamp" => 1673374894474, 
-                    "direction" => "Sell", 
-                    "timestamp" => 1673354694830, 
-                    "quantity" => "6000", 
-                    "limitPrice" => "17384.0"
-                ), 
-                "newOrder" => Dict{String, Any}(
-                    "tradeable" => "PI_XBTUSD", 
-                    "orderType" => "Post", 
+                    "tradeable" => "PI_XBTUSD",
+                    "orderType" => "Post",
                     "reduceOnly" => false,
-                    "uid" => "28e2dc51-e473-4621-ad30-88d289e2258e", 
-                    "lastUpdateTimestamp" => 1673374894696, 
-                    "direction" => "Sell", 
-                    "timestamp" => 1673354694830, 
-                    "quantity" => "6000", 
+                    "uid" => "28e2dc51-e473-4621-ad30-88d289e2258e",
+                    "lastUpdateTimestamp" => 1673374894474,
+                    "direction" => "Sell",
+                    "timestamp" => 1673354694830,
+                    "quantity" => "6000",
+                    "limitPrice" => "17384.0"
+                ),
+                "newOrder" => Dict{String, Any}(
+                    "tradeable" => "PI_XBTUSD",
+                    "orderType" => "Post",
+                    "reduceOnly" => false,
+                    "uid" => "28e2dc51-e473-4621-ad30-88d289e2258e",
+                    "lastUpdateTimestamp" => 1673374894696,
+                    "direction" => "Sell",
+                    "timestamp" => 1673354694830,
+                    "quantity" => "6000",
                     "limitPrice" => "17376.0"
                 ), "reason" => "edited_by user"
             )
-        ), 
-        "uid" => "fc6fd47a-303b-45fc-a187-d6345b664560", 
+        ),
+        "uid" => "fc6fd47a-303b-45fc-a187-d6345b664560",
         "timestamp" => 1673374894696
     ), ...]
 )
@@ -948,40 +951,40 @@ Authenticated `client` required
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
 julia> println(get_order_events(
-...        client, 
-...        tradeable="PI_XBTUSD", 
-...        sort="asc", 
+...        client,
+...        tradeable="PI_XBTUSD",
+...        sort="asc",
 ...        before="1668989233"
 ...    ))
 Dict{String, Any}(
-    "accountUid" => "72f9bd80-d65c-4f73-9a3e-cb9464e88c35", 
+    "accountUid" => "72f9bd80-d65c-4f73-9a3e-cb9464e88c35",
     "elements" => Any[
         Dict{String, Any}(
             "event" => Dict{String, Any}(
                 "OrderRejected" => Dict{String, Any}(
-                    "algoId" => "", 
+                    "algoId" => "",
                     "order" => Dict{String, Any}(
-                        "tradeable" => "PI_XBTUSD", 
-                        "lastUpdateTimestamp" => 1669116246449, 
-                        "filled" => "0", 
-                        "clientId" => "my_another_client_id", 
-                        "quantity" => "1", 
-                        "reduceOnly" => false, 
-                        "uid" => "d124183a-8c25-421b-8c75-450fb0b0efd3", 
-                        "direction" => "Buy", 
-                        "orderType" => "Limit", 
-                        "accountUid" => "72f9bd80-d65c-4f73-9a3e-cb9464e88c35", 
-                        "timestamp" => 1669116246449, 
+                        "tradeable" => "PI_XBTUSD",
+                        "lastUpdateTimestamp" => 1669116246449,
+                        "filled" => "0",
+                        "clientId" => "my_another_client_id",
+                        "quantity" => "1",
+                        "reduceOnly" => false,
+                        "uid" => "d124183a-8c25-421b-8c75-450fb0b0efd3",
+                        "direction" => "Buy",
+                        "orderType" => "Limit",
+                        "accountUid" => "72f9bd80-d65c-4f73-9a3e-cb9464e88c35",
+                        "timestamp" => 1669116246449,
                         "limitPrice" => "1.0"
-                    ), 
-                    "reason" => "new_user_order", 
+                    ),
+                    "reason" => "new_user_order",
                     "orderError" => "insufficient_margin"
                 )
-            ), 
-            "uid" => "69a24b12-3a5b-470c-bac8-c65600b595d0", 
+            ),
+            "uid" => "69a24b12-3a5b-470c-bac8-c65600b595d0",
             "timestamp" => 1669116246449
         )
-    ], 
+    ],
     "len" => 1
 )
 ```
@@ -1025,14 +1028,14 @@ Authenticated `client` required
 ```julia-repl
 julia> client = FuturesBaseRESTAPI(key="api-key", secret="api-secret")
 julia> println(get_trigger_events(
-...        client, 
-...        tradeable="PI_XBTUSD", 
-...        sort="desc", 
+...        client,
+...        tradeable="PI_XBTUSD",
+...        sort="desc",
 ...        before="1668989233"
 ...    ))
 Dict{String, Any}(
-    "accountUid" => "12f2b283-af1a-a173-aaae-ce9a64e122abc1", 
-    "elements" => Any[], 
+    "accountUid" => "12f2b283-af1a-a173-aaae-ce9a64e122abc1",
+    "elements" => Any[],
     "len" => 0
 )
 ```
