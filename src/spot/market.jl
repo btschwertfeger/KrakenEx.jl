@@ -192,7 +192,7 @@ function get_ticker(client::SpotBaseRESTAPI; pair::Union{Vector{String},String,N
 end
 
 """
-    get_ohlc(client::SpotBaseRESTAPI; pair::String, interval::Union{String,Nothing}=nothing, since::Union{Int64,Nothing}=nothing)
+    get_ohlc(client::SpotBaseRESTAPI; pair::String, interval::Union{String,Int,Nothing}=nothing, since::Union{Int,String,Nothing}=nothing)
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOHLCData](https://docs.kraken.com/rest/#operation/getOHLCData)
 
@@ -217,15 +217,15 @@ Dict{String, Any}(
 )
 ```
 """
-function get_ohlc(client::SpotBaseRESTAPI; pair::String, interval::Union{String,Nothing}=nothing, since::Union{Int64,Nothing}=nothing)
+function get_ohlc(client::SpotBaseRESTAPI; pair::String, interval::Union{String,Int,Nothing}=nothing, since::Union{Int,String,Nothing}=nothing)
     params = Dict{String,String}("pair" => pair)
-    !isnothing(interval) ? params["interval"] = interval : nothing
-    !isnothing(since) ? params["since"] = since : nothing
+    !isnothing(interval) ? params["interval"] = string(interval) : nothing
+    !isnothing(since) ? params["since"] = string(since) : nothing
     return request(client, "GET", "/public/OHLC"; data=params, auth=false)
 end
 
 """
-    get_order_book(client::SpotBaseRESTAPI; pair::String, count::Union{Int64,Nothing}=nothing)
+    get_order_book(client::SpotBaseRESTAPI; pair::String, count::Union{Int,Nothing}=nothing)
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getOrderBook](https://docs.kraken.com/rest/#operation/getOrderBook)
 
@@ -259,14 +259,14 @@ Dict{String, Any}(
 )
 ```
 """
-function get_order_book(client::SpotBaseRESTAPI; pair::String, count::Union{Int64,Nothing}=nothing)
+function get_order_book(client::SpotBaseRESTAPI; pair::String, count::Union{Int,String,Nothing}=nothing)
     params = Dict{String,String}("pair" => pair)
-    !isnothing(count) ? params["count"] = count : nothing
+    !isnothing(count) ? params["count"] = string(count) : nothing
     return request(client, "GET", "/public/Depth"; data=params, auth=false)
 end
 
 """
-    get_recent_trades(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)
+    get_recent_trades(client::SpotBaseRESTAPI; pair::String, since::Union{Int,String,Nothing}=nothing)
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getRecentTrades](https://docs.kraken.com/rest/#operation/getRecentTrades)
 
@@ -296,14 +296,14 @@ Dict{String, Any}(
 )
 ```
 """
-function get_recent_trades(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)
+function get_recent_trades(client::SpotBaseRESTAPI; pair::String, since::Union{Int,String,Nothing}=nothing)
     params = Dict{String,String}("pair" => pair)
-    !isnothing(since) ? params["since"] = since : nothing
+    !isnothing(since) ? params["since"] = string(since) : nothing
     return request(client, "GET", "/public/Trades"; data=params, auth=false)
 end
 
 """
-    get_recent_spreads(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)
+    get_recent_spreads(client::SpotBaseRESTAPI; pair::String, since::Union{Int,String,Nothing}=nothing)
 
 Kraken Docs: [https://docs.kraken.com/rest/#operation/getRecentSpreads](https://docs.kraken.com/rest/#operation/getRecentSpreads)
 
@@ -328,9 +328,9 @@ Dict{String, Any}(
     "last" => 1673363958)
 ```
 """
-function get_recent_spreads(client::SpotBaseRESTAPI; pair::String, since::Union{Int64,Nothing}=nothing)
+function get_recent_spreads(client::SpotBaseRESTAPI; pair::String, since::Union{Int,String,Nothing}=nothing)
     params = Dict{String,String}("pair" => pair)
-    !isnothing(since) ? params["since"] = since : nothing
+    !isnothing(since) ? params["since"] = string(since) : nothing
     return request(client, "GET", "/public/Spread"; data=params, auth=false)
 end
 

@@ -137,6 +137,7 @@ Initiates a withdraw and returns the `refid` to track the status.
 
 Authenticated `client` required
 
+Note: The `key` must be the name of the withdraw wallet as defined in the Web UI of the Kraken exchange.
 # Examples
 
 ```julia-repl

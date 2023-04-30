@@ -9,15 +9,18 @@
 ## Build project
 ## julia> using Pkg; Pkg.build()
 
-## Buikd documentation
+## Build documentation
 ## julia> using Documenter
 ## julia> ]
 ## pkg> activate .
 ## julia> include("docs/make.jl")
 
+## Test package
+## julia> ]
+## pkg> activate .
+## juli> using Pkg; Pkg.test()
 
 # import Pkg
-
 # Pkg.add("HTTP")
 # Pkg.add("JSON")
 # Pkg.add("PkgTemplates")

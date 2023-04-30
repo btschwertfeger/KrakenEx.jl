@@ -1,73 +1,40 @@
-using KrakenEx: SpotBaseRESTAPI, FuturesBaseRESTAPI
-import KrakenEx.SpotMarketModule as SpotMarket
-import KrakenEx.FuturesMarketModule as FuturesMarket
+
 using Test
 
-#=
- Tests can only be performed on public endpoints, because
- valid API keys are requred for private requests.
-=#
-
-@testset "KrakenEx Spot REST Market Endpoints" begin
-
-    client = SpotBaseRESTAPI()
-
-    @test typeof(SpotMarket.get_server_time(client)) == Int64
-
-    @test typeof(SpotMarket.get_assets(client)) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_tradable_asset_pair(client, pair=["XBTUSD"])) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_ticker(client, pair="XBTUSD")) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_ohlc(client, pair="XBTUSD")) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_order_book(client, pair="XBTUSD")) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_recent_spreads(client, pair="XBTUSD")) == Dict{String,Any}
-
-    @test typeof(SpotMarket.get_system_status(client)) == Dict{String,Any}
-
-    # ...
+#==== S P O T ====#
+@testset verbose = true "KrakenEx Spot REST User Endpoints" begin
+    include(joinpath(@__DIR__, "spot", "user.jl"))
 end
 
-@testset "KrakenEx Futures REST Market Endpoints" begin
+@testset verbose = true "KrakenEx Spot REST Market Endpoints" begin
+    include(joinpath(@__DIR__, "spot", "market.jl"))
+end
 
-    client = FuturesBaseRESTAPI()
+@testset verbose = true "KrakenEx Spot REST Trade Endpoints" begin
+    include(joinpath(@__DIR__, "spot", "trade.jl"))
+end
 
-    @test typeof(FuturesMarket.get_ohlc(client,
-        tick_type="trade",
-        symbol="PI_XBTUSD",
-        resolution="1m",
-        from=1668989233,
-        to=1668999233
-    )) == Dict{String,Any}
+@testset verbose = true "KrakenEx Spot REST Funding Endpoints" begin
+    include(joinpath(@__DIR__, "spot", "funding.jl"))
+end
 
-    @test typeof(FuturesMarket.get_tick_types(client)) == Vector{Any}
+@testset verbose = true "KrakenEx Spot REST Staking Endpoints" begin
+    include(joinpath(@__DIR__, "spot", "staking.jl"))
+end
 
-    @test typeof(FuturesMarket.get_tradeable_products(
-        client,
-        tick_type="mark"
-    )) == Vector{Any}
+#==== F U T U R E S ====#
+@testset verbose = true "KrakenEx Futures REST User Endpoints" begin
+    include(joinpath(@__DIR__, "futures", "user.jl"))
+end
 
-    @test typeof(FuturesMarket.get_resolutions(
-        client,
-        tradeable="PI_XBTUSD",
-        tick_type="spot"
-    )) == Vector{Any}
+@testset verbose = true "KrakenEx Futures REST Market Endpoints" begin
+    include(joinpath(@__DIR__, "futures", "market.jl"))
+end
 
-    @test typeof(FuturesMarket.get_fee_schedules(client)) == Dict{String,Any}
+@testset verbose = true "KrakenEx Futures REST Trade Endpoints" begin
+    include(joinpath(@__DIR__, "futures", "trade.jl"))
+end
 
-    @test typeof(FuturesMarket.get_orderbook(client, symbol="PI_XBTUSD")) == Dict{String,Any}
-
-    @test typeof(FuturesMarket.get_tickers(client)) == Dict{String,Any}
-
-    @test typeof(FuturesMarket.get_instruments(client)) == Dict{String,Any}
-
-    @test typeof(FuturesMarket.get_instruments_status(client)) == Dict{String,Any}
-
-    @test typeof(FuturesMarket.get_trade_history(client, symbol="PI_XBTUSD")) == Dict{String,Any}
-
-    @test typeof(FuturesMarket.get_public_execution_events(client, tradeable="PI_XBTUSD")) == Dict{String,Any}
-    # ...
+@testset verbose = true "KrakenEx Futures REST Funding Endpoints" begin
+    include(joinpath(@__DIR__, "futures", "funding.jl"))
 end
