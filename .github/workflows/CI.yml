@@ -7,6 +7,10 @@ on:
     tags: "*"
   pull_request:
 
+concurrency:
+  group: CI-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }}
