@@ -22,3 +22,4 @@ doc:
 ##
 clean:
 	rm *.zip
+	rm -rf docs/build

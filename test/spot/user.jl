@@ -3,7 +3,7 @@ import KrakenEx.SpotUserModule as SpotUser
 using Test
 
 
-@testset "KrakenEx Spot REST Market Endpoints" begin
+@testset "KrakenEx Spot REST User Endpoints" begin
 
     client = SpotBaseRESTAPI(key=ENV["SPOT_API_KEY"], secret=ENV["SPOT_SECRET_KEY"])
 
