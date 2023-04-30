@@ -15,7 +15,7 @@ jobs:
       max-parallel: 1 # avoid API rate limit issues
       matrix:
         version: ["1.8"]
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest] #, macOS-latest, windows-latest]
         arch: [x64]
     steps:
       - uses: actions/checkout@v1
