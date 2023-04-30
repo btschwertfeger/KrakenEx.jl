@@ -1,13 +1,28 @@
 
 #=This file only contains private notes=#
-import Pkg
 
-Pkg.add("HTTP")
-Pkg.add("JSON")
-Pkg.add("PkgTemplates")
-Pkg.add("Nettle")
-Pkg.add("StringEncodings")
 
+## Activate project
+## julia> ]
+## pkg> activate .
+
+## Build project
+## julia> using Pkg; Pkg.build()
+
+## Buikd documentation
+## julia> using Documenter
+## julia> ]
+## pkg> activate .
+## julia> include("docs/make.jl")
+
+
+# import Pkg
+
+# Pkg.add("HTTP")
+# Pkg.add("JSON")
+# Pkg.add("PkgTemplates")
+# Pkg.add("Nettle")
+# Pkg.add("StringEncodings")
 
 # using PkgTemplates
 # t = Template(;
